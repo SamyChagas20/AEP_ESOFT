@@ -22,6 +22,11 @@ public class HortaService {
         if (!dao.colecaoVazia()) {
             return;
         }
+        dao.inserir(new Planta("Tomate", "Outono/Primavera", 2, 90, "Sol pleno, rega regular", null));
+        dao.inserir(new Planta("Cebolinha", "Ano todo", 1, 60, "Sombra parcial ou sol", null));
+        dao.inserir(new Planta("Pimenta", "Primavera/Verão", 3, 120, "Necessita de bastante calor e sol", null));
+        dao.inserir(new Planta("Alface", "Outono/Inverno", 2, 45, "Solo úmido e boa drenagem", null));
+        dao.inserir(new Planta("Salsinha", "Ano todo", 2, 70, "Manter solo levemente úmido", null));
     }
 
     public List<Planta> listarTodas() {
