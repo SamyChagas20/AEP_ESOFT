@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class PlantaDAO {
 
-    private static final String COLLECTION = "plantas";
+    private static final String COLLECTION = "EcoHorta";
 
     private MongoCollection<Document> getCollection() {
         MongoDatabase db = MongoConnection.getDatabase();

@@ -22,57 +22,6 @@ public class HortaService {
         if (!dao.colecaoVazia()) {
             return;
         }
-
-        List<Planta> iniciais = new ArrayList<>();
-
-        iniciais.add(new Planta(
-                "Tomate",
-                "Início da primavera (setembro a outubro)",
-                2,
-                90,
-                "Sol pleno (mín. 6h/dia); usar estacas ou tutores; adubar a cada 15 dias; remover brotos laterais.",
-                null
-        ));
-
-        iniciais.add(new Planta(
-                "Cebolinha",
-                "Ano todo, preferindo clima ameno",
-                1,
-                60,
-                "Aceita meia sombra; manter o solo sempre úmido; colher cortando rente ao solo para rebrotar.",
-                null
-        ));
-
-        iniciais.add(new Planta(
-                "Pimenta",
-                "Primavera (setembro a novembro)",
-                2,
-                100,
-                "Sol pleno; evitar encharcamento do solo; adubação rica em potássio na fase de frutificação.",
-                null
-        ));
-
-        iniciais.add(new Planta(
-                "Alface",
-                "Outono/Inverno (março a junho) e final do inverno",
-                1,
-                45,
-                "Prefere meia sombra em dias quentes; solo rico em matéria orgânica; regas leves e frequentes.",
-                null
-        ));
-
-        iniciais.add(new Planta(
-                "Salsinha",
-                "Ano todo, evitando calor excessivo",
-                2,
-                70,
-                "Meia sombra; manter o solo úmido mas não encharcado; colher as folhas externas primeiro.",
-                null
-        ));
-
-        for (Planta p : iniciais) {
-            dao.inserir(p);
-        }
     }
 
     public List<Planta> listarTodas() {
