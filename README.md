@@ -13,25 +13,6 @@
 
 ---
 
-## 🛠️ Arquitetura do Projeto
-
-O projeto adota uma estrutura em camadas para garantir a separação clara de responsabilidades:
-
-EcoHorta/
- ├── src/
- │    ├── main/
- │    │    └── java/com/ecohorta/
- │    │         ├── db/           # Conexão e gerenciamento do MongoDB (MongoConnection)
- │    │         ├── model/        # Entidades/Modelos do sistema (Planta)
- │    │         ├── dao/          # Objeto de Acesso a Dados (PlantaDAO)
- │    │         ├── service/      # Camada de Regras de Negócio (HortaService)
- │    │         └── Main.java     # Classe principal / Ponto de entrada da aplicação
- │    └── test/
- │         └── java/com/ecohorta/
- │              └── model/        # Suíte de testes unitários (EcoHortaTest)
- ├── pom.xml                      # Gerenciamento de dependências Maven
- └── README.md
-
  📌 Funcionalidades Principais
 Gerenciamento de Plantas: Cadastro, alteração, consulta e remoção das plantas cultivadas.
 
