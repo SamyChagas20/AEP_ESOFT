@@ -1,0 +1,255 @@
+# Catálogo do EcoHorta (valores indicativos para o Centro-Sul do Brasil).
+# Colunas: nome;científico;categoria;diasAteColheita;luz;apartamento;regaACadaDias;regaMl;janelasDePlantio;dica
+# categoria: FOL folhosa, FRU hortaliça de fruto, RAI raiz/tubérculo, BUL bulbo, ERV erva/tempero, LEG leguminosa/grão,
+#            FRT frutífera, MED medicinal, PNC PANC, FLO flor comestível, ORN ornamental (não comestível)
+# luz: B pouca luz, M luz média (meio dia de sol), P sol pleno (dia todo)
+# apartamento: I ideal, P possível com cuidados, N não recomendado
+# janelasDePlantio: meses separados por "|" no formato inicio-fim (ex.: 9-11|2-3); 1-12 = ano todo
+# --- Folhosas ---
+Rúcula;Eruca vesicaria;FOL;40;M;I;1;200;3-9;Colher as folhas externas; no calor sobe para flor e fica amarga
+Couve;Brassica oleracea var. acephala;FOL;75;P;P;2;400;2-8;Colher de baixo para cima; aceita vaso de 20 litros
+Couve-flor;Brassica oleracea var. botrytis;FOL;100;P;N;2;500;2-6;Amarrar as folhas sobre a cabeça para ela ficar branca
+Brócolis;Brassica oleracea var. italica;FOL;90;P;N;2;500;2-7;Após a cabeça central colher os brotos laterais
+Repolho;Brassica oleracea var. capitata;FOL;90;P;N;2;500;2-7;Prefere clima ameno; vigiar lagartas
+Repolho-roxo;Brassica oleracea var. capitata f. rubra;FOL;100;P;N;2;500;3-7;Cor mais intensa em clima frio
+Couve-de-bruxelas;Brassica oleracea var. gemmifera;FOL;150;P;N;2;500;2-5;Ciclo longo; exige clima fresco
+Espinafre;Spinacia oleracea;FOL;50;M;I;2;250;3-8;Sobe para flor com o calor; semear no outono
+Acelga;Beta vulgaris var. cicla;FOL;60;M;P;2;300;1-12;Colher folhas externas; rebrota por meses
+Agrião;Nasturtium officinale;FOL;60;M;I;1;400;3-9;Precisa de água o tempo todo; usar pires com água
+Almeirão;Cichorium intybus;FOL;60;M;I;2;250;1-12;Rebrota após o corte; sabor levemente amargo
+Chicória;Cichorium endivia;FOL;70;M;I;2;250;3-9;Folhas amargas; ótima refogada
+Escarola;Cichorium endivia var. latifolia;FOL;75;M;I;2;250;3-8;Amarrar para clarear o miolo
+Endívia;Cichorium intybus var. foliosum;FOL;120;M;P;2;250;3-6;Ciclo em duas etapas; forçar no escuro
+Mostarda;Brassica juncea;FOL;45;M;I;2;250;3-9;Folhas picantes; colher jovens
+Couve-chinesa;Brassica rapa subsp. pekinensis;FOL;70;M;P;2;350;3-7;Prefere clima fresco
+Pak choi;Brassica rapa subsp. chinensis;FOL;45;M;I;2;300;3-9;Ciclo rápido; ótimo em vaso
+Mizuna;Brassica rapa var. japonica;FOL;35;M;I;2;250;3-9;Folhas recortadas para saladas
+Radicchio;Cichorium intybus var. foliosum;FOL;90;P;P;2;300;3-6;Sabor amargo; prefere frio
+Alface-americana;Lactuca sativa var. capitata;FOL;80;P;P;1;250;3-8;Forma cabeça; exige clima ameno
+Alface-roxa;Lactuca sativa var. crispa;FOL;55;M;I;1;250;3-9;Cor mais forte com sol da manhã
+Alface-crespa;Lactuca sativa var. crispa;FOL;50;M;I;1;250;3-9;Colher folhas externas
+Alface-romana;Lactuca sativa var. longifolia;FOL;70;M;P;1;250;3-8;Folhas firmes e crocantes
+Salsão;Apium graveolens;FOL;120;M;P;1;350;3-6;Gosta de solo sempre úmido
+Rúcula-selvagem;Diplotaxis tenuifolia;FOL;50;M;I;2;200;3-10;Mais picante e perene que a rúcula comum
+Couve-rábano;Brassica oleracea var. gongylodes;FOL;60;P;P;2;350;3-7;Come-se o caule engrossado
+Tatsoi;Brassica rapa subsp. narinosa;FOL;40;M;I;2;250;3-9;Roseta baixa; ótima para vasos
+Mâche;Valerianella locusta;FOL;60;M;I;2;200;4-8;Prefere frio; boa para o inverno
+# --- Ervas e temperos ---
+Manjericão;Ocimum basilicum;ERV;60;P;I;2;250;9-3;Beliscar as pontas; cortar as flores
+Manjericão-roxo;Ocimum basilicum var. purpurascens;ERV;60;P;I;2;250;9-3;Folhas escuras e aroma mais intenso
+Hortelã;Mentha spicata;ERV;60;M;I;2;300;1-12;Invasora; plantar sozinha em vaso
+Hortelã-pimenta;Mentha x piperita;ERV;70;M;I;2;300;1-12;Aroma forte de mentol; vaso exclusivo
+Orégano;Origanum vulgare;ERV;80;P;I;3;200;9-4;Não encharcar; sabor mais forte seco
+Alecrim;Salvia rosmarinus;ERV;120;P;I;4;200;3-10;Solo bem drenado; rega moderada
+Tomilho;Thymus vulgaris;ERV;90;P;I;4;150;3-9;Gosta de sol e de solo seco
+Tomilho-limão;Thymus citriodorus;ERV;90;P;I;4;150;3-9;Aroma cítrico; bom para chás
+Sálvia;Salvia officinalis;ERV;90;P;I;4;200;8-11|3-5;Não regar as folhas; podar após florir
+Coentro;Coriandrum sativum;ERV;45;M;I;2;250;3-9;Semear direto; sobe para flor no calor
+Endro;Anethum graveolens;ERV;60;P;P;2;250;3-9;Semear direto; não gosta de transplante
+Funcho;Foeniculum vulgare;ERV;100;P;P;2;350;3-9;Planta alta; evitar plantar perto de outras ervas
+Erva-doce;Pimpinella anisum;ERV;120;P;P;3;250;8-10;Sementes aromáticas; sol pleno
+Louro;Laurus nobilis;ERV;730;P;P;4;500;8-10;Crescimento lento; pode viver em vaso grande
+Manjerona;Origanum majorana;ERV;80;P;I;3;200;8-12;Aroma suave; sol e drenagem
+Estragão;Artemisia dracunculus;ERV;90;P;I;3;250;9-11;Prefere solo leve; podar para brotar
+Capim-limão;Cymbopogon citratus;ERV;120;P;P;3;500;9-3;Touceira alta; boa para chás
+Lavanda;Lavandula angustifolia;ERV;150;P;P;5;200;3-5|9-10;Muito sol e pouca água
+Segurelha;Satureja hortensis;ERV;70;P;I;3;200;9-12;Erva de feijão; sol pleno
+Alfavaca;Ocimum gratissimum;ERV;80;P;P;3;300;9-3;Perfumada; atrai polinizadores
+Cerefólio;Anthriscus cerefolium;ERV;60;M;I;2;250;3-8;Prefere meia sombra e frio
+Cebolinha-chinesa;Allium tuberosum;ERV;70;M;I;2;250;1-12;Sabor de alho suave; perene
+Stevia;Stevia rebaudiana;ERV;100;P;I;3;250;9-12;Folhas adoçam chás; podar sempre
+Coentro-de-caboclo;Eryngium foetidum;ERV;80;M;I;2;250;9-3;Tolera sombra; sabor forte
+Erva-de-gato;Nepeta cataria;ERV;70;P;I;3;250;9-4;Atrai gatos; proteger com tela se preciso
+Pimenta-do-reino;Piper nigrum;ERV;1095;M;N;3;600;9-12;Trepadeira tropical; ciclo longo
+# --- Bulbos ---
+Cebola;Allium cepa;BUL;150;P;N;3;300;3-6;Colher quando as folhas tombam
+Cebola-roxa;Allium cepa var. roxa;BUL;150;P;N;3;300;3-6;Bulbo roxo mais suave e doce
+Alho;Allium sativum;BUL;150;P;P;4;250;4-6;Plantar dentes no outono; curar à sombra
+Alho-poró;Allium porrum;BUL;130;P;N;2;400;3-8;Amontoar terra na base para clarear
+Chalota;Allium cepa var. aggregatum;BUL;100;P;P;3;250;3-7;Forma touceira; sabor delicado
+Cebola-de-cabeça-pequena;Allium cepa var. cepa;BUL;120;P;P;3;250;3-6;Boa para vasos fundos
+# --- Raízes e tubérculos ---
+Cenoura;Daucus carota;RAI;90;P;P;2;350;2-8;Solo fofo e sem pedras; desbastar
+Beterraba;Beta vulgaris;RAI;70;P;P;2;350;2-8;As folhas também são comestíveis
+Rabanete;Raphanus sativus;RAI;30;M;I;1;200;1-12;Ciclo rápido; ótimo para iniciantes
+Nabo;Brassica rapa var. rapa;RAI;60;P;P;2;300;3-8;Colher jovem para não amargar
+Batata;Solanum tuberosum;RAI;100;P;N;3;500;8-10|2-4;Fazer amontoa; folhas e brotos verdes são tóxicos
+Batata-doce;Ipomoea batatas;RAI;150;P;N;4;400;9-1;Rama rasteira; plantar mudas de rama
+Mandioca;Manihot esculenta;RAI;300;P;N;7;600;7-10;Cozinhar sempre; variedade brava é tóxica crua
+Inhame;Colocasia esculenta;RAI;240;M;N;3;600;8-11;Solo úmido; nunca comer cru
+Cará;Dioscorea alata;RAI;270;P;N;4;500;8-11;Trepadeira; precisa de tutor
+Gengibre;Zingiber officinale;RAI;240;M;P;3;400;8-11;Meia sombra e solo úmido; colher após secar a parte aérea
+Cúrcuma;Curcuma longa;RAI;270;M;P;3;400;8-11;Meia sombra; colher quando as folhas secam
+Mandioquinha;Arracacia xanthorrhiza;RAI;270;M;N;4;400;3-5;Prefere clima ameno; fácil de colher
+Yacon;Smallanthus sonchifolius;RAI;240;P;N;4;500;8-11;Raiz doce e crocante; planta alta
+Raiz-forte;Armoracia rusticana;RAI;240;M;P;3;350;3-8;Perene; picante forte
+Pastinaca;Pastinaca sativa;RAI;150;P;N;3;350;3-7;Parecida com a cenoura; sabor adocicado
+Rutabaga;Brassica napobrassica;RAI;120;P;N;3;350;3-7;Raiz grande; prefere frio
+# --- Hortaliças de fruto ---
+Pepino;Cucumis sativus;FRU;60;P;P;2;500;8-2;Trepadeira; usar tutor e colher jovem
+Pepino-japonês;Cucumis sativus var. japonês;FRU;60;P;P;2;500;8-2;Fino e sem amargor; trepadeira
+Abobrinha;Cucurbita pepo;FRU;55;P;N;2;600;8-3;Colher pequena; planta ocupa bastante espaço
+Abóbora-moranga;Cucurbita maxima;FRU;120;P;N;3;800;8-12;Rasteira; precisa de muito espaço
+Abóbora-cabotiá;Cucurbita moschata;FRU;110;P;N;3;800;8-12;Casca dura e polpa doce
+Berinjela;Solanum melongena;FRU;110;P;P;2;600;8-12;Adubar bem e tutorar; folhas e frutos verdes não se comem
+Jiló;Solanum aethiopicum;FRU;100;P;P;2;500;8-12;Gosta de calor; colher verde-claro
+Pimentão;Capsicum annuum;FRU;110;P;P;2;500;8-12;Vaso grande e tutor; não encharcar
+Quiabo;Abelmoschus esculentus;FRU;70;P;P;2;500;9-1;Colher pequeno e todo dia; adora calor
+Maxixe;Cucumis anguria;FRU;70;P;P;2;400;9-2;Trepadeira rústica; colher jovem
+Chuchu;Sechium edule;FRU;150;P;N;3;600;8-11;Trepadeira vigorosa; precisa de latada
+Melancia;Citrullus lanatus;FRU;90;P;N;3;800;8-12;Rasteira; precisa de espaço e calor
+Melão;Cucumis melo;FRU;90;P;N;3;700;8-12;Rasteiro; menos água ao amadurecer
+Tomate-cereja;Solanum lycopersicum var. cerasiforme;FRU;75;P;I;2;800;8-11|2-3;Ótimo para vasos de varanda; folhas e frutos verdes não se comem
+Tomate-italiano;Solanum lycopersicum var. italiano;FRU;95;P;P;2;1000;8-10|2-3;Ideal para molhos; tutorar; folhas e frutos verdes não se comem
+Pimenta-malagueta;Capsicum frutescens;FRU;100;P;I;3;400;9-12;Cresce bem em vaso; luvas ao manusear
+Pimenta-dedo-de-moça;Capsicum baccatum;FRU;100;P;I;3;400;9-12;Frutos medianos; picância moderada
+Pimenta-biquinho;Capsicum chinense;FRU;110;P;I;3;400;9-12;Sem picância; ótima em conservas
+Pimenta-jalapeño;Capsicum annuum var. jalapeño;FRU;100;P;I;3;400;9-12;Picância média; carnuda
+Pimenta-habanero;Capsicum chinense var. habanero;FRU;120;P;I;3;400;9-12;Muito picante; usar luvas
+Pimenta-de-cheiro;Capsicum chinense var. cheiro;FRU;110;P;I;3;400;9-12;Aromática e suave
+Pimenta-cumari;Capsicum baccatum var. praetermissum;FRU;110;P;I;3;400;9-12;Pequena e picante; ótima em vaso
+Alcachofra;Cynara scolymus;FRU;180;P;N;3;700;3-6;Planta grande e perene; colher os botões
+Aspargo;Asparagus officinalis;FRU;730;P;N;3;500;8-10;Perene; colheita só a partir do 2º ano
+# --- Leguminosas e grãos ---
+Feijão-carioca;Phaseolus vulgaris;LEG;90;P;N;3;400;9-11|2-3;Nunca comer cru; cozinhar bem
+Feijão-preto;Phaseolus vulgaris var. preto;LEG;90;P;N;3;400;9-11|2-3;Nunca comer cru; cozinhar bem
+Feijão-de-corda;Vigna unguiculata;LEG;75;P;N;3;350;9-12;Resistente ao calor; cozinhar bem
+Feijão-guandu;Cajanus cajan;LEG;180;P;N;5;400;9-12;Arbusto perene; melhora o solo
+Vagem;Phaseolus vulgaris var. vagem;LEG;60;P;P;2;400;9-2;Variedade trepadora precisa de tutor
+Ervilha;Pisum sativum;LEG;80;P;P;2;350;4-8;Trepadeira; prefere frio
+Ervilha-torta;Pisum sativum var. saccharatum;LEG;70;P;P;2;350;4-8;Come-se a vagem inteira
+Fava;Vicia faba;LEG;120;P;N;3;400;4-7;Prefere frio; cozinhar bem
+Grão-de-bico;Cicer arietinum;LEG;110;P;N;4;300;3-5;Gosta de clima seco e solo leve
+Lentilha;Lens culinaris;LEG;100;P;N;4;250;4-6;Clima fresco e seco
+Soja-edamame;Glycine max;LEG;90;P;N;3;400;9-12;Colher a vagem ainda verde
+Amendoim;Arachis hypogaea;LEG;120;P;N;4;400;9-12;Frutifica embaixo da terra
+Milho-verde;Zea mays;LEG;90;P;N;3;700;9-12;Plantar em blocos para polinizar
+Milho-pipoca;Zea mays var. everta;LEG;110;P;N;3;700;9-12;Deixar secar na planta
+# --- Frutíferas ---
+Morango;Fragaria x ananassa;FRT;90;P;I;2;300;3-6;Ótimo em vasos suspensos; retirar estolões
+Maracujá;Passiflora edulis;FRT;270;P;N;3;800;8-11;Trepadeira; precisa de latada e polinização
+Mamão;Carica papaya;FRT;270;P;N;3;1000;9-12|2-3;Não tolera geada nem encharcamento
+Banana;Musa spp.;FRT;365;P;N;3;1500;9-3;Gosta de muita água e adubo; desbastar os filhotes
+Abacaxi;Ananas comosus;FRT;540;P;P;7;400;9-11;Plantar a coroa; aguenta seca
+Limão-taiti;Citrus latifolia;FRT;900;P;P;4;1500;9-3;Cabe em vaso grande; podar após a colheita
+Limão-siciliano;Citrus limon;FRT;900;P;P;4;1500;9-3;Sensível ao frio forte; vaso grande
+Laranja;Citrus sinensis;FRT;1095;P;N;5;2000;9-3;Árvore de porte médio; adubar sempre
+Tangerina;Citrus reticulata;FRT;1095;P;N;5;1800;9-3;Boa para quintal; poda leve
+Acerola;Malpighia emarginata;FRT;365;P;P;4;1000;9-3;Muito vitamina C; sol pleno
+Pitanga;Eugenia uniflora;FRT;730;P;P;4;1000;9-3;Rústica; frutifica na primavera
+Goiaba;Psidium guajava;FRT;730;P;N;5;1500;9-3;Árvore rústica; colher madura
+Amora;Morus nigra;FRT;365;P;P;4;1000;6-8;Plantar por estaca no inverno
+Jabuticaba;Plinia cauliflora;FRT;2555;M;N;4;1500;9-3;Demora a frutificar; paciência
+Framboesa;Rubus idaeus;FRT;365;P;P;3;600;6-8;Prefere clima ameno; tutorar
+Mirtilo;Vaccinium corymbosum;FRT;730;P;P;3;800;6-8;Solo ácido; vaso com substrato próprio
+Uva;Vitis vinifera;FRT;730;P;N;5;1000;6-8;Parreira; precisa de poda anual
+Figo;Ficus carica;FRT;730;P;N;5;1200;6-8;Plantar por estaca; o látex irrita a pele
+Romã;Punica granatum;FRT;1095;P;N;5;1000;6-8;Rústica; boa em vaso grande
+Carambola;Averrhoa carambola;FRT;1095;P;N;5;1500;9-3;Árvore pequena; frutos em estrela
+Pitaya;Hylocereus undatus;FRT;730;P;P;7;700;9-3;Cacto trepador; precisa de suporte
+Physalis;Physalis peruviana;FRT;150;P;P;3;500;8-10;Fruto dentro de capa; arbusto leve
+Abacate;Persea americana;FRT;1460;P;N;5;2000;9-3;Árvore grande; precisa de espaço
+Manga;Mangifera indica;FRT;1460;P;N;5;2000;9-3;Árvore grande; adora calor
+Graviola;Annona muricata;FRT;1095;P;N;5;1500;9-3;Tropical; não tolera frio
+Kiwi;Actinidia deliciosa;FRT;1095;P;N;5;1200;6-8;Precisa de frio e de latada
+Pêssego;Prunus persica;FRT;1095;P;N;5;1500;6-8;Precisa de frio no inverno; poda anual
+Caqui;Diospyros kaki;FRT;1460;P;N;5;1500;6-8;Árvore decídua; frutos no outono
+# --- Medicinais (chás e uso tradicional; consulte um profissional de saúde) ---
+Camomila;Matricaria chamomilla;MED;70;P;I;2;250;3-9;Colher as flores abertas; secar à sombra
+Boldo;Plectranthus barbatus;MED;120;M;I;3;300;9-3;Boldo-da-terra; folhas carnudas; propaga por estaca
+Babosa;Aloe vera;MED;365;P;I;14;200;1-12;Deixar o solo secar entre as regas; gel só da parte interna
+Poejo;Mentha pulegium;MED;60;M;I;2;300;1-12;Rasteiro e perfumado; não usar em excesso
+Arruda;Ruta graveolens;MED;120;P;I;4;250;8-11;Irrita a pele com sol; não consumir
+Guaco;Mikania glomerata;MED;150;M;P;3;400;9-3;Trepadeira; folhas para xarope tradicional
+Erva-de-santa-maria;Dysphania ambrosioides;MED;70;P;I;3;250;9-3;Mastruz; uso só com orientação
+Confrei;Symphytum officinale;MED;90;M;P;3;400;9-3;Uso externo; não ingerir
+Equinácea;Echinacea purpurea;MED;240;P;P;4;350;8-10;Flor roxa; atrai polinizadores
+Malva;Malva sylvestris;MED;90;P;I;3;300;3-9;Flores e folhas para chás
+Tanchagem;Plantago major;MED;60;M;I;3;300;3-10;Planta rústica de gramados
+Carqueja;Baccharis trimera;MED;150;P;P;4;300;8-11;Sabor muito amargo
+Espinheira-santa;Maytenus ilicifolia;MED;540;M;N;4;600;9-3;Arbusto nativo; lento
+Erva-baleeira;Varronia curassavica;MED;180;P;P;4;400;9-3;Arbusto nativo; uso tradicional externo
+Erva-cidreira;Melissa officinalis;MED;70;M;I;2;300;1-12;Folhas de aroma cítrico para chás
+Losna;Artemisia absinthium;MED;120;P;P;4;250;8-11;Muito amarga; não usar na gravidez
+Sabugueiro;Sambucus nigra;MED;540;P;N;4;800;6-8;Flores usadas em chás; frutos crus e folhas são tóxicos
+Erva-de-são-joão;Hypericum perforatum;MED;180;P;P;4;300;8-11;Interage com vários remédios
+Marcela;Achyrocline satureioides;MED;150;P;P;4;250;8-11;Flores secas para travesseiros e chás
+Mil-folhas;Achillea millefolium;MED;120;P;I;4;250;8-11;Folhas recortadas; atrai polinizadores
+Hissopo;Hyssopus officinalis;MED;120;P;I;4;250;8-11;Flores azuis e aroma forte
+Valeriana;Valeriana officinalis;MED;240;M;P;3;350;8-10;Raízes para chás calmantes
+Citronela;Cymbopogon nardus;MED;120;P;P;3;500;9-3;Afasta mosquitos; touceira alta
+# --- PANC (plantas alimentícias não convencionais) ---
+Ora-pro-nóbis;Pereskia aculeata;PNC;90;P;P;4;400;9-3;Rica em proteínas; propaga por estaca
+Taioba;Xanthosoma sagittifolium;PNC;120;B;N;2;700;8-2;Cozinhar sempre as folhas; nunca comer cru
+Vinagreira;Hibiscus sabdariffa;PNC;120;P;P;3;500;9-12;Cálices e folhas azedinhas; chá e geleia
+Beldroega;Portulaca oleracea;PNC;50;P;I;4;200;9-3;Suculenta rica em ômega-3; cresce como erva daninha
+Bertalha;Basella alba;PNC;70;P;P;2;350;9-3;Trepadeira de folhas carnudas; tolera calor
+Caruru;Amaranthus viridis;PNC;45;P;P;3;300;9-3;Folhas ricas em ferro; rebrota rápido
+Serralha;Sonchus oleraceus;PNC;50;M;I;3;250;3-9;Folhas levemente amargas
+Dente-de-leão;Taraxacum officinale;PNC;60;P;I;3;250;3-9;Folhas amargas em saladas
+Peixinho-da-horta;Stachys byzantina;PNC;60;P;I;3;200;3-9;Folhas aveludadas fritas em massa
+Major-gomes;Talinum paniculatum;PNC;60;P;I;3;250;9-3;Folhas carnudas; muito rústica
+Capiçoba;Erechtites valerianifolius;PNC;60;M;P;3;300;9-3;Folhas para refogados
+Azedinha;Rumex acetosa;PNC;60;M;I;3;250;3-9;Sabor ácido; usar com moderação
+Jambu;Acmella oleracea;PNC;60;P;I;2;350;9-3;Provoca formigamento na boca
+Língua-de-vaca;Rumex obtusifolius;PNC;60;M;P;3;300;3-9;Folhas grandes para refogar
+Moringa;Moringa oleifera;PNC;180;P;N;4;600;9-12;Árvore de crescimento rápido; folhas nutritivas
+Chaya;Cnidoscolus aconitifolius;PNC;120;P;P;4;500;9-3;Couve-árvore; cozinhar sempre as folhas
+Mangarito;Xanthosoma mafaffa;PNC;270;M;N;3;600;8-11;Tubérculo pequeno e macio; cozinhar
+# --- Flores comestíveis e companheiras ---
+Calêndula;Calendula officinalis;FLO;70;P;I;3;250;3-9;Pétalas comestíveis; atrai polinizadores
+Capuchinha;Tropaeolum majus;FLO;60;P;I;3;300;3-9;Flores e folhas comestíveis; sabor picante
+Cravo-de-defunto;Tagetes erecta;FLO;70;P;I;3;250;8-3;Planta companheira que afasta pragas
+Girassol;Helianthus annuus;FLO;90;P;N;3;500;8-1;Gira para o sol; sementes comestíveis
+Amor-perfeito;Viola x wittrockiana;FLO;80;M;I;3;200;3-6;Flores comestíveis; prefere frio
+Violeta;Viola odorata;FLO;90;M;I;3;200;3-8;Flores perfumadas e comestíveis
+Borragem;Borago officinalis;FLO;70;P;P;3;300;3-9;Flores azuis comestíveis; usar com moderação
+Rosa;Rosa spp.;FLO;180;P;P;3;500;6-8;Pétalas comestíveis se sem agrotóxico
+Hibisco;Hibiscus rosa-sinensis;FLO;270;P;N;3;700;8-11;Arbusto florífero; flores usadas em saladas
+Alisso;Lobularia maritima;FLO;60;P;I;3;200;3-9;Florzinha perfumada; atrai polinizadores
+Cosmos;Cosmos bipinnatus;FLO;70;P;P;3;300;9-2;Fácil de cultivar; atrai abelhas
+# --- Ornamentais populares (não comestíveis) ---
+Jiboia;Epipremnum aureum;ORN;365;B;I;7;250;1-12;Aceita luz baixa; deixar secar entre as regas
+Samambaia;Nephrolepis exaltata;ORN;365;M;I;3;300;1-12;Gosta de umidade; borrifar as folhas
+Espada-de-são-jorge;Dracaena trifasciata;ORN;365;B;I;14;200;1-12;Muito resistente; evitar excesso de água
+Zamioculca;Zamioculcas zamiifolia;ORN;365;B;I;14;200;1-12;Aguenta pouca luz e pouca água
+Comigo-ninguém-pode;Dieffenbachia seguine;ORN;365;B;I;7;250;1-12;Seiva irritante; manter longe de crianças e pets
+Lírio-da-paz;Spathiphyllum wallisii;ORN;365;B;I;5;250;1-12;Murcha quando precisa de água
+Costela-de-adão;Monstera deliciosa;ORN;365;M;I;7;350;1-12;Folhas grandes e furadas; usar tutor
+Orquídea;Phalaenopsis spp.;ORN;365;M;I;7;150;1-12;Regar sem molhar o miolo; substrato de casca
+Violeta-africana;Streptocarpus ionanthus;ORN;365;M;I;4;100;1-12;Regar por baixo; não molhar as folhas
+Echeveria;Echeveria elegans;ORN;365;P;I;14;100;1-12;Suculenta; pouca água e muito sol
+Planta-jade;Crassula ovata;ORN;365;P;I;14;150;1-12;Suculenta longeva; deixar secar entre regas
+Kalanchoe;Kalanchoe blossfeldiana;ORN;365;P;I;10;120;1-12;Floresce em dias curtos; pouca água
+Cacto;Cereus spp.;ORN;365;P;I;21;100;1-12;Sol pleno; regar pouco
+Haworthia;Haworthiopsis attenuata;ORN;365;M;I;14;100;1-12;Suculenta que tolera luz indireta
+Dracena;Dracaena fragrans;ORN;365;M;I;7;300;1-12;Tolera ambientes internos claros
+Fícus-lira;Ficus lyrata;ORN;365;M;I;7;400;1-12;Evitar mudar de lugar; luz forte indireta
+Fícus-benjamim;Ficus benjamina;ORN;365;M;P;7;400;1-12;Solta folhas se mudar de lugar
+Seringueira;Ficus elastica;ORN;365;M;I;7;350;1-12;Limpar as folhas com pano úmido
+Palmeira-areca;Dypsis lutescens;ORN;365;M;I;5;400;1-12;Pet-friendly; gosta de ambiente úmido
+Bambu-da-sorte;Dracaena sanderiana;ORN;365;B;I;7;150;1-12;Cresce em água ou terra
+Maranta;Maranta leuconeura;ORN;365;B;I;5;250;1-12;Folhas fecham à noite; evitar sol direto
+Calathea;Goeppertia makoyana;ORN;365;B;I;5;250;1-12;Gosta de umidade e luz indireta
+Peperômia;Peperomia obtusifolia;ORN;365;B;I;10;150;1-12;Compacta; pouca água
+Filodendro;Philodendron hederaceum;ORN;365;B;I;7;250;1-12;Pendente; cresce em luz baixa
+Antúrio;Anthurium andraeanum;ORN;365;M;I;5;250;1-12;Flor vermelha duradoura; ambiente úmido
+Begônia;Begonia maculata;ORN;365;M;I;5;200;1-12;Não molhar as folhas
+Bromélia;Guzmania lingulata;ORN;365;M;I;7;200;1-12;Manter água no centro da roseta
+Clorofito;Chlorophytum comosum;ORN;365;M;I;5;250;1-12;Multiplica por filhotes; pet-friendly
+Hera;Hedera helix;ORN;365;M;I;5;250;1-12;Trepadeira; prefere ambientes frescos
+Singônio;Syngonium podophyllum;ORN;365;B;I;7;250;1-12;Fácil de propagar por estaca
+Trapoeraba;Tradescantia zebrina;ORN;365;M;I;5;250;1-12;Cresce rápido; podar as pontas
+Cica;Cycas revoluta;ORN;1095;M;N;7;800;9-3;Muito tóxica para pets; sementes perigosas
+Azaleia;Rhododendron simsii;ORN;365;M;P;3;400;3-8;Solo ácido; mantenha longe de pets
+Hortênsia;Hydrangea macrophylla;ORN;365;M;N;3;700;6-9;Cor depende do pH do solo
+Espirradeira;Nerium oleander;ORN;730;P;N;4;800;8-11;Todas as partes são muito tóxicas
+Copo-de-leite;Zantedeschia aethiopica;ORN;365;M;P;3;500;3-9;Gosta de solo úmido; seiva irritante
+Mamona;Ricinus communis;ORN;240;P;N;4;700;9-12;Sementes extremamente tóxicas
+Crisântemo;Chrysanthemum morifolium;ORN;180;P;P;3;400;2-6;Floresce no outono; tóxico para pets
+Gerânio-perfumado;Pelargonium graveolens;ORN;180;P;P;4;300;3-9;Folhas aromáticas; tóxico para pets
+Margarida;Leucanthemum vulgare;ORN;120;P;P;3;300;3-9;Flor simples e rústica
+Zínia;Zinnia elegans;ORN;70;P;P;3;300;9-2;Flores coloridas de verão
+Petúnia;Petunia x hybrida;ORN;70;P;P;2;300;8-11;Muito florida em sol pleno
+Lírio;Lilium spp.;ORN;180;P;P;3;400;3-8;Extremamente perigoso para gatos
+Dália;Dahlia pinnata;ORN;120;P;N;3;500;8-11;Bulbo; floresce no verão

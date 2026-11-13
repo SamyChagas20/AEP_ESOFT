@@ -1,166 +1,62 @@
 package com.ecohorta;
 
-import com.ecohorta.db.MongoConnection;
-import com.ecohorta.model.Planta;
-import com.ecohorta.service.HortaService;
+import com.ecohorta.cli.ConsoleApp;
+import com.ecohorta.config.MongoConnection;
+import com.ecohorta.demo.DemoDataLoader;
+import com.ecohorta.repository.mongo.MongoHortaRepository;
+import com.ecohorta.repository.mongo.MongoIndices;
+import com.ecohorta.repository.mongo.MongoPlantaRepository;
+import com.ecohorta.repository.mongo.MongoPlantioRepository;
+import com.ecohorta.repository.mongo.MongoSaudeRepository;
+import com.ecohorta.repository.mongo.MongoTempoRepository;
+import com.ecohorta.repository.mongo.MongoUsuarioRepository;
+import com.ecohorta.service.Servicos;
+import com.mongodb.MongoException;
+import com.mongodb.client.MongoDatabase;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.util.Scanner;
 
-/**
- * EcoHorta - Protótipo de terminal
- *
- * Ajuda a pessoa a cuidar da horta indicando época de plantio,
- * frequência de rega e cuidados gerais de 5 plantas cadastradas
- * inicialmente: Tomate, Cebolinha, Pimenta, Alface e Salsinha.
- *
- * Persistência: MongoDB (banco "ecohorta", coleção "plantas").
- */
+/** Ponto de entrada: monta as dependências (MongoDB + serviços) e abre o menu no terminal. */
 public class Main {
 
-    private static final Scanner scanner = new Scanner(System.in);
-    private static final HortaService service = new HortaService();
-
     public static void main(String[] args) {
-        System.out.println("=======================================");
-        System.out.println("        🌱 EcoHorta - Protótipo 🌱     ");
-        System.out.println("=======================================");
+        PrintStream saida = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
-        try {
-            System.out.println("Conectando ao MongoDB...");
-            service.garantirPlantasIniciais();
-            System.out.println("Conectado! Banco pronto para uso.\n");
+        try (MongoConnection conexao = MongoConnection.deAmbiente()) {
+            saida.println("Conectando ao MongoDB...");
+            conexao.verificarConexao();
 
-            menuPrincipal();
+            MongoDatabase banco = conexao.getBanco();
+            MongoIndices.criar(banco);
 
-        } catch (Exception e) {
-            System.out.println("\n❌ Não foi possível conectar ao MongoDB.");
-            System.out.println("Verifique se o MongoDB está rodando em mongodb://localhost:27017");
-            System.out.println("Detalhe do erro: " + e.getMessage());
-        } finally {
-            MongoConnection.fechar();
-            scanner.close();
-        }
-    }
+            Clock relogio = Clock.systemDefaultZone();
+            Servicos servicos = Servicos.criar(
+                    new MongoUsuarioRepository(banco),
+                    new MongoHortaRepository(banco),
+                    new MongoPlantaRepository(banco),
+                    new MongoPlantioRepository(banco),
+                    new MongoTempoRepository(banco),
+                    new MongoSaudeRepository(banco),
+                    relogio);
 
-    private static void menuPrincipal() {
-        boolean sair = false;
-        while (!sair) {
-            System.out.println("---------------------------------------");
-            System.out.println("1 - Listar todas as plantas");
-            System.out.println("2 - Ver detalhes de uma planta");
-            System.out.println("3 - Registrar rega de hoje");
-            System.out.println("4 - Ver plantas que precisam de rega hoje");
-            System.out.println("5 - Cadastrar nova planta");
-            System.out.println("0 - Sair");
-            System.out.println("---------------------------------------");
-            System.out.print("Escolha uma opção: ");
-
-            String opcao = scanner.nextLine().trim();
-            System.out.println();
-
-            switch (opcao) {
-                case "1" -> listarPlantas();
-                case "2" -> verDetalhes();
-                case "3" -> registrarRega();
-                case "4" -> plantasParaRegarHoje();
-                case "5" -> cadastrarPlanta();
-                case "0" -> {
-                    sair = true;
-                    System.out.println("Até a próxima! 🌿");
-                }
-                default -> System.out.println("Opção inválida, tente novamente.\n");
+            Servicos.ResumoCarga carga = servicos.carregarDadosIniciais();
+            if (carga.plantas() + carga.estacoes() + carga.registrosSaude() > 0) {
+                saida.println("Dados iniciais carregados: " + carga.plantas() + " planta(s), "
+                        + carga.estacoes() + " estação(ões) e " + carga.registrosSaude()
+                        + " registro(s) de saúde.");
             }
-        }
-    }
 
-    private static void listarPlantas() {
-        List<Planta> plantas = service.listarTodas();
-        System.out.println("== Plantas cadastradas (" + plantas.size() + ") ==");
-        for (Planta p : plantas) {
-            System.out.println("- " + p);
-        }
-        System.out.println();
-    }
+            Scanner entrada = new Scanner(System.in, StandardCharsets.UTF_8);
+            new ConsoleApp(servicos, new DemoDataLoader(servicos, relogio), entrada, saida, relogio).executar();
 
-    private static void verDetalhes() {
-        System.out.print("Nome da planta: ");
-        String nome = scanner.nextLine().trim();
-        Planta p = service.buscarPorNome(nome);
-
-        if (p == null) {
-            System.out.println("Planta não encontrada.\n");
-            return;
-        }
-
-        System.out.println("== " + p.getNome() + " ==");
-        System.out.println("Época de plantio : " + p.getEpocaPlantio());
-        System.out.println("Rega recomendada : a cada " + p.getFrequenciaRegaDias() + " dia(s)");
-        System.out.println("Dias até colheita: " + p.getDiasParaColheita());
-        System.out.println("Cuidados         : " + p.getCuidados());
-        System.out.println("Última rega      : " +
-                (p.getUltimaRega() == null ? "ainda não regada" : p.getUltimaRega().format(Planta.FORMATO_DATA)));
-        System.out.println("Precisa regar hoje? " + (p.precisaRegarHoje() ? "SIM ⚠️" : "não"));
-        System.out.println();
-    }
-
-    private static void registrarRega() {
-        System.out.print("Nome da planta que foi regada agora: ");
-        String nome = scanner.nextLine().trim();
-
-        boolean ok = service.registrarRegaHoje(nome);
-        if (ok) {
-            System.out.println("✅ Rega registrada para " + nome + " em " +
-                    LocalDate.now().format(Planta.FORMATO_DATA) + ".\n");
-        } else {
-            System.out.println("Planta não encontrada ou nada foi alterado.\n");
-        }
-    }
-
-    private static void plantasParaRegarHoje() {
-        List<Planta> plantas = service.plantasParaRegarHoje();
-        if (plantas.isEmpty()) {
-            System.out.println("🎉 Nenhuma planta precisa de rega hoje!\n");
-            return;
-        }
-        System.out.println("⚠️  Plantas que precisam de rega hoje:");
-        for (Planta p : plantas) {
-            System.out.println("- " + p.getNome());
-        }
-        System.out.println();
-    }
-
-    private static void cadastrarPlanta() {
-        System.out.println("== Cadastro de nova planta ==");
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine().trim();
-
-        System.out.print("Época de plantio: ");
-        String epoca = scanner.nextLine().trim();
-
-        System.out.print("Frequência de rega (a cada quantos dias): ");
-        int freqRega = lerInteiro();
-
-        System.out.print("Dias até a colheita: ");
-        int diasColheita = lerInteiro();
-
-        System.out.print("Cuidados: ");
-        String cuidados = scanner.nextLine().trim();
-
-        Planta nova = new Planta(nome, epoca, freqRega, diasColheita, cuidados, null);
-        service.adicionarPlanta(nova);
-
-        System.out.println("✅ Planta \"" + nome + "\" cadastrada com sucesso!\n");
-    }
-
-    private static int lerInteiro() {
-        while (true) {
-            try {
-                return Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.print("Digite um número válido: ");
-            }
+        } catch (MongoException e) {
+            saida.println("\n❌ Não foi possível usar o MongoDB (" + MongoConnection.URI_PADRAO + " por padrão).");
+            saida.println("Verifique se ele está em execução (veja o README: 'docker compose up -d').");
+            saida.println("Detalhe: " + e.getMessage());
+            System.exit(1);
         }
     }
 }
