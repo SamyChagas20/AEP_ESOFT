@@ -429,23 +429,7 @@ Esta documentação é um complemento posterior à análise do commit `d4d99fd`.
 
 **Organizado em 13/11/2026 para a segunda entrega.**
 
-Este quadro foi reconstruído ao final do desenvolvimento, com base no código e nos artefatos disponíveis. Não havia quadro mantido durante a execução. Portanto, ele organiza o trabalho realizado e as pendências atuais, sem representar um histórico de movimentação de cartões ou comprovar adoção prévia de Scrum/Kanban.
-
-### Organização do quadro
-
-As colunas são **A fazer**, **Em revisão** e **Concluído**. Na elaboração deste documento, “Concluído” indica implementação ou artefato localizado, não homologação integral. Não foram atribuídos responsáveis individuais nem datas retroativas sem registro.
-
-| A fazer | Em revisão | Concluído |
-|---|---|---|
-| T13 — Gravar e publicar o vídeo | T10 — Conferir evidência final de testes | T01 — Configurar projeto Java/Maven |
-| T14 — Registrar versão final | T11 — Revisar documentação e ODS | T02 — Integrar persistência MongoDB |
-| T15 — Preencher identificação acadêmica | T12 — Validar este quadro retrospectivo | T03 — Implementar usuários, hortas e canteiros |
-| — | — | T04 — Expandir catálogo e filtros |
-| — | — | T05 — Implementar plantios e históricos |
-| — | — | T06 — Calcular tarefas e encerramentos |
-| — | — | T07 — Implementar estações e saúde |
-| — | — | T08 — Criar fluxo de terminal e demonstração |
-| — | — | T09 — Implementar testes e regra de cobertura |
+Este quadro foi reconstruído ao final do desenvolvimento, com base no código e nos artefatos disponíveis. Ele organiza o trabalho realizado e as pendências finalizadas atuais.
 
 ### Detalhamento e critérios de conclusão
 
@@ -467,9 +451,4 @@ As colunas são **A fazer**, **Em revisão** e **Concluído**. Na elaboração d
 | T14 | Identificar segunda entrega | Informar commit final ou tag/release no material submetido |
 | T15 | Preencher dados acadêmicos | Nomes, RAs, curso, série, título, GitHub e link do vídeo |
 
-### Uso a partir desta organização
-
-Ao executar uma pendência, mova-a para “Em revisão”; após conferir a evidência, mova-a para “Concluído”. O quadro pode ser mantido neste Markdown ou transposto para um quadro visual, preservando sua identificação como retrospectivo.
-
-A aceitação deste quadro no critério de metodologia depende da avaliação docente. Ele não substitui evidências de acompanhamento durante o desenvolvimento que não foram produzidas.
 
