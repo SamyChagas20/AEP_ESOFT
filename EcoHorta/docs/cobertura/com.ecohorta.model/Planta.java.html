@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Planta.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.model</a> &gt; <span class="el_source">Planta.java</span></div><h1>Planta.java</h1><pre class="source lang-java linenums">package com.ecohorta.model;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.OptionalInt;
+import java.util.Optional;
+
+public class Planta {
+
+    private String id;
+    private final String nome;
+    private final String nomeCientifico;
+    private final int diasParaColheita;
+    private final String luminosidade;
+    private final RegaRecomendada rega;
+<span class="fc" id="L19">    private final List&lt;JanelaPlantio&gt; janelasPlantio = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L20">    private final List&lt;Cuidado&gt; cuidados = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L21">    private CategoriaPlanta categoria = CategoriaPlanta.OUTRA;</span>
+<span class="fc" id="L22">    private NivelLuz nivelLuz = NivelLuz.PLENA;</span>
+<span class="fc" id="L23">    private AdaptacaoApartamento apartamento = new AdaptacaoApartamento(NivelApartamento.NAO_RECOMENDADO, &quot;&quot;);</span>
+<span class="fc" id="L24">    private boolean comestivel = true;</span>
+
+    public Planta(String nome, String nomeCientifico, int diasParaColheita,
+<span class="fc" id="L27">                  String luminosidade, RegaRecomendada rega) {</span>
+<span class="fc bfc" id="L28" title="All 4 branches covered.">        if (nome == null || nome.isBlank()) {</span>
+<span class="fc" id="L29">            throw new IllegalArgumentException(&quot;O nome da planta é obrigatório.&quot;);</span>
+        }
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (diasParaColheita &lt; 1) {</span>
+<span class="fc" id="L32">            throw new IllegalArgumentException(&quot;Os dias para a colheita devem ser maiores que zero.&quot;);</span>
+        }
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (rega == null) {</span>
+<span class="fc" id="L35">            throw new IllegalArgumentException(&quot;A recomendação de rega é obrigatória.&quot;);</span>
+        }
+<span class="fc" id="L37">        this.nome = nome.trim();</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        this.nomeCientifico = nomeCientifico == null ? &quot;&quot; : nomeCientifico.trim();</span>
+<span class="fc" id="L39">        this.diasParaColheita = diasParaColheita;</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        this.luminosidade = luminosidade == null ? &quot;&quot; : luminosidade.trim();</span>
+<span class="fc" id="L41">        this.rega = rega;</span>
+<span class="fc" id="L42">    }</span>
+
+    public Planta adicionarJanela(int mesInicio, int mesFim, String observacao) {
+<span class="fc" id="L45">        return adicionarJanela(new JanelaPlantio(mesInicio, mesFim, observacao));</span>
+    }
+
+    public Planta adicionarJanela(JanelaPlantio janela) {
+<span class="fc" id="L49">        janelasPlantio.add(Objects.requireNonNull(janela));</span>
+<span class="fc" id="L50">        return this;</span>
+    }
+
+    public Planta adicionarCuidado(TipoCuidado tipo, String descricao, int frequenciaDias) {
+<span class="fc" id="L54">        return adicionarCuidado(new Cuidado(tipo, descricao, frequenciaDias));</span>
+    }
+
+    public Planta adicionarCuidado(Cuidado cuidado) {
+<span class="fc" id="L58">        cuidados.add(Objects.requireNonNull(cuidado));</span>
+<span class="fc" id="L59">        return this;</span>
+    }
+
+    public Planta categoria(CategoriaPlanta categoria) {
+<span class="fc" id="L63">        this.categoria = Objects.requireNonNull(categoria);</span>
+<span class="fc" id="L64">        return this;</span>
+    }
+
+    public Planta nivelLuz(NivelLuz nivelLuz) {
+<span class="fc" id="L68">        this.nivelLuz = Objects.requireNonNull(nivelLuz);</span>
+<span class="fc" id="L69">        return this;</span>
+    }
+
+    public Planta apartamento(AdaptacaoApartamento apartamento) {
+<span class="fc" id="L73">        this.apartamento = Objects.requireNonNull(apartamento);</span>
+<span class="fc" id="L74">        return this;</span>
+    }
+
+    public Planta comestivel(boolean comestivel) {
+<span class="fc" id="L78">        this.comestivel = comestivel;</span>
+<span class="fc" id="L79">        return this;</span>
+    }
+
+    public boolean epocaAdequada(int mes) {
+<span class="fc" id="L83">        return janelaPara(mes).isPresent();</span>
+    }
+
+    public boolean epocaAdequada(LocalDate data) {
+<span class="fc" id="L87">        return epocaAdequada(data.getMonthValue());</span>
+    }
+
+    public Optional&lt;JanelaPlantio&gt; janelaPara(int mes) {
+<span class="fc" id="L91">        return janelasPlantio.stream().filter(j -&gt; j.contem(mes)).findFirst();</span>
+    }
+
+    public List&lt;Estacao&gt; getEstacoes() {
+<span class="fc" id="L95">        List&lt;Estacao&gt; resultado = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        for (Estacao estacao : Estacao.values()) {</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">            if (estacao.getMeses().stream().anyMatch(this::epocaAdequada)) {</span>
+<span class="fc" id="L98">                resultado.add(estacao);</span>
+            }
+        }
+<span class="fc" id="L101">        return resultado;</span>
+    }
+
+    public OptionalInt getMelhorMesPlantio() {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (janelasPlantio.isEmpty()) {</span>
+<span class="fc" id="L106">            return OptionalInt.empty();</span>
+        }
+<span class="fc" id="L108">        JanelaPlantio janela = janelasPlantio.get(0);</span>
+<span class="fc" id="L109">        int tamanho = ((janela.mesFim() - janela.mesInicio() + 12) % 12) + 1;</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (tamanho == 12) {</span>
+<span class="fc" id="L111">            return OptionalInt.empty();</span>
+        }
+<span class="fc" id="L113">        return OptionalInt.of(((janela.mesInicio() - 1 + (tamanho - 1) / 2) % 12) + 1);</span>
+    }
+
+    public List&lt;Cuidado&gt; cuidadosPeriodicos() {
+<span class="fc" id="L117">        return cuidados.stream().filter(Cuidado::periodico).toList();</span>
+    }
+
+    public String getId() {
+<span class="fc" id="L121">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="fc" id="L125">        this.id = id;</span>
+<span class="fc" id="L126">    }</span>
+
+    public String getNome() {
+<span class="fc" id="L129">        return nome;</span>
+    }
+
+    public String getNomeBusca() {
+<span class="fc" id="L133">        return Textos.normalizar(nome);</span>
+    }
+
+    public String getNomeCientifico() {
+<span class="fc" id="L137">        return nomeCientifico;</span>
+    }
+
+    public int getDiasParaColheita() {
+<span class="fc" id="L141">        return diasParaColheita;</span>
+    }
+
+    public String getLuminosidade() {
+<span class="fc" id="L145">        return luminosidade;</span>
+    }
+
+    public RegaRecomendada getRega() {
+<span class="fc" id="L149">        return rega;</span>
+    }
+
+    public CategoriaPlanta getCategoria() {
+<span class="fc" id="L153">        return categoria;</span>
+    }
+
+    public NivelLuz getNivelLuz() {
+<span class="fc" id="L157">        return nivelLuz;</span>
+    }
+
+    public int getHorasSolMinimas() {
+<span class="fc" id="L161">        return nivelLuz.getHorasMinimas();</span>
+    }
+
+    public AdaptacaoApartamento getApartamento() {
+<span class="fc" id="L165">        return apartamento;</span>
+    }
+
+    public boolean isComestivel() {
+<span class="fc" id="L169">        return comestivel;</span>
+    }
+
+    public List&lt;JanelaPlantio&gt; getJanelasPlantio() {
+<span class="fc" id="L173">        return Collections.unmodifiableList(janelasPlantio);</span>
+    }
+
+    public List&lt;Cuidado&gt; getCuidados() {
+<span class="fc" id="L177">        return Collections.unmodifiableList(cuidados);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

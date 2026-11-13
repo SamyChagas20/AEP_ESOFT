@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/** Persistência de hortas (com canteiros embutidos) na coleção "hortas". */
 public class MongoHortaRepository implements HortaRepository {
 
     public static final String COLECAO = "hortas";

@@ -9,11 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * Uma planta (ou lote de plantas) efetivamente cultivada em um canteiro.
- * Liga "hortas" e "plantas" por referência de id e guarda o histórico de
- * regas e cuidados como listas de subdocumentos.
- */
 public class Plantio {
 
     private String id;
@@ -44,7 +39,6 @@ public class Plantio {
         this.dataPlantio = Objects.requireNonNull(dataPlantio, "A data do plantio é obrigatória.");
     }
 
-    /** Reconstrói um plantio a partir do banco de dados, sem aplicar regras de transição. */
     public static Plantio restaurar(String id, String hortaId, String plantaId, String canteiro,
                                     int quantidade, LocalDate dataPlantio, StatusPlantio status,
                                     LocalDate dataEncerramento, List<RegistroRega> regas,
@@ -57,8 +51,6 @@ public class Plantio {
         p.cuidados.addAll(cuidados);
         return p;
     }
-
-    // ---------- comportamentos ----------
 
     public RegistroRega registrarRega(LocalDate data, int quantidadeMl, String observacao) {
         exigirAtivo();
@@ -106,8 +98,6 @@ public class Plantio {
         }
     }
 
-    // ---------- cálculos de calendário ----------
-
     public boolean isAtivo() {
         return status == StatusPlantio.ATIVO;
     }
@@ -116,10 +106,6 @@ public class Plantio {
         return regas.stream().map(RegistroRega::data).max(Comparator.naturalOrder());
     }
 
-    /**
-     * Data da próxima rega: última rega + frequência da planta.
-     * Se ainda não foi regado, a primeira rega é devida já na data do plantio.
-     */
     public LocalDate proximaRega(Planta planta) {
         return ultimaRega()
                 .map(ultima -> ultima.plusDays(planta.getRega().frequenciaDias()))
@@ -133,7 +119,6 @@ public class Plantio {
                 .max(Comparator.naturalOrder());
     }
 
-    /** Data do próximo cuidado periódico (último do mesmo tipo, ou o plantio, + frequência). */
     public LocalDate proximoCuidado(Cuidado cuidado) {
         LocalDate base = ultimoCuidado(cuidado.tipo()).orElse(dataPlantio);
         return base.plusDays(cuidado.frequenciaDias());
@@ -146,8 +131,6 @@ public class Plantio {
     public long diasDesdePlantio(LocalDate hoje) {
         return ChronoUnit.DAYS.between(dataPlantio, hoje);
     }
-
-    // ---------- getters ----------
 
     public String getId() {
         return id;

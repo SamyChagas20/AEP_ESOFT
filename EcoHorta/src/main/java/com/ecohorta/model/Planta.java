@@ -8,11 +8,6 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Optional;
 
-/**
- * Espécie do catálogo. Possui documentos aninhados (rega, adaptação a apartamento),
- * listas de subdocumentos (janelas de plantio e cuidados) e se relaciona com a
- * coleção "tempo" pelas estações em que pode ser plantada.
- */
 public class Planta {
 
     private String id;
@@ -45,8 +40,6 @@ public class Planta {
         this.luminosidade = luminosidade == null ? "" : luminosidade.trim();
         this.rega = rega;
     }
-
-    // ---------- montagem fluente ----------
 
     public Planta adicionarJanela(int mesInicio, int mesFim, String observacao) {
         return adicionarJanela(new JanelaPlantio(mesInicio, mesFim, observacao));
@@ -86,9 +79,6 @@ public class Planta {
         return this;
     }
 
-    // ---------- calendário e estações ----------
-
-    /** Verdadeiro se o mês (1-12) está em alguma janela de plantio. */
     public boolean epocaAdequada(int mes) {
         return janelaPara(mes).isPresent();
     }
@@ -97,12 +87,10 @@ public class Planta {
         return epocaAdequada(data.getMonthValue());
     }
 
-    /** Primeira janela de plantio que contém o mês. */
     public Optional<JanelaPlantio> janelaPara(int mes) {
         return janelasPlantio.stream().filter(j -> j.contem(mes)).findFirst();
     }
 
-    /** Estações (coleção "tempo") em que a planta tem alguma janela de plantio. */
     public List<Estacao> getEstacoes() {
         List<Estacao> resultado = new ArrayList<>();
         for (Estacao estacao : Estacao.values()) {
@@ -113,10 +101,6 @@ public class Planta {
         return resultado;
     }
 
-    /**
-     * Melhor mês para plantar: o mês central da primeira janela de plantio.
-     * Janelas de ano todo não têm um "melhor" mês.
-     */
     public OptionalInt getMelhorMesPlantio() {
         if (janelasPlantio.isEmpty()) {
             return OptionalInt.empty();
@@ -133,8 +117,6 @@ public class Planta {
         return cuidados.stream().filter(Cuidado::periodico).toList();
     }
 
-    // ---------- getters ----------
-
     public String getId() {
         return id;
     }
@@ -147,7 +129,6 @@ public class Planta {
         return nome;
     }
 
-    /** Nome sem acentos e em minúsculas, usado em buscas e ordenação. */
     public String getNomeBusca() {
         return Textos.normalizar(nome);
     }
@@ -184,7 +165,6 @@ public class Planta {
         return apartamento;
     }
 
-    /** Usada para consumo (alimento, tempero ou chá). Falso para ornamentais. */
     public boolean isComestivel() {
         return comestivel;
     }

@@ -10,8 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TempoESaudeModelTest {
 
-    // ---------------- Tempo ----------------
-
     @Test
     void tempoGuardaEstacaoMelhorMesEMeses() {
         Tempo tempo = new Tempo(Estacao.PRIMAVERA, " Clima bom ", 10, " Porque sim ")
@@ -39,8 +37,6 @@ class TempoESaudeModelTest {
         assertEquals("", tempo.getDescricao());
         assertThrows(IllegalArgumentException.class, () -> tempo.adicionarMes(1, ""));
     }
-
-    // ---------------- Saúde ----------------
 
     @Test
     void itemSaudeValidaCampos() {

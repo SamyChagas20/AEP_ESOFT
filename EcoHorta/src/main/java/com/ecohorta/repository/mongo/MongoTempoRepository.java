@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/** Persistência das estações do ano na coleção "tempo". */
 public class MongoTempoRepository implements TempoRepository {
 
     public static final String COLECAO = "tempo";

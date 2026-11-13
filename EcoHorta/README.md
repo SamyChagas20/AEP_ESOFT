@@ -107,20 +107,41 @@ O menu **4 – O que plantar neste mês?** usa a data atual para sugerir plantas
 Para explorar as novidades sem precisar entrar: **2 → 4** (plantas ideais para apartamento, filtrando por luz),
 **3** (melhor mês de cada estação) e **5 → 1** (plantas perigosas para gatos).
 
-## Testes
+## Testes e cobertura — segunda entrega
+
+Requisitos: JDK 17 e Maven 3.8 ou superior. Para a medição completa, inicie o MongoDB:
 
 ```bash
-mvn test        # roda os testes e gera o relatório de cobertura
-mvn verify      # testes + verificação do mínimo de 70% de cobertura (falha se abaixo)
+docker compose up -d
+mvn clean verify -Dmongo.obrigatorio=true
 ```
 
-- Relatório HTML de cobertura: `target/site/jacoco/index.html`
-- **Testes unitários e de fluxo** (não precisam de MongoDB): usam repositórios em memória que guardam
-  documentos BSON pelos mesmos *mappers* do MongoDB. Incluem a simulação completa do menu de terminal.
-- **Testes de integração** (`MongoRepositoriosIntegracaoTest`): usam um MongoDB real em um banco temporário
-  (apagado no final). Se o MongoDB não estiver acessível, são **ignorados automaticamente**.
-  Para rodá-los: `docker compose up -d` e depois `mvn verify`.
-- Os testes usam um relógio fixo (10/11/2026), então são determinísticos.
+- **Resultado validado em 13/11/2026:** 220 testes aprovados, sem falhas ou erros,
+  incluindo 16 testes de integração com MongoDB real.
+- **Cobertura de linhas: 98,20%** (1.907 de 1.942 linhas executáveis), calculada sobre
+  todo o código de produção, sem exclusões de classes ou pacotes.
+- O JaCoCo mantém o mínimo de **70% de linhas** e reprova `mvn verify` abaixo desse valor.
+- Relatório desta versão: [docs/cobertura/index.html](docs/cobertura/index.html).
+  Baixe o projeto e abra esse arquivo no navegador; o GitHub exibe o código HTML.
+- Ao executar novamente, o relatório é gerado em `target/site/jacoco/index.html`,
+  com versões XML e CSV na mesma pasta.
+- Os testes de integração usam um banco temporário próprio, apagado ao final.
+  `MONGODB_URI` permite indicar outro servidor.
+- `-Dmongo.obrigatorio=true` reprova a execução se o banco estiver indisponível.
+  A CI usa essa opção e aguarda a verificação de saúde do MongoDB.
+
+Para testar localmente sem exigir MongoDB:
+
+```bash
+mvn clean verify
+```
+
+Sem servidor acessível, a suíte de integração é abortada por uma condição do JUnit.
+Nesse cenário foram aprovados **204 testes unitários e de fluxo**, com **89,70%** de
+cobertura de linhas. Os testes de fluxo usam repositórios em memória com os mesmos
+mapeadores BSON da aplicação e relógio fixo em 10/11/2026.
+
+Detalhes dos cenários e da medição: [docs/TESTES_E_COBERTURA.md](docs/TESTES_E_COBERTURA.md).
 
 ## Estrutura do projeto
 

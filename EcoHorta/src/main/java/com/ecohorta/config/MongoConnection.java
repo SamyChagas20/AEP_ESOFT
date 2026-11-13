@@ -9,13 +9,6 @@ import org.bson.Document;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Conexão com o MongoDB.
- *
- * Variáveis de ambiente opcionais:
- *   MONGODB_URI  (padrão: mongodb://localhost:27017)
- *   MONGODB_DB   (padrão: ecohorta)
- */
 public class MongoConnection implements AutoCloseable {
 
     public static final String URI_PADRAO = "mongodb://localhost:27017";
@@ -34,7 +27,6 @@ public class MongoConnection implements AutoCloseable {
         this.banco = cliente.getDatabase(nomeBanco);
     }
 
-    /** Cria a conexão a partir das variáveis de ambiente (ou dos valores padrão). */
     public static MongoConnection deAmbiente() {
         return new MongoConnection(
                 valorOuPadrao(System.getenv("MONGODB_URI"), URI_PADRAO),
@@ -49,7 +41,6 @@ public class MongoConnection implements AutoCloseable {
         return banco;
     }
 
-    /** Executa um "ping"; lança MongoException se o servidor não estiver acessível. */
     public void verificarConexao() {
         banco.runCommand(new Document("ping", 1));
     }

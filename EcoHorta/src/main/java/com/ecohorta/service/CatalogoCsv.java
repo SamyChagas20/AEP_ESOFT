@@ -17,11 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Lê o catálogo ampliado do arquivo {@code /catalogo/plantas.csv}.
- * Colunas: nome;científico;categoria;dias;luz;apartamento;regaDias;regaMl;janelas;dica
- * (a última coluna recebe o resto da linha, então a dica pode conter ponto e vírgula).
- */
 public final class CatalogoCsv {
 
     public static final String RECURSO = "/catalogo/plantas.csv";
@@ -42,7 +37,6 @@ public final class CatalogoCsv {
     private CatalogoCsv() {
     }
 
-    /** Carrega o recurso padrão do projeto. */
     public static List<Planta> carregar() {
         try (InputStream in = CatalogoCsv.class.getResourceAsStream(RECURSO)) {
             if (in == null) {

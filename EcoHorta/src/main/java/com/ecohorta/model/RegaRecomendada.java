@@ -1,9 +1,5 @@
 package com.ecohorta.model;
 
-/**
- * Recomendação de rega de uma planta.
- * É um subdocumento aninhado (documento dentro de documento) em "plantas".
- */
 public record RegaRecomendada(int frequenciaDias, int quantidadeMl, String observacao) {
 
     public RegaRecomendada {

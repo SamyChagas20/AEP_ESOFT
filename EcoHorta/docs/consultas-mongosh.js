@@ -1,7 +1,3 @@
-// Consultas de exemplo para explorar o banco no mongosh:
-//   mongosh "mongodb://localhost:27017/ecohorta" --file docs/consultas-mongosh.js
-// (rode antes o app e use a opção "4 - dados de demonstração")
-
 const banco = db.getSiblingDB("ecohorta");
 
 print("\n== 1) Plantas que podem ser plantadas em novembro (mês 11), incluindo janelas que cruzam o ano ==");
@@ -49,11 +45,6 @@ banco.plantios.aggregate([
 
 print("\n== 6) Plantios por status (mesma agregação usada pelo app) ==");
 banco.plantios.aggregate([{ $group: { _id: "$status", total: { $sum: 1 } } }]).forEach(printjson);
-
-// ======================================================================
-// Consultas das coleções "tempo" e "saude" e dos novos campos de "plantas"
-// (rode antes o app uma vez: ele carrega o catálogo, as estações e a saúde)
-// ======================================================================
 
 print("\n== 7) Estações com o melhor mês de cada uma ==");
 banco.tempo.find({}, { _id: 0, nome: 1, melhorMes: 1, justificativaMelhorMes: 1 }).sort({ ordem: 1 }).forEach(printjson);

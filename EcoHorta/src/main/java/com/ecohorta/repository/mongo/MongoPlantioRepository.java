@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/** Persistência de plantios (referências + histórico embutido) na coleção "plantios". */
 public class MongoPlantioRepository implements PlantioRepository {
 
     public static final String COLECAO = "plantios";
@@ -60,7 +59,6 @@ public class MongoPlantioRepository implements PlantioRepository {
                 .into(new ArrayList<>());
     }
 
-    /** Usa o pipeline de agregação do MongoDB ($match + $group) para contar por status. */
     @Override
     public Map<StatusPlantio, Long> contarPorStatus(String hortaId) {
         Map<StatusPlantio, Long> resultado = new EnumMap<>(StatusPlantio.class);

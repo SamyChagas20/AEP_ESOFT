@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MongoPlantioRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.repository.mongo</a> &gt; <span class="el_source">MongoPlantioRepository.java</span></div><h1>MongoPlantioRepository.java</h1><pre class="source lang-java linenums">package com.ecohorta.repository.mongo;
+
+import com.ecohorta.model.Plantio;
+import com.ecohorta.model.StatusPlantio;
+import com.ecohorta.repository.PlantioRepository;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.Sorts;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+public class MongoPlantioRepository implements PlantioRepository {
+
+    public static final String COLECAO = &quot;plantios&quot;;
+
+    private final MongoCollection&lt;Document&gt; colecao;
+
+<span class="fc" id="L28">    public MongoPlantioRepository(MongoDatabase banco) {</span>
+<span class="fc" id="L29">        this.colecao = banco.getCollection(COLECAO);</span>
+<span class="fc" id="L30">    }</span>
+
+    @Override
+    public Plantio salvar(Plantio plantio) {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (plantio.getId() == null) {</span>
+<span class="fc" id="L35">            plantio.setId(new ObjectId().toHexString());</span>
+        }
+<span class="fc" id="L37">        colecao.replaceOne(Filters.eq(&quot;_id&quot;, new ObjectId(plantio.getId())),</span>
+<span class="fc" id="L38">                PlantioMapper.paraDocumento(plantio), new ReplaceOptions().upsert(true));</span>
+<span class="fc" id="L39">        return plantio;</span>
+    }
+
+    @Override
+    public Optional&lt;Plantio&gt; buscarPorId(String id) {
+<span class="fc bfc" id="L44" title="All 4 branches covered.">        if (id == null || !ObjectId.isValid(id)) {</span>
+<span class="fc" id="L45">            return Optional.empty();</span>
+        }
+<span class="fc" id="L47">        Document doc = colecao.find(Filters.eq(&quot;_id&quot;, new ObjectId(id))).first();</span>
+<span class="fc" id="L48">        return Optional.ofNullable(doc).map(PlantioMapper::deDocumento);</span>
+    }
+
+    @Override
+    public List&lt;Plantio&gt; listarPorHorta(String hortaId) {
+<span class="fc bfc" id="L53" title="All 4 branches covered.">        if (hortaId == null || !ObjectId.isValid(hortaId)) {</span>
+<span class="fc" id="L54">            return List.of();</span>
+        }
+<span class="fc" id="L56">        return colecao.find(Filters.eq(&quot;hortaId&quot;, new ObjectId(hortaId)))</span>
+<span class="fc" id="L57">                .sort(Sorts.ascending(&quot;dataPlantio&quot;))</span>
+<span class="fc" id="L58">                .map(PlantioMapper::deDocumento)</span>
+<span class="fc" id="L59">                .into(new ArrayList&lt;&gt;());</span>
+    }
+
+    @Override
+    public Map&lt;StatusPlantio, Long&gt; contarPorStatus(String hortaId) {
+<span class="fc" id="L64">        Map&lt;StatusPlantio, Long&gt; resultado = new EnumMap&lt;&gt;(StatusPlantio.class);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        for (StatusPlantio s : StatusPlantio.values()) {</span>
+<span class="fc" id="L66">            resultado.put(s, 0L);</span>
+        }
+<span class="fc bfc" id="L68" title="All 4 branches covered.">        if (hortaId == null || !ObjectId.isValid(hortaId)) {</span>
+<span class="fc" id="L69">            return resultado;</span>
+        }
+<span class="fc" id="L71">        List&lt;Document&gt; grupos = colecao.aggregate(List.of(</span>
+<span class="fc" id="L72">                Aggregates.match(Filters.eq(&quot;hortaId&quot;, new ObjectId(hortaId))),</span>
+<span class="fc" id="L73">                Aggregates.group(&quot;$status&quot;, Accumulators.sum(&quot;total&quot;, 1))</span>
+<span class="fc" id="L74">        )).into(new ArrayList&lt;&gt;());</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (Document g : grupos) {</span>
+<span class="fc" id="L76">            resultado.put(StatusPlantio.valueOf(g.getString(&quot;_id&quot;)), ((Number) g.get(&quot;total&quot;)).longValue());</span>
+<span class="fc" id="L77">        }</span>
+<span class="fc" id="L78">        return resultado;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

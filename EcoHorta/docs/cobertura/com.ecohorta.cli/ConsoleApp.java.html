@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConsoleApp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.cli</a> &gt; <span class="el_source">ConsoleApp.java</span></div><h1>ConsoleApp.java</h1><pre class="source lang-java linenums">package com.ecohorta.cli;
+
+import com.ecohorta.demo.DemoDataLoader;
+import com.ecohorta.model.CategoriaPlanta;
+import com.ecohorta.model.Canteiro;
+import com.ecohorta.model.Cuidado;
+import com.ecohorta.model.Estacao;
+import com.ecohorta.model.Gravidade;
+import com.ecohorta.model.Horta;
+import com.ecohorta.model.ItemSaude;
+import com.ecohorta.model.JanelaPlantio;
+import com.ecohorta.model.MesDaEstacao;
+import com.ecohorta.model.Meses;
+import com.ecohorta.model.NivelApartamento;
+import com.ecohorta.model.NivelLuz;
+import com.ecohorta.model.Planta;
+import com.ecohorta.model.Plantio;
+import com.ecohorta.model.RegistroSaude;
+import com.ecohorta.model.StatusPlantio;
+import com.ecohorta.model.Tarefa;
+import com.ecohorta.model.Tempo;
+import com.ecohorta.model.TipoRegistroSaude;
+import com.ecohorta.model.TipoTarefa;
+import com.ecohorta.model.Usuario;
+import com.ecohorta.repository.FiltroPlantas;
+import com.ecohorta.service.RegraDeNegocioException;
+import com.ecohorta.service.SaudeService;
+import com.ecohorta.service.Servicos;
+
+import java.io.PrintStream;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Scanner;
+import java.util.function.Function;
+
+public class ConsoleApp {
+
+<span class="fc" id="L49">    private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern(&quot;dd/MM/uuuu&quot;).withResolverStyle(ResolverStyle.STRICT);</span>
+<span class="fc" id="L50">    private static final Locale PT_BR = Locale.forLanguageTag(&quot;pt-BR&quot;);</span>
+
+    private final Servicos servicos;
+    private final DemoDataLoader demo;
+    private final Scanner entrada;
+    private final PrintStream saida;
+    private final Clock relogio;
+
+    public ConsoleApp(Servicos servicos, DemoDataLoader demo, Scanner entrada,
+<span class="fc" id="L59">                      PrintStream saida, Clock relogio) {</span>
+<span class="fc" id="L60">        this.servicos = servicos;</span>
+<span class="fc" id="L61">        this.demo = demo;</span>
+<span class="fc" id="L62">        this.entrada = entrada;</span>
+<span class="fc" id="L63">        this.saida = saida;</span>
+<span class="fc" id="L64">        this.relogio = relogio;</span>
+<span class="fc" id="L65">    }</span>
+
+    public void executar() {
+<span class="fc" id="L68">        saida.println(&quot;=======================================&quot;);</span>
+<span class="fc" id="L69">        saida.println(&quot;      EcoHorta - cuidando da horta     &quot;);</span>
+<span class="fc" id="L70">        saida.println(&quot;=======================================&quot;);</span>
+        try {
+<span class="fc" id="L72">            menuInicial();</span>
+<span class="fc" id="L73">        } catch (EntradaEncerradaException e) {</span>
+<span class="fc" id="L74">            saida.println(&quot;\nEntrada encerrada. Até a próxima!&quot;);</span>
+<span class="fc" id="L75">        }</span>
+<span class="fc" id="L76">    }</span>
+
+    private void menuInicial() {
+        while (true) {
+<span class="fc" id="L80">            saida.println(&quot;\n--- Menu inicial ---&quot;);</span>
+<span class="fc" id="L81">            saida.println(&quot;1 - Entrar / cadastrar-se (por e-mail)&quot;);</span>
+<span class="fc" id="L82">            saida.println(&quot;2 - Catálogo de plantas (busca, luz, apartamento, estação)&quot;);</span>
+<span class="fc" id="L83">            saida.println(&quot;3 - Estações do ano e melhores meses&quot;);</span>
+<span class="fc" id="L84">            saida.println(&quot;4 - O que plantar neste mês?&quot;);</span>
+<span class="fc" id="L85">            saida.println(&quot;5 - Saúde e segurança (pets e condições de saúde)&quot;);</span>
+<span class="fc" id="L86">            saida.println(&quot;6 - Carregar dados de demonstração e entrar&quot;);</span>
+<span class="fc" id="L87">            saida.println(&quot;0 - Sair&quot;);</span>
+<span class="fc bfc" id="L88" title="All 8 branches covered.">            switch (ler(&quot;Escolha uma opção: &quot;)) {</span>
+<span class="fc" id="L89">                case &quot;1&quot; -&gt; executarAcao(this::entrar);</span>
+<span class="fc" id="L90">                case &quot;2&quot; -&gt; executarAcao(this::menuCatalogo);</span>
+<span class="fc" id="L91">                case &quot;3&quot; -&gt; executarAcao(this::menuEstacoes);</span>
+<span class="fc" id="L92">                case &quot;4&quot; -&gt; executarAcao(this::oQuePlantar);</span>
+<span class="fc" id="L93">                case &quot;5&quot; -&gt; executarAcao(this::menuSaude);</span>
+<span class="fc" id="L94">                case &quot;6&quot; -&gt; executarAcao(this::entrarComDemonstracao);</span>
+                case &quot;0&quot; -&gt; {
+<span class="fc" id="L96">                    saida.println(&quot;Até a próxima! 🌱&quot;);</span>
+<span class="fc" id="L97">                    return;</span>
+                }
+<span class="fc" id="L99">                default -&gt; saida.println(&quot;Opção inválida.&quot;);</span>
+<span class="fc" id="L100">            }</span>
+        }
+    }
+
+    private void menuUsuario(Usuario usuario) {
+        while (true) {
+<span class="fc" id="L106">            saida.println(&quot;\n--- Olá, &quot; + usuario.getNome() + &quot;! ---&quot;);</span>
+<span class="fc" id="L107">            saida.println(&quot; 1 - Minhas hortas&quot;);</span>
+<span class="fc" id="L108">            saida.println(&quot; 2 - Criar horta&quot;);</span>
+<span class="fc" id="L109">            saida.println(&quot; 3 - Adicionar canteiro a uma horta&quot;);</span>
+<span class="fc" id="L110">            saida.println(&quot; 4 - Iniciar plantio&quot;);</span>
+<span class="fc" id="L111">            saida.println(&quot; 5 - Ver plantios da horta&quot;);</span>
+<span class="fc" id="L112">            saida.println(&quot; 6 - Registrar rega&quot;);</span>
+<span class="fc" id="L113">            saida.println(&quot; 7 - Registrar cuidado&quot;);</span>
+<span class="fc" id="L114">            saida.println(&quot; 8 - Tarefas de hoje&quot;);</span>
+<span class="fc" id="L115">            saida.println(&quot; 9 - Encerrar plantio (colhido / perdido)&quot;);</span>
+<span class="fc" id="L116">            saida.println(&quot;10 - Resumo da horta&quot;);</span>
+<span class="fc" id="L117">            saida.println(&quot; 0 - Sair da conta&quot;);</span>
+<span class="fc bfc" id="L118" title="All 12 branches covered.">            switch (ler(&quot;Escolha uma opção: &quot;)) {</span>
+<span class="fc" id="L119">                case &quot;1&quot; -&gt; executarAcao(() -&gt; minhasHortas(usuario));</span>
+<span class="fc" id="L120">                case &quot;2&quot; -&gt; executarAcao(() -&gt; criarHorta(usuario));</span>
+<span class="fc" id="L121">                case &quot;3&quot; -&gt; executarAcao(() -&gt; adicionarCanteiro(usuario));</span>
+<span class="fc" id="L122">                case &quot;4&quot; -&gt; executarAcao(() -&gt; iniciarPlantio(usuario));</span>
+<span class="fc" id="L123">                case &quot;5&quot; -&gt; executarAcao(() -&gt; verPlantios(usuario));</span>
+<span class="fc" id="L124">                case &quot;6&quot; -&gt; executarAcao(() -&gt; registrarRega(usuario));</span>
+<span class="fc" id="L125">                case &quot;7&quot; -&gt; executarAcao(() -&gt; registrarCuidado(usuario));</span>
+<span class="fc" id="L126">                case &quot;8&quot; -&gt; executarAcao(() -&gt; tarefasDeHoje(usuario));</span>
+<span class="fc" id="L127">                case &quot;9&quot; -&gt; executarAcao(() -&gt; encerrarPlantio(usuario));</span>
+<span class="fc" id="L128">                case &quot;10&quot; -&gt; executarAcao(() -&gt; resumo(usuario));</span>
+                case &quot;0&quot; -&gt; {
+<span class="fc" id="L130">                    return;</span>
+                }
+<span class="fc" id="L132">                default -&gt; saida.println(&quot;Opção inválida.&quot;);</span>
+<span class="fc" id="L133">            }</span>
+        }
+    }
+
+    private void executarAcao(Runnable acao) {
+        try {
+<span class="fc" id="L139">            acao.run();</span>
+<span class="fc" id="L140">        } catch (RegraDeNegocioException | IllegalArgumentException | IllegalStateException e) {</span>
+<span class="fc" id="L141">            saida.println(&quot;⚠ &quot; + e.getMessage());</span>
+<span class="fc" id="L142">        }</span>
+<span class="fc" id="L143">    }</span>
+
+    private void entrar() {
+<span class="fc" id="L146">        String email = lerObrigatorio(&quot;E-mail: &quot;);</span>
+<span class="fc" id="L147">        Optional&lt;Usuario&gt; existente = servicos.usuarios().buscarPorEmail(email);</span>
+        Usuario usuario;
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (existente.isPresent()) {</span>
+<span class="fc" id="L150">            usuario = existente.get();</span>
+<span class="fc" id="L151">            saida.println(&quot;Bem-vindo(a) de volta, &quot; + usuario.getNome() + &quot;!&quot;);</span>
+        } else {
+<span class="fc" id="L153">            saida.println(&quot;E-mail novo! Vamos criar o seu cadastro.&quot;);</span>
+<span class="fc" id="L154">            String nome = lerObrigatorio(&quot;Seu nome: &quot;);</span>
+<span class="fc" id="L155">            usuario = servicos.usuarios().cadastrar(nome, email);</span>
+<span class="fc" id="L156">            saida.println(&quot;Cadastro criado, &quot; + usuario.getNome() + &quot;!&quot;);</span>
+        }
+<span class="fc" id="L158">        menuUsuario(usuario);</span>
+<span class="fc" id="L159">    }</span>
+
+    private void entrarComDemonstracao() {
+<span class="fc" id="L162">        Usuario usuario = demo.carregar();</span>
+<span class="fc" id="L163">        saida.println(&quot;Dados de demonstração prontos. Entrando como &quot;</span>
+<span class="fc" id="L164">                + usuario.getNome() + &quot; (&quot; + usuario.getEmail() + &quot;).&quot;);</span>
+<span class="fc" id="L165">        menuUsuario(usuario);</span>
+<span class="fc" id="L166">    }</span>
+
+    private void menuCatalogo() {
+        while (true) {
+<span class="fc" id="L170">            saida.println(&quot;\n--- Catálogo de plantas ---&quot;);</span>
+<span class="fc" id="L171">            saida.println(&quot;1 - Buscar por nome&quot;);</span>
+<span class="fc" id="L172">            saida.println(&quot;2 - Filtrar por categoria&quot;);</span>
+<span class="fc" id="L173">            saida.println(&quot;3 - Filtrar por estação do ano&quot;);</span>
+<span class="fc" id="L174">            saida.println(&quot;4 - Plantas para apartamento (com filtro de luz)&quot;);</span>
+<span class="fc" id="L175">            saida.println(&quot;5 - Filtrar por quantidade de luz solar&quot;);</span>
+<span class="fc" id="L176">            saida.println(&quot;0 - Voltar&quot;);</span>
+<span class="fc bfc" id="L177" title="All 7 branches covered.">            switch (ler(&quot;Escolha uma opção: &quot;)) {</span>
+                case &quot;1&quot; -&gt; {
+<span class="fc" id="L179">                    String termo = lerObrigatorio(&quot;Nome (ou parte do nome): &quot;);</span>
+<span class="fc" id="L180">                    explorar(&quot;Busca por \&quot;&quot; + termo + &quot;\&quot;&quot;,</span>
+<span class="fc" id="L181">                            servicos.catalogo().pesquisar(FiltroPlantas.todas().comTermo(termo)));</span>
+<span class="fc" id="L182">                }</span>
+                case &quot;2&quot; -&gt; {
+<span class="fc" id="L184">                    List&lt;CategoriaPlanta&gt; categorias = new ArrayList&lt;&gt;(List.of(CategoriaPlanta.values()));</span>
+<span class="fc" id="L185">                    categorias.remove(CategoriaPlanta.OUTRA);</span>
+<span class="fc" id="L186">                    CategoriaPlanta categoria = escolher(&quot;Categorias:&quot;, categorias, CategoriaPlanta::getRotulo);</span>
+<span class="fc" id="L187">                    explorar(categoria.getRotulo(),</span>
+<span class="fc" id="L188">                            servicos.catalogo().pesquisar(FiltroPlantas.todas().comCategoria(categoria)));</span>
+<span class="fc" id="L189">                }</span>
+                case &quot;3&quot; -&gt; {
+<span class="fc" id="L191">                    Estacao estacao = escolher(&quot;Estações:&quot;, List.of(Estacao.values()), Estacao::getNome);</span>
+<span class="fc" id="L192">                    explorar(&quot;Plantas de &quot; + estacao.getNome(),</span>
+<span class="fc" id="L193">                            servicos.catalogo().pesquisar(FiltroPlantas.todas().comEstacao(estacao)));</span>
+<span class="fc" id="L194">                }</span>
+                case &quot;4&quot; -&gt; {
+<span class="fc" id="L196">                    NivelApartamento nivel = escolher(&quot;Adaptação ao apartamento:&quot;,</span>
+<span class="fc" id="L197">                            List.of(NivelApartamento.values()), NivelApartamento::getRotulo);</span>
+<span class="fc" id="L198">                    FiltroPlantas filtro = FiltroPlantas.todas().comApartamento(nivel);</span>
+<span class="fc" id="L199">                    saida.println(&quot;Luz disponível (Enter = qualquer):&quot;);</span>
+<span class="fc" id="L200">                    NivelLuz luz = escolherLuzOpcional();</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">                    if (luz != null) {</span>
+<span class="fc" id="L202">                        filtro = filtro.comNivelLuz(luz);</span>
+                    }
+<span class="fc bfc" id="L204" title="All 2 branches covered.">                    explorar(nivel.getRotulo() + (luz == null ? &quot;&quot; : &quot; — &quot; + luz.getRotulo()),</span>
+<span class="fc" id="L205">                            servicos.catalogo().pesquisar(filtro));</span>
+<span class="fc" id="L206">                }</span>
+                case &quot;5&quot; -&gt; {
+<span class="fc" id="L208">                    NivelLuz luz = escolher(&quot;Quanto sol a planta precisa:&quot;, List.of(NivelLuz.values()),</span>
+<span class="fc" id="L209">                            n -&gt; n.getRotulo() + &quot; — &quot; + n.getDescricao());</span>
+<span class="fc" id="L210">                    explorar(luz.getRotulo(), servicos.catalogo().pesquisar(FiltroPlantas.todas().comNivelLuz(luz)));</span>
+<span class="fc" id="L211">                }</span>
+                case &quot;0&quot; -&gt; {
+<span class="fc" id="L213">                    return;</span>
+                }
+<span class="fc" id="L215">                default -&gt; saida.println(&quot;Opção inválida.&quot;);</span>
+<span class="fc" id="L216">            }</span>
+        }
+    }
+
+    private NivelLuz escolherLuzOpcional() {
+<span class="fc" id="L221">        List&lt;NivelLuz&gt; niveis = List.of(NivelLuz.values());</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">        for (int i = 0; i &lt; niveis.size(); i++) {</span>
+<span class="fc" id="L223">            saida.println(&quot;  &quot; + (i + 1) + &quot;) &quot; + niveis.get(i).getRotulo() + &quot; — &quot; + niveis.get(i).getDescricao());</span>
+        }
+<span class="fc" id="L225">        OptionalInt escolha = lerInteiroOpcional(&quot;Número (ou Enter): &quot;, 1, niveis.size());</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        return escolha.isPresent() ? niveis.get(escolha.getAsInt() - 1) : null;</span>
+    }
+
+    private void explorar(String titulo, List&lt;Planta&gt; plantas) {
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (plantas.isEmpty()) {</span>
+<span class="fc" id="L231">            saida.println(&quot;Nenhuma planta encontrada.&quot;);</span>
+<span class="fc" id="L232">            return;</span>
+        }
+<span class="fc" id="L234">        final int tamanhoPagina = 20;</span>
+<span class="fc" id="L235">        int pagina = 0;</span>
+        while (true) {
+<span class="fc" id="L237">            int inicio = pagina * tamanhoPagina;</span>
+<span class="fc" id="L238">            int fim = Math.min(inicio + tamanhoPagina, plantas.size());</span>
+<span class="fc" id="L239">            saida.println(&quot;\n&quot; + titulo + &quot; — &quot; + plantas.size() + &quot; planta(s), mostrando &quot;</span>
+                    + (inicio + 1) + &quot; a &quot; + fim + &quot;:&quot;);
+<span class="fc bfc" id="L241" title="All 2 branches covered.">            for (int i = inicio; i &lt; fim; i++) {</span>
+<span class="fc" id="L242">                Planta p = plantas.get(i);</span>
+<span class="fc" id="L243">                saida.printf(PT_BR, &quot;%4d) %-24s %s | %s | apto: %s%n&quot;, i + 1, p.getNome(),</span>
+<span class="fc" id="L244">                        p.getCategoria().getRotulo(), p.getNivelLuz().getRotulo(),</span>
+<span class="fc" id="L245">                        p.getApartamento().nivel().getRotulo());</span>
+            }
+<span class="fc bfc" id="L247" title="All 2 branches covered.">            String dica = &quot;Número para ver detalhes&quot; + (fim &lt; plantas.size() ? &quot;, P = próxima página&quot; : &quot;&quot;)</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">                    + (pagina &gt; 0 ? &quot;, A = página anterior&quot; : &quot;&quot;) + &quot;, 0 = voltar: &quot;;</span>
+<span class="fc" id="L249">            String entradaUsuario = ler(dica).toLowerCase(Locale.ROOT);</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">            if (entradaUsuario.equals(&quot;0&quot;)) {</span>
+<span class="fc" id="L251">                return;</span>
+<span class="pc bpc" id="L252" title="1 of 4 branches missed.">            } else if (entradaUsuario.equals(&quot;p&quot;) &amp;&amp; fim &lt; plantas.size()) {</span>
+<span class="fc" id="L253">                pagina++;</span>
+<span class="pc bpc" id="L254" title="1 of 4 branches missed.">            } else if (entradaUsuario.equals(&quot;a&quot;) &amp;&amp; pagina &gt; 0) {</span>
+<span class="fc" id="L255">                pagina--;</span>
+            } else {
+                try {
+<span class="fc" id="L258">                    int numero = Integer.parseInt(entradaUsuario);</span>
+<span class="pc bpc" id="L259" title="1 of 4 branches missed.">                    if (numero &gt;= 1 &amp;&amp; numero &lt;= plantas.size()) {</span>
+<span class="fc" id="L260">                        detalharPlanta(plantas.get(numero - 1));</span>
+<span class="fc" id="L261">                        continue;</span>
+                    }
+<span class="fc" id="L263">                } catch (NumberFormatException ignorada) {</span>
+
+<span class="fc" id="L265">                }</span>
+<span class="fc" id="L266">                saida.println(&quot;Opção inválida.&quot;);</span>
+            }
+<span class="fc" id="L268">        }</span>
+    }
+
+    private &lt;T&gt; T escolher(String titulo, List&lt;T&gt; opcoes, Function&lt;T, String&gt; rotulo) {
+<span class="fc" id="L272">        saida.println(titulo);</span>
+<span class="fc bfc" id="L273" title="All 2 branches covered.">        for (int i = 0; i &lt; opcoes.size(); i++) {</span>
+<span class="fc" id="L274">            saida.println(&quot;  &quot; + (i + 1) + &quot;) &quot; + rotulo.apply(opcoes.get(i)));</span>
+        }
+<span class="fc" id="L276">        return opcoes.get(lerInteiro(&quot;Escolha: &quot;, 1, opcoes.size()) - 1);</span>
+    }
+
+    private Optional&lt;Planta&gt; pesquisarEEscolher() {
+<span class="fc" id="L280">        String termo = lerObrigatorio(&quot;Nome (ou parte do nome) da planta: &quot;);</span>
+<span class="fc" id="L281">        List&lt;Planta&gt; achadas = servicos.catalogo().pesquisar(FiltroPlantas.todas().comTermo(termo));</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">        if (achadas.isEmpty()) {</span>
+<span class="fc" id="L283">            saida.println(&quot;Nenhuma planta encontrada para \&quot;&quot; + termo + &quot;\&quot;.&quot;);</span>
+<span class="fc" id="L284">            return Optional.empty();</span>
+        }
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (achadas.size() &gt; 15) {</span>
+<span class="fc" id="L287">            saida.println(achadas.size() + &quot; resultados; mostrando os 15 primeiros. Refine o nome para ver os demais.&quot;);</span>
+<span class="fc" id="L288">            achadas = achadas.subList(0, 15);</span>
+        }
+<span class="fc bfc" id="L290" title="All 2 branches covered.">        if (achadas.size() == 1) {</span>
+<span class="fc" id="L291">            saida.println(&quot;Planta: &quot; + achadas.get(0).getNome());</span>
+<span class="fc" id="L292">            return Optional.of(achadas.get(0));</span>
+        }
+<span class="fc" id="L294">        return Optional.of(escolher(&quot;Resultados:&quot;, achadas, Planta::getNome));</span>
+    }
+
+    private void detalharPlanta(Planta planta) {
+<span class="fc" id="L298">        saida.println(&quot;\n== &quot; + planta.getNome() + &quot; (&quot; + planta.getNomeCientifico() + &quot;) ==&quot;);</span>
+<span class="fc" id="L299">        saida.println(&quot;Categoria  : &quot; + planta.getCategoria().getRotulo()</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">                + (planta.isComestivel() ? &quot;&quot; : &quot; — NÃO use para consumo&quot;));</span>
+<span class="fc" id="L301">        saida.println(&quot;Luz solar  : &quot; + planta.getNivelLuz().getRotulo() + &quot; (&quot; + planta.getNivelLuz().getDescricao() + &quot;)&quot;);</span>
+<span class="fc" id="L302">        saida.println(&quot;Apartamento: &quot; + planta.getApartamento().nivel().getRotulo()</span>
+<span class="fc" id="L303">                + &quot; — &quot; + planta.getApartamento().observacao());</span>
+<span class="fc" id="L304">        saida.println(&quot;Plantio    : &quot; + joinJanelas(planta));</span>
+<span class="fc" id="L305">        String estacoes = planta.getEstacoes().stream().map(Estacao::getNome).reduce((x, y) -&gt; x + &quot;, &quot; + y).orElse(&quot;—&quot;);</span>
+<span class="fc bfc" id="L306" title="All 2 branches covered.">        String melhor = planta.getMelhorMesPlantio().isPresent()</span>
+<span class="fc" id="L307">                ? Meses.nome(planta.getMelhorMesPlantio().getAsInt()) : &quot;qualquer mês (ano todo)&quot;;</span>
+<span class="fc" id="L308">        saida.println(&quot;Estações   : &quot; + estacoes + &quot; | melhor mês para plantar: &quot; + melhor);</span>
+<span class="fc bfc" id="L309" title="All 2 branches covered.">        if (planta.isComestivel()) {</span>
+<span class="fc" id="L310">            saida.println(&quot;Colheita   : cerca de &quot; + planta.getDiasParaColheita() + &quot; dias após o plantio&quot;);</span>
+        }
+<span class="fc" id="L312">        saida.println(&quot;Rega       : a cada &quot; + planta.getRega().frequenciaDias() + &quot; dia(s), cerca de &quot;</span>
+<span class="fc" id="L313">                + planta.getRega().quantidadeMl() + &quot; ml. &quot; + planta.getRega().observacao());</span>
+<span class="fc" id="L314">        saida.println(&quot;Cuidados   :&quot;);</span>
+<span class="fc bfc" id="L315" title="All 2 branches covered.">        for (Cuidado cuidado : planta.getCuidados()) {</span>
+<span class="fc bfc" id="L316" title="All 2 branches covered.">            String frequencia = cuidado.periodico() ? &quot; (a cada &quot; + cuidado.frequenciaDias() + &quot; dias)&quot; : &quot;&quot;;</span>
+<span class="fc" id="L317">            saida.println(&quot;   - &quot; + cuidado.tipo().getRotulo() + &quot;: &quot; + cuidado.descricao() + frequencia);</span>
+<span class="fc" id="L318">        }</span>
+<span class="fc" id="L319">        imprimirSaude(planta);</span>
+<span class="fc" id="L320">    }</span>
+
+    private String joinJanelas(Planta planta) {
+<span class="fc" id="L323">        return planta.getJanelasPlantio().stream().map(JanelaPlantio::descricao)</span>
+<span class="fc" id="L324">                .reduce((x, y) -&gt; x + &quot; | &quot; + y).orElse(&quot;—&quot;);</span>
+    }
+
+    private void imprimirSaude(Planta planta) {
+<span class="fc" id="L328">        SaudeService.PerfilSaude perfil = servicos.saude().perfil(planta);</span>
+<span class="fc" id="L329">        saida.println(&quot;Saúde      :&quot;);</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">        if (perfil.semRegistros()) {</span>
+<span class="fc" id="L331">            saida.println(&quot;   Sem alertas no nosso cadastro (isso não garante que seja segura).&quot;);</span>
+<span class="fc" id="L332">            return;</span>
+        }
+<span class="fc bfc" id="L334" title="All 2 branches covered.">        for (SaudeService.Alerta a : perfil.toxicidade()) {</span>
+<span class="fc" id="L335">            saida.println(&quot;   ⚠ Perigosa para &quot; + a.nome() + &quot; [&quot; + a.item().gravidade().getRotulo() + &quot;]: &quot;</span>
+<span class="fc" id="L336">                    + a.item().motivo());</span>
+<span class="fc" id="L337">        }</span>
+<span class="fc bfc" id="L338" title="All 2 branches covered.">        for (SaudeService.Alerta a : perfil.evitarEm()) {</span>
+<span class="fc" id="L339">            saida.println(&quot;   ✋ Cuidado se tiver &quot; + a.nome() + &quot; [&quot; + a.item().gravidade().getRotulo() + &quot;]: &quot;</span>
+<span class="fc" id="L340">                    + a.item().motivo());</span>
+<span class="fc" id="L341">        }</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        for (SaudeService.Alerta a : perfil.indicadaPara()) {</span>
+<span class="fc" id="L343">            saida.println(&quot;   ✔ Indicada em &quot; + a.nome() + &quot;: &quot; + a.item().motivo());</span>
+<span class="fc" id="L344">        }</span>
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        if (!perfil.seguraParaPets().isEmpty()) {</span>
+<span class="nc" id="L346">            String quem = perfil.seguraParaPets().stream().map(SaudeService.Alerta::nome)</span>
+<span class="nc" id="L347">                    .reduce((x, y) -&gt; x + &quot; e &quot; + y).orElse(&quot;&quot;);</span>
+<span class="nc" id="L348">            saida.println(&quot;   🐾 Considerada segura para: &quot; + quem);</span>
+        }
+<span class="fc" id="L350">        saida.println(&quot;   (Informação educativa; não substitui médico, nutricionista ou veterinário.)&quot;);</span>
+<span class="fc" id="L351">    }</span>
+
+    private void menuEstacoes() {
+<span class="fc" id="L354">        List&lt;Tempo&gt; tempos = servicos.tempo().listar();</span>
+<span class="fc bfc" id="L355" title="All 2 branches covered.">        if (tempos.isEmpty()) {</span>
+<span class="fc" id="L356">            saida.println(&quot;Os dados das estações ainda não foram carregados.&quot;);</span>
+<span class="fc" id="L357">            return;</span>
+        }
+<span class="fc" id="L359">        Estacao atual = servicos.tempo().estacaoDe(hoje());</span>
+<span class="fc" id="L360">        saida.println(&quot;\nHoje é &quot; + hoje().format(FORMATO_DATA) + &quot;: estamos na &quot; + atual.getNome() + &quot;.&quot;);</span>
+        while (true) {
+<span class="fc" id="L362">            saida.println(&quot;\nEstações do ano:&quot;);</span>
+<span class="fc bfc" id="L363" title="All 2 branches covered.">            for (int i = 0; i &lt; tempos.size(); i++) {</span>
+<span class="fc" id="L364">                Tempo t = tempos.get(i);</span>
+<span class="fc" id="L365">                saida.println(&quot;  &quot; + (i + 1) + &quot;) &quot; + t.getEstacao().getNome() + &quot; — melhor mês: &quot;</span>
+<span class="fc bfc" id="L366" title="All 2 branches covered.">                        + Meses.nome(t.getMelhorMes()) + (t.getEstacao() == atual ? &quot;  (estação atual)&quot; : &quot;&quot;));</span>
+            }
+<span class="fc" id="L368">            int escolha = lerInteiro(&quot;Número da estação (0 = voltar): &quot;, 0, tempos.size());</span>
+<span class="fc bfc" id="L369" title="All 2 branches covered.">            if (escolha == 0) {</span>
+<span class="fc" id="L370">                return;</span>
+            }
+<span class="fc" id="L372">            mostrarEstacao(tempos.get(escolha - 1));</span>
+<span class="fc" id="L373">        }</span>
+    }
+
+    private void mostrarEstacao(Tempo tempo) {
+<span class="fc" id="L377">        Estacao estacao = tempo.getEstacao();</span>
+<span class="fc" id="L378">        List&lt;Integer&gt; meses = estacao.getMeses();</span>
+<span class="fc" id="L379">        saida.println(&quot;\n== &quot; + estacao.getNome() + &quot; (&quot; + Meses.nome(meses.get(0)) + &quot; a &quot;</span>
+<span class="fc" id="L380">                + Meses.nome(meses.get(meses.size() - 1)) + &quot;) ==&quot;);</span>
+<span class="fc" id="L381">        saida.println(tempo.getDescricao());</span>
+<span class="fc" id="L382">        saida.println(&quot;⭐ Melhor mês para plantar: &quot; + Meses.nome(tempo.getMelhorMes())</span>
+<span class="fc" id="L383">                + &quot; — &quot; + tempo.getJustificativaMelhorMes());</span>
+<span class="fc" id="L384">        Map&lt;Integer, Long&gt; contagem = servicos.tempo().plantasPorMes(estacao);</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">        for (MesDaEstacao mes : tempo.getMeses()) {</span>
+<span class="fc bfc" id="L386" title="All 2 branches covered.">            saida.println(&quot;  &quot; + mes.nome() + (mes.melhor() ? &quot; ⭐&quot; : &quot;&quot;) + &quot;: &quot; + mes.observacao()</span>
+<span class="fc" id="L387">                    + &quot; [&quot; + contagem.getOrDefault(mes.numero(), 0L) + &quot; plantas podem ser plantadas]&quot;);</span>
+<span class="fc" id="L388">        }</span>
+<span class="fc" id="L389">        saida.println(&quot;1 - Ver as plantas desta estação&quot;);</span>
+<span class="fc" id="L390">        saida.println(&quot;2 - Ver só as plantas do melhor mês (&quot; + Meses.nome(tempo.getMelhorMes()) + &quot;)&quot;);</span>
+<span class="fc" id="L391">        saida.println(&quot;0 - Voltar&quot;);</span>
+<span class="fc bfc" id="L392" title="All 3 branches covered.">        switch (lerInteiro(&quot;Opção: &quot;, 0, 2)) {</span>
+<span class="fc" id="L393">            case 1 -&gt; explorar(&quot;Plantas de &quot; + estacao.getNome(), servicos.tempo().plantasDaEstacao(estacao));</span>
+<span class="fc" id="L394">            case 2 -&gt; explorar(&quot;Plantas para &quot; + Meses.nome(tempo.getMelhorMes()),</span>
+<span class="fc" id="L395">                    servicos.tempo().plantasDoMelhorMes(estacao));</span>
+            default -&gt; {
+
+            }
+        }
+<span class="fc" id="L400">    }</span>
+
+    private void oQuePlantar() {
+<span class="fc" id="L403">        int mes = hoje().getMonthValue();</span>
+<span class="fc" id="L404">        Estacao estacao = Estacao.deMes(mes);</span>
+<span class="fc" id="L405">        saida.println(&quot;\nMês atual: &quot; + Meses.nome(mes) + &quot; (&quot; + estacao.getNome() + &quot;).&quot;);</span>
+<span class="pc bpc" id="L406" title="1 of 2 branches missed.">        servicos.tempo().listar().stream().filter(t -&gt; t.getEstacao() == estacao).findFirst()</span>
+<span class="fc" id="L407">                .ifPresent(t -&gt; saida.println(&quot;Melhor mês da estação: &quot; + Meses.nome(t.getMelhorMes())</span>
+<span class="pc bpc" id="L408" title="1 of 2 branches missed.">                        + (t.getMelhorMes() == mes ? &quot; (é agora!)&quot; : &quot;&quot;) + &quot;.&quot;));</span>
+<span class="fc" id="L409">        explorar(&quot;Para plantar em &quot; + Meses.nome(mes), servicos.catalogo().plantasParaPlantar(mes));</span>
+<span class="fc" id="L410">    }</span>
+
+    private void menuSaude() {
+        while (true) {
+<span class="fc" id="L414">            saida.println(&quot;\n--- Saúde e segurança ---&quot;);</span>
+<span class="fc" id="L415">            saida.println(&quot;1 - Plantas perigosas para gatos&quot;);</span>
+<span class="fc" id="L416">            saida.println(&quot;2 - Plantas perigosas para cães&quot;);</span>
+<span class="fc" id="L417">            saida.println(&quot;3 - Plantas que fazem mal às pessoas (consumo)&quot;);</span>
+<span class="fc" id="L418">            saida.println(&quot;4 - Saúde por condição (asma, diabetes, renal, gravidez...)&quot;);</span>
+<span class="fc" id="L419">            saida.println(&quot;5 - Ficha de saúde de uma planta&quot;);</span>
+<span class="fc" id="L420">            saida.println(&quot;0 - Voltar&quot;);</span>
+<span class="fc bfc" id="L421" title="All 7 branches covered.">            switch (ler(&quot;Escolha uma opção: &quot;)) {</span>
+<span class="fc" id="L422">                case &quot;1&quot; -&gt; mostrarRegistro(servicos.saude().buscarPorCodigo(&quot;GATOS&quot;));</span>
+<span class="fc" id="L423">                case &quot;2&quot; -&gt; mostrarRegistro(servicos.saude().buscarPorCodigo(&quot;CAES&quot;));</span>
+<span class="fc" id="L424">                case &quot;3&quot; -&gt; mostrarRegistro(servicos.saude().buscarPorCodigo(&quot;PESSOAS&quot;));</span>
+                case &quot;4&quot; -&gt; {
+<span class="fc" id="L426">                    List&lt;RegistroSaude&gt; condicoes = servicos.saude().listarPorTipo(TipoRegistroSaude.COMORBIDADE);</span>
+<span class="fc bfc" id="L427" title="All 2 branches covered.">                    if (condicoes.isEmpty()) {</span>
+<span class="fc" id="L428">                        saida.println(&quot;Os dados de saúde ainda não foram carregados.&quot;);</span>
+                    } else {
+<span class="fc" id="L430">                        mostrarRegistro(escolher(&quot;Condições:&quot;, condicoes, RegistroSaude::getNome));</span>
+                    }
+<span class="fc" id="L432">                }</span>
+<span class="fc" id="L433">                case &quot;5&quot; -&gt; pesquisarEEscolher().ifPresent(p -&gt; {</span>
+<span class="fc" id="L434">                    saida.println(&quot;\n== &quot; + p.getNome() + &quot; ==&quot;);</span>
+<span class="fc" id="L435">                    imprimirSaude(p);</span>
+<span class="fc" id="L436">                });</span>
+                case &quot;0&quot; -&gt; {
+<span class="fc" id="L438">                    return;</span>
+                }
+<span class="fc" id="L440">                default -&gt; saida.println(&quot;Opção inválida.&quot;);</span>
+<span class="fc" id="L441">            }</span>
+        }
+    }
+
+    private void mostrarRegistro(RegistroSaude registro) {
+<span class="fc" id="L446">        saida.println(&quot;\n== &quot; + registro.getNome() + &quot; ==&quot;);</span>
+<span class="fc" id="L447">        saida.println(registro.getDescricao());</span>
+<span class="fc" id="L448">        saida.println(&quot;Orientação: &quot; + registro.getOrientacao());</span>
+<span class="pc bpc" id="L449" title="1 of 2 branches missed.">        if (!registro.getEvitar().isEmpty()) {</span>
+<span class="fc" id="L450">            saida.println(&quot;\nPlantas a evitar ou com cuidado:&quot;);</span>
+<span class="fc" id="L451">            imprimirItens(registro.getEvitar(), true);</span>
+        }
+<span class="fc bfc" id="L453" title="All 2 branches covered.">        if (!registro.getRecomendadas().isEmpty()) {</span>
+<span class="fc" id="L454">            saida.println(&quot;\nPlantas &quot;</span>
+<span class="fc bfc" id="L455" title="All 2 branches covered.">                    + (registro.getTipo() == TipoRegistroSaude.ANIMAL ? &quot;consideradas seguras&quot; : &quot;recomendadas&quot;) + &quot;:&quot;);</span>
+<span class="fc" id="L456">            imprimirItens(registro.getRecomendadas(), false);</span>
+        }
+<span class="fc" id="L458">        saida.println(&quot;\n&quot; + registro.getAviso());</span>
+<span class="fc" id="L459">    }</span>
+
+    private void imprimirItens(List&lt;ItemSaude&gt; itens, boolean comGravidade) {
+<span class="fc" id="L462">        List&lt;ItemSaude&gt; ordenados = new ArrayList&lt;&gt;(itens);</span>
+<span class="fc bfc" id="L463" title="All 2 branches covered.">        if (comGravidade) {</span>
+<span class="fc" id="L464">            ordenados.sort(Comparator.comparing(ItemSaude::gravidade).reversed());</span>
+        }
+<span class="fc" id="L466">        Map&lt;String, List&lt;String&gt;&gt; grupos = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L467" title="All 2 branches covered.">        for (ItemSaude i : ordenados) {</span>
+<span class="fc bfc" id="L468" title="All 2 branches covered.">            String chave = (comGravidade ? &quot;[&quot; + i.gravidade().getRotulo() + &quot;] &quot; : &quot;&quot;) + i.motivo();</span>
+<span class="fc" id="L469">            grupos.computeIfAbsent(chave, k -&gt; new ArrayList&lt;&gt;()).add(i.plantaNome());</span>
+<span class="fc" id="L470">        }</span>
+<span class="fc" id="L471">        grupos.forEach((chave, nomes) -&gt; saida.println(&quot;  • &quot; + chave + &quot;:\n      &quot; + String.join(&quot;, &quot;, nomes)));</span>
+<span class="fc" id="L472">    }</span>
+
+    private void minhasHortas(Usuario usuario) {
+<span class="fc" id="L475">        List&lt;Horta&gt; hortas = servicos.hortas().listarPorUsuario(usuario.getId());</span>
+<span class="fc bfc" id="L476" title="All 2 branches covered.">        if (hortas.isEmpty()) {</span>
+<span class="fc" id="L477">            saida.println(&quot;Você ainda não tem hortas. Use a opção 2 para criar a primeira.&quot;);</span>
+<span class="fc" id="L478">            return;</span>
+        }
+<span class="fc bfc" id="L480" title="All 2 branches covered.">        for (Horta horta : hortas) {</span>
+<span class="fc" id="L481">            saida.println(&quot;\n&quot; + horta.getNome() + &quot; — &quot; + horta.getLocalizacao());</span>
+<span class="fc bfc" id="L482" title="All 2 branches covered.">            if (horta.getCanteiros().isEmpty()) {</span>
+<span class="fc" id="L483">                saida.println(&quot;   (sem canteiros)&quot;);</span>
+            }
+<span class="fc bfc" id="L485" title="All 2 branches covered.">            for (Canteiro c : horta.getCanteiros()) {</span>
+<span class="fc" id="L486">                saida.printf(PT_BR, &quot;   • %s — %.1f m², %s%n&quot;, c.nome(), c.areaM2(), c.exposicaoSol());</span>
+<span class="fc" id="L487">            }</span>
+<span class="fc" id="L488">        }</span>
+<span class="fc" id="L489">    }</span>
+
+    private void criarHorta(Usuario usuario) {
+<span class="fc" id="L492">        String nome = lerObrigatorio(&quot;Nome da horta: &quot;);</span>
+<span class="fc" id="L493">        String localizacao = ler(&quot;Localização (opcional): &quot;);</span>
+<span class="fc" id="L494">        Horta horta = servicos.hortas().criarHorta(usuario.getId(), nome, localizacao);</span>
+<span class="fc" id="L495">        saida.println(&quot;✅ Horta \&quot;&quot; + horta.getNome() + &quot;\&quot; criada. Agora adicione canteiros (opção 3).&quot;);</span>
+<span class="fc" id="L496">    }</span>
+
+    private void adicionarCanteiro(Usuario usuario) {
+<span class="fc" id="L499">        Optional&lt;Horta&gt; horta = escolherHorta(usuario);</span>
+<span class="fc bfc" id="L500" title="All 2 branches covered.">        if (horta.isEmpty()) {</span>
+<span class="fc" id="L501">            return;</span>
+        }
+<span class="fc" id="L503">        String nome = lerObrigatorio(&quot;Nome do canteiro: &quot;);</span>
+<span class="fc" id="L504">        double area = lerDecimalPositivo(&quot;Área em m²: &quot;);</span>
+<span class="fc" id="L505">        String exposicao = ler(&quot;Exposição ao sol (ex.: Sol pleno, Meia sombra): &quot;);</span>
+<span class="fc" id="L506">        servicos.hortas().adicionarCanteiro(horta.get().getId(), nome, area, exposicao);</span>
+<span class="fc" id="L507">        saida.println(&quot;✅ Canteiro \&quot;&quot; + nome + &quot;\&quot; adicionado.&quot;);</span>
+<span class="fc" id="L508">    }</span>
+
+    private void iniciarPlantio(Usuario usuario) {
+<span class="fc" id="L511">        Optional&lt;Horta&gt; opcaoHorta = escolherHorta(usuario);</span>
+<span class="fc bfc" id="L512" title="All 2 branches covered.">        if (opcaoHorta.isEmpty()) {</span>
+<span class="fc" id="L513">            return;</span>
+        }
+<span class="fc" id="L515">        Horta horta = opcaoHorta.get();</span>
+<span class="fc bfc" id="L516" title="All 2 branches covered.">        if (horta.getCanteiros().isEmpty()) {</span>
+<span class="fc" id="L517">            saida.println(&quot;Esta horta ainda não tem canteiros. Adicione um na opção 3.&quot;);</span>
+<span class="fc" id="L518">            return;</span>
+        }
+<span class="fc" id="L520">        Optional&lt;Planta&gt; escolhida = pesquisarEEscolher();</span>
+<span class="fc bfc" id="L521" title="All 2 branches covered.">        if (escolhida.isEmpty()) {</span>
+<span class="fc" id="L522">            return;</span>
+        }
+<span class="fc" id="L524">        Planta planta = escolhida.get();</span>
+<span class="fc" id="L525">        saida.println(&quot;Luz: &quot; + planta.getNivelLuz().getRotulo() + &quot; | Apartamento: &quot;</span>
+<span class="fc" id="L526">                + planta.getApartamento().nivel().getRotulo());</span>
+<span class="fc" id="L527">        servicos.saude().perfil(planta).toxicidade().forEach(a -&gt; saida.println(&quot;⚠ Atenção: perigosa para &quot;</span>
+<span class="fc" id="L528">                + a.nome() + &quot; [&quot; + a.item().gravidade().getRotulo() + &quot;] — &quot; + a.item().motivo()));</span>
+
+<span class="fc" id="L530">        List&lt;Canteiro&gt; canteiros = horta.getCanteiros();</span>
+<span class="fc" id="L531">        saida.println(&quot;Canteiros:&quot;);</span>
+<span class="fc bfc" id="L532" title="All 2 branches covered.">        for (int i = 0; i &lt; canteiros.size(); i++) {</span>
+<span class="fc" id="L533">            saida.println(&quot;  &quot; + (i + 1) + &quot;) &quot; + canteiros.get(i).nome()</span>
+<span class="fc" id="L534">                    + &quot; — &quot; + canteiros.get(i).exposicaoSol());</span>
+        }
+<span class="fc" id="L536">        Canteiro canteiro = canteiros.get(lerInteiro(&quot;Escolha o canteiro: &quot;, 1, canteiros.size()) - 1);</span>
+
+<span class="fc" id="L538">        int quantidade = lerInteiro(&quot;Quantidade de mudas/plantas: &quot;, 1, 10000);</span>
+<span class="fc" id="L539">        LocalDate data = lerData(&quot;Data do plantio (dd/MM/aaaa, Enter = hoje): &quot;);</span>
+
+<span class="fc bfc" id="L541" title="All 2 branches covered.">        if (!planta.epocaAdequada(data)) {</span>
+<span class="fc" id="L542">            saida.println(&quot;⚠ Atenção: este mês não está entre as épocas indicadas para &quot; + planta.getNome() + &quot;:&quot;);</span>
+<span class="fc bfc" id="L543" title="All 2 branches covered.">            for (JanelaPlantio janela : planta.getJanelasPlantio()) {</span>
+<span class="fc" id="L544">                saida.println(&quot;   - &quot; + janela.descricao());</span>
+<span class="fc" id="L545">            }</span>
+        }
+
+<span class="fc" id="L548">        Plantio plantio = servicos.plantios()</span>
+<span class="fc" id="L549">                .iniciarPlantio(horta.getId(), planta.getNome(), canteiro.nome(), quantidade, data);</span>
+<span class="fc bfc" id="L550" title="All 2 branches covered.">        String fim = planta.isComestivel()</span>
+<span class="fc" id="L551">                ? &quot;Colheita prevista para &quot; + plantio.dataPrevistaColheita(planta).format(FORMATO_DATA) + &quot;.&quot;</span>
+<span class="fc" id="L552">                : &quot;Planta ornamental: sem colheita.&quot;;</span>
+<span class="fc" id="L553">        saida.println(&quot;✅ Plantio iniciado: &quot; + quantidade + &quot; &quot; + planta.getNome() + &quot; em &quot; + canteiro.nome()</span>
+                + &quot;. &quot; + fim);
+<span class="fc" id="L555">    }</span>
+
+    private void verPlantios(Usuario usuario) {
+<span class="fc" id="L558">        Optional&lt;Horta&gt; horta = escolherHorta(usuario);</span>
+<span class="fc bfc" id="L559" title="All 2 branches covered.">        if (horta.isEmpty()) {</span>
+<span class="fc" id="L560">            return;</span>
+        }
+<span class="fc" id="L562">        List&lt;Plantio&gt; plantios = servicos.plantios().listarPorHorta(horta.get().getId());</span>
+<span class="fc bfc" id="L563" title="All 2 branches covered.">        if (plantios.isEmpty()) {</span>
+<span class="fc" id="L564">            saida.println(&quot;Nenhum plantio nesta horta. Use a opção 4 para iniciar um.&quot;);</span>
+<span class="fc" id="L565">            return;</span>
+        }
+<span class="fc bfc" id="L567" title="All 2 branches covered.">        for (Plantio plantio : plantios) {</span>
+<span class="fc" id="L568">            Planta planta = servicos.plantios().buscarPlanta(plantio.getPlantaId());</span>
+<span class="fc" id="L569">            saida.println(&quot;\n&quot; + planta.getNome() + &quot; — &quot; + plantio.getCanteiro()</span>
+<span class="fc" id="L570">                    + &quot; [&quot; + plantio.getStatus().getRotulo() + &quot;]&quot;);</span>
+<span class="fc" id="L571">            saida.println(&quot;   Plantado em &quot; + plantio.getDataPlantio().format(FORMATO_DATA)</span>
+<span class="fc" id="L572">                    + &quot; (&quot; + plantio.getQuantidade() + &quot; un.)&quot;</span>
+<span class="fc bfc" id="L573" title="All 2 branches covered.">                    + (planta.isComestivel()</span>
+<span class="fc" id="L574">                    ? &quot; | colheita prevista em &quot; + plantio.dataPrevistaColheita(planta).format(FORMATO_DATA)</span>
+<span class="fc" id="L575">                    : &quot; | ornamental, sem colheita&quot;));</span>
+<span class="fc" id="L576">            String ultima = plantio.ultimaRega().map(d -&gt; d.format(FORMATO_DATA)).orElse(&quot;nunca&quot;);</span>
+<span class="fc" id="L577">            saida.println(&quot;   Regas: &quot; + plantio.getRegas().size() + &quot; (última: &quot; + ultima + &quot;)&quot;</span>
+<span class="fc" id="L578">                    + &quot; | Cuidados registrados: &quot; + plantio.getCuidados().size());</span>
+<span class="fc" id="L579">        }</span>
+<span class="fc" id="L580">    }</span>
+
+    private void registrarRega(Usuario usuario) {
+<span class="fc" id="L583">        Optional&lt;Plantio&gt; escolhido = escolherPlantioAtivo(usuario);</span>
+<span class="fc bfc" id="L584" title="All 2 branches covered.">        if (escolhido.isEmpty()) {</span>
+<span class="fc" id="L585">            return;</span>
+        }
+<span class="fc" id="L587">        Plantio plantio = escolhido.get();</span>
+<span class="fc" id="L588">        Planta planta = servicos.plantios().buscarPlanta(plantio.getPlantaId());</span>
+
+<span class="fc" id="L590">        OptionalInt ml = lerInteiroOpcional(</span>
+<span class="fc" id="L591">                &quot;Quantidade em ml (Enter = &quot; + planta.getRega().quantidadeMl() + &quot;): &quot;, 1, 100000);</span>
+<span class="fc" id="L592">        LocalDate data = lerData(&quot;Data da rega (Enter = hoje): &quot;);</span>
+<span class="fc" id="L593">        String observacao = ler(&quot;Observação (opcional): &quot;);</span>
+
+<span class="fc" id="L595">        Plantio atualizado = servicos.plantios().registrarRega(</span>
+<span class="fc bfc" id="L596" title="All 2 branches covered.">                plantio.getId(), ml.isPresent() ? ml.getAsInt() : null, observacao, data);</span>
+<span class="fc" id="L597">        saida.println(&quot;💧 Rega registrada. Próxima rega sugerida: &quot;</span>
+<span class="fc" id="L598">                + atualizado.proximaRega(planta).format(FORMATO_DATA) + &quot;.&quot;);</span>
+<span class="fc" id="L599">    }</span>
+
+    private void registrarCuidado(Usuario usuario) {
+<span class="fc" id="L602">        Optional&lt;Plantio&gt; escolhido = escolherPlantioAtivo(usuario);</span>
+<span class="fc bfc" id="L603" title="All 2 branches covered.">        if (escolhido.isEmpty()) {</span>
+<span class="fc" id="L604">            return;</span>
+        }
+<span class="fc" id="L606">        Plantio plantio = escolhido.get();</span>
+<span class="fc" id="L607">        Planta planta = servicos.plantios().buscarPlanta(plantio.getPlantaId());</span>
+<span class="fc" id="L608">        List&lt;Cuidado&gt; cuidados = planta.getCuidados();</span>
+<span class="pc bpc" id="L609" title="1 of 2 branches missed.">        if (cuidados.isEmpty()) {</span>
+<span class="nc" id="L610">            saida.println(&quot;Esta planta não tem cuidados cadastrados.&quot;);</span>
+<span class="nc" id="L611">            return;</span>
+        }
+
+<span class="fc" id="L614">        saida.println(&quot;Cuidados recomendados para &quot; + planta.getNome() + &quot;:&quot;);</span>
+<span class="fc bfc" id="L615" title="All 2 branches covered.">        for (int i = 0; i &lt; cuidados.size(); i++) {</span>
+<span class="fc" id="L616">            Cuidado c = cuidados.get(i);</span>
+<span class="pc bpc" id="L617" title="1 of 2 branches missed.">            String frequencia = c.periodico() ? &quot; (a cada &quot; + c.frequenciaDias() + &quot; dias)&quot; : &quot;&quot;;</span>
+<span class="fc" id="L618">            saida.println(&quot;  &quot; + (i + 1) + &quot;) [&quot; + c.tipo().getRotulo() + &quot;] &quot; + c.descricao() + frequencia);</span>
+        }
+<span class="fc" id="L620">        Cuidado cuidado = cuidados.get(lerInteiro(&quot;Qual cuidado você realizou? &quot;, 1, cuidados.size()) - 1);</span>
+<span class="fc" id="L621">        LocalDate data = lerData(&quot;Data (Enter = hoje): &quot;);</span>
+
+<span class="fc" id="L623">        Plantio atualizado = servicos.plantios()</span>
+<span class="fc" id="L624">                .registrarCuidado(plantio.getId(), cuidado.tipo(), cuidado.descricao(), data);</span>
+<span class="pc bpc" id="L625" title="1 of 2 branches missed.">        String proximo = cuidado.periodico()</span>
+<span class="fc" id="L626">                ? &quot; Próximo: &quot; + atualizado.proximoCuidado(cuidado).format(FORMATO_DATA) + &quot;.&quot;</span>
+<span class="pc" id="L627">                : &quot;&quot;;</span>
+<span class="fc" id="L628">        saida.println(&quot;🌿 Cuidado registrado.&quot; + proximo);</span>
+<span class="fc" id="L629">    }</span>
+
+    private void tarefasDeHoje(Usuario usuario) {
+<span class="fc" id="L632">        Optional&lt;Horta&gt; horta = escolherHorta(usuario);</span>
+<span class="fc bfc" id="L633" title="All 2 branches covered.">        if (horta.isEmpty()) {</span>
+<span class="fc" id="L634">            return;</span>
+        }
+<span class="fc" id="L636">        LocalDate hoje = hoje();</span>
+<span class="fc" id="L637">        List&lt;Tarefa&gt; tarefas = servicos.plantios().tarefasDoDia(horta.get().getId(), hoje);</span>
+<span class="fc bfc" id="L638" title="All 2 branches covered.">        if (tarefas.isEmpty()) {</span>
+<span class="fc" id="L639">            saida.println(&quot;🎉 Nenhuma tarefa pendente para hoje!&quot;);</span>
+<span class="fc" id="L640">            return;</span>
+        }
+<span class="fc" id="L642">        saida.println(&quot;Tarefas para &quot; + hoje.format(FORMATO_DATA) + &quot;:&quot;);</span>
+<span class="fc bfc" id="L643" title="All 2 branches covered.">        for (Tarefa t : tarefas) {</span>
+<span class="fc bfc" id="L644" title="All 2 branches covered.">            String atraso = t.atrasada() ? &quot; [ATRASADA desde &quot; + t.dataPrevista().format(FORMATO_DATA) + &quot;]&quot; : &quot;&quot;;</span>
+<span class="fc" id="L645">            saida.println(&quot;  &quot; + icone(t.tipo()) + &quot; &quot; + t.plantaNome() + &quot; (&quot; + t.canteiro() + &quot;) — &quot;</span>
+<span class="fc" id="L646">                    + t.descricao() + atraso);</span>
+<span class="fc" id="L647">        }</span>
+<span class="fc" id="L648">    }</span>
+
+    private void encerrarPlantio(Usuario usuario) {
+<span class="fc" id="L651">        Optional&lt;Plantio&gt; escolhido = escolherPlantioAtivo(usuario);</span>
+<span class="fc bfc" id="L652" title="All 2 branches covered.">        if (escolhido.isEmpty()) {</span>
+<span class="fc" id="L653">            return;</span>
+        }
+<span class="fc" id="L655">        Plantio plantio = escolhido.get();</span>
+<span class="fc" id="L656">        saida.println(&quot;1) Colhido   2) Perdido   0) Cancelar&quot;);</span>
+<span class="fc" id="L657">        int opcao = lerInteiro(&quot;Opção: &quot;, 0, 2);</span>
+<span class="fc bfc" id="L658" title="All 2 branches covered.">        if (opcao == 0) {</span>
+<span class="fc" id="L659">            saida.println(&quot;Nada foi alterado.&quot;);</span>
+<span class="fc" id="L660">            return;</span>
+        }
+<span class="fc" id="L662">        LocalDate data = lerData(&quot;Data (Enter = hoje): &quot;);</span>
+<span class="fc bfc" id="L663" title="All 2 branches covered.">        if (opcao == 1) {</span>
+<span class="fc" id="L664">            servicos.plantios().colher(plantio.getId(), data);</span>
+<span class="fc" id="L665">            saida.println(&quot;🧺 Plantio marcado como colhido.&quot;);</span>
+        } else {
+<span class="fc" id="L667">            servicos.plantios().marcarComoPerdido(plantio.getId(), data);</span>
+<span class="fc" id="L668">            saida.println(&quot;Plantio marcado como perdido.&quot;);</span>
+        }
+<span class="fc" id="L670">    }</span>
+
+    private void resumo(Usuario usuario) {
+<span class="fc" id="L673">        Optional&lt;Horta&gt; opcaoHorta = escolherHorta(usuario);</span>
+<span class="fc bfc" id="L674" title="All 2 branches covered.">        if (opcaoHorta.isEmpty()) {</span>
+<span class="fc" id="L675">            return;</span>
+        }
+<span class="fc" id="L677">        Horta horta = opcaoHorta.get();</span>
+<span class="fc" id="L678">        Map&lt;StatusPlantio, Long&gt; contagem = servicos.plantios().resumo(horta.getId());</span>
+<span class="fc" id="L679">        saida.println(&quot;\nResumo de &quot; + horta.getNome() + &quot; (&quot; + horta.getCanteiros().size() + &quot; canteiro(s)):&quot;);</span>
+<span class="fc bfc" id="L680" title="All 2 branches covered.">        for (StatusPlantio status : StatusPlantio.values()) {</span>
+<span class="fc" id="L681">            saida.println(&quot;  &quot; + status.getRotulo() + &quot;: &quot; + contagem.getOrDefault(status, 0L));</span>
+        }
+<span class="fc" id="L683">    }</span>
+
+    private Optional&lt;Horta&gt; escolherHorta(Usuario usuario) {
+<span class="fc" id="L686">        List&lt;Horta&gt; hortas = servicos.hortas().listarPorUsuario(usuario.getId());</span>
+<span class="fc bfc" id="L687" title="All 2 branches covered.">        if (hortas.isEmpty()) {</span>
+<span class="fc" id="L688">            saida.println(&quot;Você ainda não tem hortas. Crie uma na opção 2.&quot;);</span>
+<span class="fc" id="L689">            return Optional.empty();</span>
+        }
+<span class="fc bfc" id="L691" title="All 2 branches covered.">        if (hortas.size() == 1) {</span>
+<span class="fc" id="L692">            saida.println(&quot;Horta: &quot; + hortas.get(0).getNome());</span>
+<span class="fc" id="L693">            return Optional.of(hortas.get(0));</span>
+        }
+<span class="fc" id="L695">        saida.println(&quot;Suas hortas:&quot;);</span>
+<span class="fc bfc" id="L696" title="All 2 branches covered.">        for (int i = 0; i &lt; hortas.size(); i++) {</span>
+<span class="fc" id="L697">            saida.println(&quot;  &quot; + (i + 1) + &quot;) &quot; + hortas.get(i).getNome());</span>
+        }
+<span class="fc" id="L699">        return Optional.of(hortas.get(lerInteiro(&quot;Escolha a horta: &quot;, 1, hortas.size()) - 1));</span>
+    }
+
+    private Optional&lt;Plantio&gt; escolherPlantioAtivo(Usuario usuario) {
+<span class="fc" id="L703">        Optional&lt;Horta&gt; horta = escolherHorta(usuario);</span>
+<span class="fc bfc" id="L704" title="All 2 branches covered.">        if (horta.isEmpty()) {</span>
+<span class="fc" id="L705">            return Optional.empty();</span>
+        }
+<span class="fc" id="L707">        List&lt;Plantio&gt; ativos = servicos.plantios().listarPorHorta(horta.get().getId()).stream()</span>
+<span class="fc" id="L708">                .filter(Plantio::isAtivo)</span>
+<span class="fc" id="L709">                .toList();</span>
+<span class="fc bfc" id="L710" title="All 2 branches covered.">        if (ativos.isEmpty()) {</span>
+<span class="fc" id="L711">            saida.println(&quot;Não há plantios ativos nesta horta. Use a opção 4 para iniciar um.&quot;);</span>
+<span class="fc" id="L712">            return Optional.empty();</span>
+        }
+<span class="fc" id="L714">        saida.println(&quot;Plantios ativos:&quot;);</span>
+<span class="fc bfc" id="L715" title="All 2 branches covered.">        for (int i = 0; i &lt; ativos.size(); i++) {</span>
+<span class="fc" id="L716">            Plantio p = ativos.get(i);</span>
+<span class="fc" id="L717">            Planta planta = servicos.plantios().buscarPlanta(p.getPlantaId());</span>
+<span class="fc" id="L718">            saida.println(&quot;  &quot; + (i + 1) + &quot;) &quot; + planta.getNome() + &quot; — &quot; + p.getCanteiro()</span>
+<span class="fc" id="L719">                    + &quot; (plantado em &quot; + p.getDataPlantio().format(FORMATO_DATA) + &quot;)&quot;);</span>
+        }
+<span class="fc" id="L721">        return Optional.of(ativos.get(lerInteiro(&quot;Escolha o plantio: &quot;, 1, ativos.size()) - 1));</span>
+    }
+
+    private String icone(TipoTarefa tipo) {
+<span class="fc bfc" id="L725" title="All 3 branches covered.">        return switch (tipo) {</span>
+<span class="fc" id="L726">            case REGA -&gt; &quot;💧&quot;;</span>
+<span class="fc" id="L727">            case CUIDADO -&gt; &quot;🌿&quot;;</span>
+<span class="fc" id="L728">            case COLHEITA -&gt; &quot;🧺&quot;;</span>
+        };
+    }
+
+    private String ler(String pergunta) {
+<span class="fc" id="L733">        saida.print(pergunta);</span>
+<span class="fc" id="L734">        saida.flush();</span>
+<span class="fc bfc" id="L735" title="All 2 branches covered.">        if (!entrada.hasNextLine()) {</span>
+<span class="fc" id="L736">            throw new EntradaEncerradaException();</span>
+        }
+<span class="fc" id="L738">        return entrada.nextLine().trim();</span>
+    }
+
+    private String lerObrigatorio(String pergunta) {
+        while (true) {
+<span class="fc" id="L743">            String valor = ler(pergunta);</span>
+<span class="fc bfc" id="L744" title="All 2 branches covered.">            if (!valor.isEmpty()) {</span>
+<span class="fc" id="L745">                return valor;</span>
+            }
+<span class="fc" id="L747">            saida.println(&quot;Este campo é obrigatório.&quot;);</span>
+<span class="fc" id="L748">        }</span>
+    }
+
+    private int lerInteiro(String pergunta, int minimo, int maximo) {
+        while (true) {
+<span class="fc" id="L753">            String valor = ler(pergunta);</span>
+            try {
+<span class="fc" id="L755">                int numero = Integer.parseInt(valor);</span>
+<span class="pc bpc" id="L756" title="1 of 4 branches missed.">                if (numero &gt;= minimo &amp;&amp; numero &lt;= maximo) {</span>
+<span class="fc" id="L757">                    return numero;</span>
+                }
+<span class="nc" id="L759">            } catch (NumberFormatException ignorada) {</span>
+
+<span class="fc" id="L761">            }</span>
+<span class="fc" id="L762">            saida.println(&quot;Digite um número entre &quot; + minimo + &quot; e &quot; + maximo + &quot;.&quot;);</span>
+<span class="fc" id="L763">        }</span>
+    }
+
+    private OptionalInt lerInteiroOpcional(String pergunta, int minimo, int maximo) {
+        while (true) {
+<span class="fc" id="L768">            String valor = ler(pergunta);</span>
+<span class="fc bfc" id="L769" title="All 2 branches covered.">            if (valor.isEmpty()) {</span>
+<span class="fc" id="L770">                return OptionalInt.empty();</span>
+            }
+            try {
+<span class="fc" id="L773">                int numero = Integer.parseInt(valor);</span>
+<span class="pc bpc" id="L774" title="2 of 4 branches missed.">                if (numero &gt;= minimo &amp;&amp; numero &lt;= maximo) {</span>
+<span class="fc" id="L775">                    return OptionalInt.of(numero);</span>
+                }
+<span class="fc" id="L777">            } catch (NumberFormatException ignorada) {</span>
+
+<span class="nc" id="L779">            }</span>
+<span class="fc" id="L780">            saida.println(&quot;Digite um número entre &quot; + minimo + &quot; e &quot; + maximo + &quot; (ou Enter).&quot;);</span>
+<span class="fc" id="L781">        }</span>
+    }
+
+    private double lerDecimalPositivo(String pergunta) {
+        while (true) {
+<span class="fc" id="L786">            String valor = ler(pergunta).replace(',', '.');</span>
+            try {
+<span class="fc" id="L788">                double numero = Double.parseDouble(valor);</span>
+<span class="fc bfc" id="L789" title="All 2 branches covered.">                if (numero &gt; 0) {</span>
+<span class="fc" id="L790">                    return numero;</span>
+                }
+<span class="fc" id="L792">            } catch (NumberFormatException ignorada) {</span>
+
+<span class="fc" id="L794">            }</span>
+<span class="fc" id="L795">            saida.println(&quot;Digite um número maior que zero.&quot;);</span>
+<span class="fc" id="L796">        }</span>
+    }
+
+    private LocalDate lerData(String pergunta) {
+        while (true) {
+<span class="fc" id="L801">            String valor = ler(pergunta);</span>
+<span class="fc bfc" id="L802" title="All 2 branches covered.">            if (valor.isEmpty()) {</span>
+<span class="fc" id="L803">                return hoje();</span>
+            }
+            try {
+<span class="fc" id="L806">                return LocalDate.parse(valor, FORMATO_DATA);</span>
+<span class="fc" id="L807">            } catch (DateTimeParseException e) {</span>
+<span class="fc" id="L808">                saida.println(&quot;Data inválida. Use o formato dd/MM/aaaa.&quot;);</span>
+            }
+<span class="fc" id="L810">        }</span>
+    }
+
+    private LocalDate hoje() {
+<span class="fc" id="L814">        return LocalDate.now(relogio);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

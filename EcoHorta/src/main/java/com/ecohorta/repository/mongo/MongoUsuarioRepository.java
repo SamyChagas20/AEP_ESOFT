@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/** Persistência de usuários na coleção "usuarios" do MongoDB. */
 public class MongoUsuarioRepository implements UsuarioRepository {
 
     public static final String COLECAO = "usuarios";

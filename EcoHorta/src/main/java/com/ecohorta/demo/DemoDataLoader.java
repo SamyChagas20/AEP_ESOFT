@@ -8,11 +8,6 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.Optional;
 
-/**
- * Cria um usuário, uma horta com dois canteiros e plantios com histórico
- * para demonstrar rapidamente o sistema (tarefas atrasadas, colheita, etc.).
- * É idempotente: se o usuário de demonstração já existir, apenas o devolve.
- */
 public class DemoDataLoader {
 
     public static final String EMAIL_DEMO = "demo@ecohorta.com";

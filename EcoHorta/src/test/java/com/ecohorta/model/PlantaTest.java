@@ -95,8 +95,6 @@ class PlantaTest {
         assertThrows(NullPointerException.class, () -> planta.adicionarCuidado((Cuidado) null));
     }
 
-    // ---------------- luz, apartamento, estações ----------------
-
     @Test
     void valoresPadraoDosAtributosNovos() {
         Planta planta = new Planta("X", "", 10, "", new RegaRecomendada(1, 100, ""));

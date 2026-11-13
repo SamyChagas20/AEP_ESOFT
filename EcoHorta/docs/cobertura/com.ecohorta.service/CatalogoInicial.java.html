@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CatalogoInicial.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.service</a> &gt; <span class="el_source">CatalogoInicial.java</span></div><h1>CatalogoInicial.java</h1><pre class="source lang-java linenums">package com.ecohorta.service;
+
+import com.ecohorta.model.AdaptacaoApartamento;
+import com.ecohorta.model.CategoriaPlanta;
+import com.ecohorta.model.NivelApartamento;
+import com.ecohorta.model.NivelLuz;
+import com.ecohorta.model.Planta;
+import com.ecohorta.model.RegaRecomendada;
+import com.ecohorta.model.TipoCuidado;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class CatalogoInicial {
+
+    private CatalogoInicial() {
+    }
+
+    public static List&lt;Planta&gt; plantas() {
+<span class="fc" id="L20">        List&lt;Planta&gt; todas = new ArrayList&lt;&gt;(detalhadas());</span>
+<span class="fc" id="L21">        todas.addAll(CatalogoCsv.carregar());</span>
+<span class="fc" id="L22">        return todas;</span>
+    }
+
+    public static List&lt;Planta&gt; detalhadas() {
+<span class="fc" id="L26">        return List.of(tomate(), cebolinha(), pimenta(), alface(), salsinha());</span>
+    }
+
+    private static AdaptacaoApartamento apt(NivelApartamento nivel, String nota) {
+<span class="fc" id="L30">        return new AdaptacaoApartamento(nivel, nota);</span>
+    }
+
+    public static Planta tomate() {
+<span class="fc" id="L34">        return new Planta(&quot;Tomate&quot;, &quot;Solanum lycopersicum&quot;, 90, &quot;Sol pleno (mínimo 6 h por dia)&quot;,</span>
+                new RegaRecomendada(2, 1000, &quot;Regar na base da planta, sem molhar folhas e frutos&quot;))
+<span class="fc" id="L36">                .categoria(CategoriaPlanta.HORTALICA_FRUTO).nivelLuz(NivelLuz.PLENA)</span>
+<span class="fc" id="L37">                .apartamento(apt(NivelApartamento.POSSIVEL, &quot;Possível em vaso grande (mín. 20 L) em varanda com sol o dia todo; prefira tomate-cereja&quot;))</span>
+<span class="fc" id="L38">                .adicionarJanela(8, 10, &quot;Plantio principal, fim do inverno e primavera&quot;)</span>
+<span class="fc" id="L39">                .adicionarJanela(2, 3, &quot;Safrinha, onde o inverno é ameno&quot;)</span>
+<span class="fc" id="L40">                .adicionarCuidado(TipoCuidado.ADUBACAO, &quot;Adubar com composto ou NPK a cada 15 dias&quot;, 15)</span>
+<span class="fc" id="L41">                .adicionarCuidado(TipoCuidado.SUSTENTACAO, &quot;Amarrar a haste ao tutor conforme cresce&quot;, 7)</span>
+<span class="fc" id="L42">                .adicionarCuidado(TipoCuidado.PODA, &quot;Remover os brotos laterais (desbrota)&quot;, 7)</span>
+<span class="fc" id="L43">                .adicionarCuidado(TipoCuidado.PRAGAS, &quot;Inspecionar folhas (mosca-branca, traça, ácaros)&quot;, 7);</span>
+    }
+
+    public static Planta cebolinha() {
+<span class="fc" id="L47">        return new Planta(&quot;Cebolinha&quot;, &quot;Allium fistulosum&quot;, 60, &quot;Sol pleno a meia sombra&quot;,</span>
+                new RegaRecomendada(1, 200, &quot;Manter o solo sempre úmido&quot;))
+<span class="fc" id="L49">                .categoria(CategoriaPlanta.ERVA_TEMPERO).nivelLuz(NivelLuz.MEDIA)</span>
+<span class="fc" id="L50">                .apartamento(apt(NivelApartamento.IDEAL, &quot;Ótima em vasos na janela ou cozinha com sol da manhã&quot;))</span>
+<span class="fc" id="L51">                .adicionarJanela(1, 12, &quot;Pode ser plantada o ano todo&quot;)</span>
+<span class="fc" id="L52">                .adicionarCuidado(TipoCuidado.ADUBACAO, &quot;Adubo orgânico (húmus) a cada 30 dias&quot;, 30)</span>
+<span class="fc" id="L53">                .adicionarCuidado(TipoCuidado.MANEJO, &quot;Colher cortando a cerca de 2 cm do solo para rebrotar&quot;, 0)</span>
+<span class="fc" id="L54">                .adicionarCuidado(TipoCuidado.SOLO, &quot;Solo fofo e rico em matéria orgânica&quot;, 0);</span>
+    }
+
+    public static Planta pimenta() {
+<span class="fc" id="L58">        return new Planta(&quot;Pimenta&quot;, &quot;Capsicum spp.&quot;, 100, &quot;Sol pleno&quot;,</span>
+                new RegaRecomendada(2, 500, &quot;Evitar encharcamento do solo&quot;))
+<span class="fc" id="L60">                .categoria(CategoriaPlanta.HORTALICA_FRUTO).nivelLuz(NivelLuz.PLENA)</span>
+<span class="fc" id="L61">                .apartamento(apt(NivelApartamento.POSSIVEL, &quot;Possível em vaso na varanda ou janela com sol forte&quot;))</span>
+<span class="fc" id="L62">                .adicionarJanela(9, 11, &quot;Primavera&quot;)</span>
+<span class="fc" id="L63">                .adicionarCuidado(TipoCuidado.ADUBACAO, &quot;Adubo rico em potássio na fase de frutificação&quot;, 20)</span>
+<span class="fc" id="L64">                .adicionarCuidado(TipoCuidado.PRAGAS, &quot;Verificar pulgões e ácaros nas folhas&quot;, 10)</span>
+<span class="fc" id="L65">                .adicionarCuidado(TipoCuidado.SUSTENTACAO, &quot;Tutorar plantas altas ou carregadas de frutos&quot;, 0);</span>
+    }
+
+    public static Planta alface() {
+<span class="fc" id="L69">        return new Planta(&quot;Alface&quot;, &quot;Lactuca sativa&quot;, 45, &quot;Sol pleno em clima ameno; meia sombra no calor&quot;,</span>
+                new RegaRecomendada(1, 250, &quot;Regas leves e frequentes&quot;))
+<span class="fc" id="L71">                .categoria(CategoriaPlanta.FOLHOSA).nivelLuz(NivelLuz.MEDIA)</span>
+<span class="fc" id="L72">                .apartamento(apt(NivelApartamento.IDEAL, &quot;Cresce bem em jardineiras ou vasos largos na janela&quot;))</span>
+<span class="fc" id="L73">                .adicionarJanela(3, 8, &quot;Melhor época, clima ameno&quot;)</span>
+<span class="fc" id="L74">                .adicionarJanela(9, 2, &quot;Verão: usar variedades resistentes ao calor e meia sombra&quot;)</span>
+<span class="fc" id="L75">                .adicionarCuidado(TipoCuidado.ADUBACAO, &quot;Adubação orgânica rica em nitrogênio&quot;, 15)</span>
+<span class="fc" id="L76">                .adicionarCuidado(TipoCuidado.PRAGAS, &quot;Verificar lesmas e caracóis&quot;, 7)</span>
+<span class="fc" id="L77">                .adicionarCuidado(TipoCuidado.SOLO, &quot;Solo rico em matéria orgânica e bem drenado&quot;, 0);</span>
+    }
+
+    public static Planta salsinha() {
+<span class="fc" id="L81">        return new Planta(&quot;Salsinha&quot;, &quot;Petroselinum crispum&quot;, 70, &quot;Meia sombra&quot;,</span>
+                new RegaRecomendada(2, 300, &quot;Solo úmido, mas nunca encharcado&quot;))
+<span class="fc" id="L83">                .categoria(CategoriaPlanta.ERVA_TEMPERO).nivelLuz(NivelLuz.MEDIA)</span>
+<span class="fc" id="L84">                .apartamento(apt(NivelApartamento.IDEAL, &quot;Ótima em vaso na janela com luz da manhã&quot;))</span>
+<span class="fc" id="L85">                .adicionarJanela(3, 10, &quot;Melhor época&quot;)</span>
+<span class="fc" id="L86">                .adicionarJanela(11, 2, &quot;Verão: sombrear nas horas mais quentes&quot;)</span>
+<span class="fc" id="L87">                .adicionarCuidado(TipoCuidado.ADUBACAO, &quot;Adubo orgânico a cada 30 dias&quot;, 30)</span>
+<span class="fc" id="L88">                .adicionarCuidado(TipoCuidado.MANEJO, &quot;Colher as folhas externas, preservando o miolo&quot;, 0)</span>
+<span class="fc" id="L89">                .adicionarCuidado(TipoCuidado.LUMINOSIDADE, &quot;Prefere meia sombra&quot;, 0);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,9 +1,5 @@
 package com.ecohorta.model;
 
-/**
- * Divisão física de uma horta. É um item da lista de subdocumentos
- * "canteiros" dentro do documento da horta.
- */
 public record Canteiro(String nome, double areaM2, String exposicaoSol) {
 
     public Canteiro {

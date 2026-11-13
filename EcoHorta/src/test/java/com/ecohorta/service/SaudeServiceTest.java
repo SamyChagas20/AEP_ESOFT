@@ -36,8 +36,6 @@ class SaudeServiceTest {
         return alertas.stream().anyMatch(a -> a.codigo().equals(codigo));
     }
 
-    // ---------------- integridade dos dados iniciais ----------------
-
     @Test
     void todasAsPlantasCitadasExistemNoCatalogo() {
         Set<String> catalogo = new HashSet<>();
@@ -60,7 +58,7 @@ class SaudeServiceTest {
             Set<String> recomendadas = new HashSet<>();
             d.recomendadas().forEach(e -> assertTrue(recomendadas.add(e.planta()),
                     d.codigo() + " recomendadas repete " + e.planta()));
-            // uma planta não pode ser "evitar" e "recomendada" no mesmo registro
+
             evitar.forEach(n -> assertFalse(recomendadas.contains(n), d.codigo() + " contradiz-se em " + n));
         }
     }
@@ -75,8 +73,6 @@ class SaudeServiceTest {
             assertTrue(d.evitar().stream().allMatch(e -> e.gravidade() != null), d.codigo());
         }
     }
-
-    // ---------------- carga ----------------
 
     @Test
     void cargaExigeOCatalogoCarregado() {
@@ -120,8 +116,6 @@ class SaudeServiceTest {
         assertEquals(Gravidade.GRAVE, cebola.gravidade());
     }
 
-    // ---------------- toxicidade: o principal ----------------
-
     @Test
     void cebolaEGravementeToxicaParaGatosECaesEHaCuidadoParaPessoasComRefluxo() {
         carregarTudo();
@@ -164,8 +158,6 @@ class SaudeServiceTest {
         assertEquals(2, perfil.seguraParaPets().size());
         assertTrue(perfil.toxicidade().isEmpty());
     }
-
-    // ---------------- comorbidades: o que é melhor e o que evitar ----------------
 
     @Test
     void espinafreEvitadoNaDoencaRenalEIndicadoNoDiabetes() {

@@ -4,7 +4,6 @@ import com.ecohorta.model.Usuario;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-/** Converte Usuario <-> Document (coleção "usuarios"). */
 public final class UsuarioMapper {
 
     private UsuarioMapper() {

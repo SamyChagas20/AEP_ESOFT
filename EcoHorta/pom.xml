@@ -17,7 +17,6 @@
         <mongodb.driver.version>4.11.1</mongodb.driver.version>
         <junit.version>5.10.2</junit.version>
         <jacoco.version>0.8.11</jacoco.version>
-        <!-- Cobertura mínima de linhas exigida no "mvn verify" -->
         <cobertura.minima>0.70</cobertura.minima>
     </properties>
 
@@ -44,15 +43,11 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.12.1</version>
             </plugin>
-
-            <!-- Versão 3.x é necessária para executar testes JUnit 5 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
             </plugin>
-
-            <!-- Cobertura de testes -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -63,13 +58,11 @@
                         <goals><goal>prepare-agent</goal></goals>
                     </execution>
                     <execution>
-                        <!-- Gera o relatório HTML em target/site/jacoco/index.html -->
                         <id>relatorio</id>
                         <phase>test</phase>
                         <goals><goal>report</goal></goals>
                     </execution>
                     <execution>
-                        <!-- Falha o build se a cobertura de linhas ficar abaixo do mínimo -->
                         <id>verificar-cobertura</id>
                         <phase>verify</phase>
                         <goals><goal>check</goal></goals>
@@ -90,8 +83,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Permite rodar com: mvn compile exec:java -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -100,8 +91,6 @@
                     <mainClass>com.ecohorta.Main</mainClass>
                 </configuration>
             </plugin>
-
-            <!-- Gera um JAR executável (com dependências) via: mvn package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

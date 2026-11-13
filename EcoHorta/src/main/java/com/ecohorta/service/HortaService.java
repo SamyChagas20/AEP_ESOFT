@@ -7,7 +7,6 @@ import com.ecohorta.repository.UsuarioRepository;
 
 import java.util.List;
 
-/** Criação de hortas e gerenciamento dos seus canteiros. */
 public class HortaService {
 
     private final HortaRepository hortas;

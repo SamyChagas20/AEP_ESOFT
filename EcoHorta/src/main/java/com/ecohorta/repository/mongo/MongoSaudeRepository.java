@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/** Persistência de saúde e segurança na coleção "saude". */
 public class MongoSaudeRepository implements SaudeRepository {
 
     public static final String COLECAO = "saude";
@@ -59,7 +58,6 @@ public class MongoSaudeRepository implements SaudeRepository {
                 .into(new ArrayList<>());
     }
 
-    /** Consulta nas listas embutidas: procura o id da planta em "evitar" ou "recomendadas". */
     @Override
     public List<RegistroSaude> listarPorPlanta(String plantaId) {
         if (plantaId == null || !ObjectId.isValid(plantaId)) {

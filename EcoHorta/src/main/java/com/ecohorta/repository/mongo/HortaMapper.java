@@ -8,11 +8,6 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Converte Horta <-> Document (coleção "hortas").
- * "usuarioId" é uma referência (ObjectId) para "usuarios";
- * "canteiros" é uma lista de subdocumentos embutidos.
- */
 public final class HortaMapper {
 
     private HortaMapper() {

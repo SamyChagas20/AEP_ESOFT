@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Uma estação do ano na coleção "tempo": seus meses (subdocumentos), o melhor mês
- * para plantar e a explicação. As plantas apontam para ela pelo campo "estacoes".
- */
 public class Tempo {
 
     private String id;
@@ -30,7 +26,6 @@ public class Tempo {
         this.justificativaMelhorMes = justificativaMelhorMes == null ? "" : justificativaMelhorMes.trim();
     }
 
-    /** Descreve um mês da estação (o mês marcado como melhor é calculado). */
     public Tempo adicionarMes(int mes, String observacao) {
         if (!estacao.contem(mes)) {
             throw new IllegalArgumentException("O mês " + mes + " não pertence à estação " + estacao.getNome() + ".");

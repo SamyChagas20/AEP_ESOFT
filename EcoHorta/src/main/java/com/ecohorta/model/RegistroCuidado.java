@@ -2,7 +2,6 @@ package com.ecohorta.model;
 
 import java.time.LocalDate;
 
-/** Histórico de um cuidado realizado (subdocumento em "plantios"). */
 public record RegistroCuidado(LocalDate data, TipoCuidado tipo, String descricao) {
 
     public RegistroCuidado {

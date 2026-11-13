@@ -1,10 +1,5 @@
 package com.ecohorta.model;
 
-/**
- * Planta citada em um registro de saúde (subdocumento em "saude").
- * "plantaId" referencia a coleção "plantas"; "plantaNome" é cópia para exibição.
- * A gravidade só se aplica a itens da lista "evitar" (pode ser nula em "recomendadas").
- */
 public record ItemSaude(String plantaId, String plantaNome, String motivo, Gravidade gravidade) {
 
     public ItemSaude {

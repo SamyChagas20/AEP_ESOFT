@@ -1,6 +1,5 @@
 package com.ecohorta.model;
 
-/** Adaptação a apartamento (documento aninhado em "plantas"). */
 public record AdaptacaoApartamento(NivelApartamento nivel, String observacao) {
 
     public AdaptacaoApartamento {

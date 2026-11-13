@@ -1,6 +1,5 @@
 package com.ecohorta.model;
 
-/** Situação de um plantio ao longo do seu ciclo de vida. */
 public enum StatusPlantio {
     ATIVO("Ativo"),
     COLHIDO("Colhido"),

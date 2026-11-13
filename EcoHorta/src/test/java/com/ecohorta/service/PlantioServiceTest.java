@@ -40,8 +40,6 @@ class PlantioServiceTest {
         return service.iniciarPlantio(horta.getId(), planta, "C1", 3, HOJE.minusDays(diasAtras));
     }
 
-    // ---------------- iniciar plantio ----------------
-
     @Test
     void iniciarPlantioLigaHortaEPlantaPorReferencia() {
         Plantio plantio = plantar("tomate", 2);
@@ -70,8 +68,6 @@ class PlantioServiceTest {
                 () -> service.iniciarPlantio(horta.getId(), "Tomate", "C1", 1, HOJE.plusDays(1)));
     }
 
-    // ---------------- regas e cuidados ----------------
-
     @Test
     void registrarRegaUsaQuantidadeEDataPadraoQuandoOmitidas() {
         Plantio plantio = plantar("Tomate", 2);
@@ -80,7 +76,7 @@ class PlantioServiceTest {
 
         assertEquals(1000, atualizado.getRegas().get(0).quantidadeMl());
         assertEquals(HOJE, atualizado.getRegas().get(0).data());
-        // foi persistido, não apenas alterado em memória
+
         assertEquals(1, ambiente.plantios.buscarPorId(plantio.getId()).orElseThrow().getRegas().size());
     }
 
@@ -116,8 +112,6 @@ class PlantioServiceTest {
                 () -> service.registrarCuidado(id, TipoCuidado.PODA, "", HOJE.plusDays(2)));
     }
 
-    // ---------------- encerramento e resumo ----------------
-
     @Test
     void colherEMarcarComoPerdidoAtualizamOResumo() {
         Plantio colhido = plantar("Alface", 40);
@@ -139,11 +133,9 @@ class PlantioServiceTest {
         assertThrows(RecursoNaoEncontradoException.class, () -> service.buscarPlanta("000000000000000000000000"));
     }
 
-    // ---------------- tarefas do dia ----------------
-
     @Test
     void plantioSemHistoricoGeraRegaECuidadosAtrasados() {
-        plantar("Tomate", 20); // plantado em 21/10
+        plantar("Tomate", 20);
 
         List<Tarefa> tarefas = service.tarefasDoDia(horta.getId(), HOJE);
 
@@ -164,7 +156,7 @@ class PlantioServiceTest {
 
         List<Tarefa> tarefas = service.tarefasDoDia(horta.getId(), HOJE);
 
-        assertEquals(3, tarefas.size()); // sustentação, poda e pragas continuam pendentes
+        assertEquals(3, tarefas.size());
         assertTrue(tarefas.stream().allMatch(t -> t.tipo() == TipoTarefa.CUIDADO));
     }
 
@@ -175,7 +167,6 @@ class PlantioServiceTest {
 
         List<Tarefa> tarefas = service.tarefasDoDia(horta.getId(), HOJE);
 
-        // ordenadas por data prevista: adubação (06/10), colheita (05/11) e rega (hoje)
         assertEquals(List.of(TipoTarefa.CUIDADO, TipoTarefa.COLHEITA, TipoTarefa.REGA),
                 tarefas.stream().map(Tarefa::tipo).toList());
         assertEquals(List.of(true, true, false), tarefas.stream().map(Tarefa::atrasada).toList());

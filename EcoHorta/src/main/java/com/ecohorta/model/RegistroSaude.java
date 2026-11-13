@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Documento da coleção "saude": um grupo (gatos, cães, pessoas) ou uma condição de saúde
- * (ex.: doença renal) com listas de plantas a evitar e plantas recomendadas.
- * Informação educativa; não substitui orientação de médico ou veterinário.
- */
 public class RegistroSaude {
 
     private String id;

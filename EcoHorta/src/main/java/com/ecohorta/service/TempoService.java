@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Estações do ano, melhores meses e relação com as plantas do catálogo. */
 public class TempoService {
 
     private final TempoRepository tempos;
@@ -23,7 +22,6 @@ public class TempoService {
         this.plantas = plantas;
     }
 
-    /** Insere as estações que ainda não existem. @return quantas foram inseridas */
     public int carregarTempoInicial() {
         int inseridas = 0;
         for (Tempo tempo : TempoInicial.estacoes()) {
@@ -49,18 +47,15 @@ public class TempoService {
         return Estacao.deMes(data.getMonthValue());
     }
 
-    /** Plantas que têm janela de plantio na estação. */
     public List<Planta> plantasDaEstacao(Estacao estacao) {
         return plantas.filtrar(FiltroPlantas.todas().comEstacao(estacao));
     }
 
-    /** Plantas com janela de plantio no melhor mês da estação. */
     public List<Planta> plantasDoMelhorMes(Estacao estacao) {
         int melhor = buscar(estacao).getMelhorMes();
         return plantasDaEstacao(estacao).stream().filter(p -> p.epocaAdequada(melhor)).toList();
     }
 
-    /** Quantidade de plantas do catálogo que podem ser plantadas em cada mês da estação. */
     public Map<Integer, Long> plantasPorMes(Estacao estacao) {
         List<Planta> daEstacao = plantasDaEstacao(estacao);
         Map<Integer, Long> contagem = new LinkedHashMap<>();

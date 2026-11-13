@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tempo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.model</a> &gt; <span class="el_source">Tempo.java</span></div><h1>Tempo.java</h1><pre class="source lang-java linenums">package com.ecohorta.model;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Tempo {
+
+    private String id;
+    private final Estacao estacao;
+    private final String descricao;
+    private final int melhorMes;
+    private final String justificativaMelhorMes;
+<span class="fc" id="L14">    private final List&lt;MesDaEstacao&gt; meses = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L16">    public Tempo(Estacao estacao, String descricao, int melhorMes, String justificativaMelhorMes) {</span>
+<span class="fc bfc" id="L17" title="All 2 branches covered.">        if (estacao == null) {</span>
+<span class="fc" id="L18">            throw new IllegalArgumentException(&quot;A estação é obrigatória.&quot;);</span>
+        }
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (!estacao.contem(melhorMes)) {</span>
+<span class="fc" id="L21">            throw new IllegalArgumentException(&quot;O melhor mês deve pertencer à estação &quot; + estacao.getNome() + &quot;.&quot;);</span>
+        }
+<span class="fc" id="L23">        this.estacao = estacao;</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        this.descricao = descricao == null ? &quot;&quot; : descricao.trim();</span>
+<span class="fc" id="L25">        this.melhorMes = melhorMes;</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        this.justificativaMelhorMes = justificativaMelhorMes == null ? &quot;&quot; : justificativaMelhorMes.trim();</span>
+<span class="fc" id="L27">    }</span>
+
+    public Tempo adicionarMes(int mes, String observacao) {
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (!estacao.contem(mes)) {</span>
+<span class="fc" id="L31">            throw new IllegalArgumentException(&quot;O mês &quot; + mes + &quot; não pertence à estação &quot; + estacao.getNome() + &quot;.&quot;);</span>
+        }
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        meses.add(new MesDaEstacao(mes, Meses.nome(mes), mes == melhorMes, observacao));</span>
+<span class="fc" id="L34">        return this;</span>
+    }
+
+    public String getId() {
+<span class="fc" id="L38">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="fc" id="L42">        this.id = id;</span>
+<span class="fc" id="L43">    }</span>
+
+    public Estacao getEstacao() {
+<span class="fc" id="L46">        return estacao;</span>
+    }
+
+    public String getDescricao() {
+<span class="fc" id="L50">        return descricao;</span>
+    }
+
+    public int getMelhorMes() {
+<span class="fc" id="L54">        return melhorMes;</span>
+    }
+
+    public String getJustificativaMelhorMes() {
+<span class="fc" id="L58">        return justificativaMelhorMes;</span>
+    }
+
+    public List&lt;MesDaEstacao&gt; getMeses() {
+<span class="fc" id="L62">        return Collections.unmodifiableList(meses);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

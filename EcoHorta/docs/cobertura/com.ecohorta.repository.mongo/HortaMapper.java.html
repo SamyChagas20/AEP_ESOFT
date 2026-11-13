@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HortaMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.repository.mongo</a> &gt; <span class="el_source">HortaMapper.java</span></div><h1>HortaMapper.java</h1><pre class="source lang-java linenums">package com.ecohorta.repository.mongo;
+
+import com.ecohorta.model.Canteiro;
+import com.ecohorta.model.Horta;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class HortaMapper {
+
+    private HortaMapper() {
+    }
+
+    public static Document paraDocumento(Horta horta) {
+<span class="fc" id="L17">        Document doc = new Document();</span>
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        if (horta.getId() != null) {</span>
+<span class="fc" id="L19">            doc.put(&quot;_id&quot;, new ObjectId(horta.getId()));</span>
+        }
+<span class="fc" id="L21">        doc.append(&quot;usuarioId&quot;, BsonUtil.paraObjectId(horta.getUsuarioId()));</span>
+<span class="fc" id="L22">        doc.append(&quot;nome&quot;, horta.getNome());</span>
+<span class="fc" id="L23">        doc.append(&quot;localizacao&quot;, horta.getLocalizacao());</span>
+
+<span class="fc" id="L25">        List&lt;Document&gt; canteiros = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        for (Canteiro c : horta.getCanteiros()) {</span>
+<span class="fc" id="L27">            canteiros.add(new Document(&quot;nome&quot;, c.nome())</span>
+<span class="fc" id="L28">                    .append(&quot;areaM2&quot;, c.areaM2())</span>
+<span class="fc" id="L29">                    .append(&quot;exposicaoSol&quot;, c.exposicaoSol()));</span>
+<span class="fc" id="L30">        }</span>
+<span class="fc" id="L31">        doc.append(&quot;canteiros&quot;, canteiros);</span>
+<span class="fc" id="L32">        return doc;</span>
+    }
+
+    public static Horta deDocumento(Document doc) {
+<span class="fc" id="L36">        Horta horta = new Horta(</span>
+<span class="fc" id="L37">                BsonUtil.lerReferencia(doc, &quot;usuarioId&quot;),</span>
+<span class="fc" id="L38">                doc.getString(&quot;nome&quot;),</span>
+<span class="fc" id="L39">                doc.getString(&quot;localizacao&quot;));</span>
+<span class="fc" id="L40">        horta.setId(BsonUtil.lerId(doc));</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        for (Document c : BsonUtil.lerSubdocumentos(doc, &quot;canteiros&quot;)) {</span>
+<span class="fc" id="L42">            horta.adicionarCanteiro(new Canteiro(</span>
+<span class="fc" id="L43">                    c.getString(&quot;nome&quot;),</span>
+<span class="fc" id="L44">                    BsonUtil.lerDouble(c, &quot;areaM2&quot;),</span>
+<span class="fc" id="L45">                    c.getString(&quot;exposicaoSol&quot;)));</span>
+<span class="fc" id="L46">        }</span>
+<span class="fc" id="L47">        return horta;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

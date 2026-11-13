@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-/** Persistência do catálogo na coleção "plantas" (documentos com subdocumentos e listas). */
 public class MongoPlantaRepository implements PlantaRepository {
 
     public static final String COLECAO = "plantas";

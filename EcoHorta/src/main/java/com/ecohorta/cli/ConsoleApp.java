@@ -44,11 +44,6 @@ import java.util.OptionalInt;
 import java.util.Scanner;
 import java.util.function.Function;
 
-/**
- * Interface de terminal do EcoHorta. Só cuida de ler/mostrar dados; toda a
- * regra de negócio fica nos serviços. Entrada e saída são injetadas, o que
- * permite testar os fluxos de forma automatizada.
- */
 public class ConsoleApp {
 
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
@@ -79,10 +74,6 @@ public class ConsoleApp {
             saida.println("\nEntrada encerrada. Até a próxima!");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Menus
-    // ------------------------------------------------------------------
 
     private void menuInicial() {
         while (true) {
@@ -143,7 +134,6 @@ public class ConsoleApp {
         }
     }
 
-    /** Executa uma ação mostrando erros de negócio/validação de forma amigável. */
     private void executarAcao(Runnable acao) {
         try {
             acao.run();
@@ -151,10 +141,6 @@ public class ConsoleApp {
             saida.println("⚠ " + e.getMessage());
         }
     }
-
-    // ------------------------------------------------------------------
-    // Ações do menu inicial
-    // ------------------------------------------------------------------
 
     private void entrar() {
         String email = lerObrigatorio("E-mail: ");
@@ -178,10 +164,6 @@ public class ConsoleApp {
                 + usuario.getNome() + " (" + usuario.getEmail() + ").");
         menuUsuario(usuario);
     }
-
-    // ------------------------------------------------------------------
-    // Catálogo
-    // ------------------------------------------------------------------
 
     private void menuCatalogo() {
         while (true) {
@@ -244,7 +226,6 @@ public class ConsoleApp {
         return escolha.isPresent() ? niveis.get(escolha.getAsInt() - 1) : null;
     }
 
-    /** Mostra uma lista numerada e paginada; permite abrir os detalhes de uma planta. */
     private void explorar(String titulo, List<Planta> plantas) {
         if (plantas.isEmpty()) {
             saida.println("Nenhuma planta encontrada.");
@@ -280,7 +261,7 @@ public class ConsoleApp {
                         continue;
                     }
                 } catch (NumberFormatException ignorada) {
-                    // cai na mensagem abaixo
+
                 }
                 saida.println("Opção inválida.");
             }
@@ -295,7 +276,6 @@ public class ConsoleApp {
         return opcoes.get(lerInteiro("Escolha: ", 1, opcoes.size()) - 1);
     }
 
-    /** Pede parte do nome e deixa a pessoa escolher entre os resultados (máx. 15). */
     private Optional<Planta> pesquisarEEscolher() {
         String termo = lerObrigatorio("Nome (ou parte do nome) da planta: ");
         List<Planta> achadas = servicos.catalogo().pesquisar(FiltroPlantas.todas().comTermo(termo));
@@ -370,10 +350,6 @@ public class ConsoleApp {
         saida.println("   (Informação educativa; não substitui médico, nutricionista ou veterinário.)");
     }
 
-    // ------------------------------------------------------------------
-    // Estações e meses
-    // ------------------------------------------------------------------
-
     private void menuEstacoes() {
         List<Tempo> tempos = servicos.tempo().listar();
         if (tempos.isEmpty()) {
@@ -418,7 +394,7 @@ public class ConsoleApp {
             case 2 -> explorar("Plantas para " + Meses.nome(tempo.getMelhorMes()),
                     servicos.tempo().plantasDoMelhorMes(estacao));
             default -> {
-                // volta
+
             }
         }
     }
@@ -432,10 +408,6 @@ public class ConsoleApp {
                         + (t.getMelhorMes() == mes ? " (é agora!)" : "") + "."));
         explorar("Para plantar em " + Meses.nome(mes), servicos.catalogo().plantasParaPlantar(mes));
     }
-
-    // ------------------------------------------------------------------
-    // Saúde e segurança
-    // ------------------------------------------------------------------
 
     private void menuSaude() {
         while (true) {
@@ -486,7 +458,6 @@ public class ConsoleApp {
         saida.println("\n" + registro.getAviso());
     }
 
-    /** Agrupa por gravidade e motivo para a lista não ficar enorme. */
     private void imprimirItens(List<ItemSaude> itens, boolean comGravidade) {
         List<ItemSaude> ordenados = new ArrayList<>(itens);
         if (comGravidade) {
@@ -499,10 +470,6 @@ public class ConsoleApp {
         }
         grupos.forEach((chave, nomes) -> saida.println("  • " + chave + ":\n      " + String.join(", ", nomes)));
     }
-
-    // ------------------------------------------------------------------
-    // Ações do menu do usuário
-    // ------------------------------------------------------------------
 
     private void minhasHortas(Usuario usuario) {
         List<Horta> hortas = servicos.hortas().listarPorUsuario(usuario.getId());
@@ -715,11 +682,6 @@ public class ConsoleApp {
         }
     }
 
-    // ------------------------------------------------------------------
-    // Seleção de registros
-    // ------------------------------------------------------------------
-
-    /** Lista as hortas do usuário; se houver só uma, seleciona automaticamente. */
     private Optional<Horta> escolherHorta(Usuario usuario) {
         List<Horta> hortas = servicos.hortas().listarPorUsuario(usuario.getId());
         if (hortas.isEmpty()) {
@@ -767,10 +729,6 @@ public class ConsoleApp {
         };
     }
 
-    // ------------------------------------------------------------------
-    // Leitura de dados (com validação)
-    // ------------------------------------------------------------------
-
     private String ler(String pergunta) {
         saida.print(pergunta);
         saida.flush();
@@ -799,7 +757,7 @@ public class ConsoleApp {
                     return numero;
                 }
             } catch (NumberFormatException ignorada) {
-                // cai na mensagem abaixo
+
             }
             saida.println("Digite um número entre " + minimo + " e " + maximo + ".");
         }
@@ -817,7 +775,7 @@ public class ConsoleApp {
                     return OptionalInt.of(numero);
                 }
             } catch (NumberFormatException ignorada) {
-                // cai na mensagem abaixo
+
             }
             saida.println("Digite um número entre " + minimo + " e " + maximo + " (ou Enter).");
         }
@@ -832,13 +790,12 @@ public class ConsoleApp {
                     return numero;
                 }
             } catch (NumberFormatException ignorada) {
-                // cai na mensagem abaixo
+
             }
             saida.println("Digite um número maior que zero.");
         }
     }
 
-    /** Lê uma data no formato dd/MM/aaaa; Enter devolve a data de hoje. */
     private LocalDate lerData(String pergunta) {
         while (true) {
             String valor = ler(pergunta);

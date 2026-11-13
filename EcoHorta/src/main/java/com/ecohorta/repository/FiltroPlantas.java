@@ -5,10 +5,6 @@ import com.ecohorta.model.Estacao;
 import com.ecohorta.model.NivelApartamento;
 import com.ecohorta.model.NivelLuz;
 
-/**
- * Critérios opcionais para consultar o catálogo (campos nulos são ignorados).
- * "termo" busca parte do nome, sem diferenciar acentos nem maiúsculas.
- */
 public record FiltroPlantas(String termo, Estacao estacao, NivelLuz nivelLuz,
                             NivelApartamento apartamento, CategoriaPlanta categoria, Boolean comestivel) {
 

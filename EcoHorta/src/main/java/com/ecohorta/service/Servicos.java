@@ -9,7 +9,6 @@ import com.ecohorta.repository.UsuarioRepository;
 
 import java.time.Clock;
 
-/** Agrupa os serviços da aplicação para facilitar a injeção (ex.: no terminal e nos testes). */
 public record Servicos(UsuarioService usuarios,
                        HortaService hortas,
                        CatalogoService catalogo,
@@ -17,7 +16,6 @@ public record Servicos(UsuarioService usuarios,
                        TempoService tempo,
                        SaudeService saude) {
 
-    /** Quantidade de registros inseridos na carga inicial. */
     public record ResumoCarga(int plantas, int estacoes, int registrosSaude) {
     }
 
@@ -33,7 +31,6 @@ public record Servicos(UsuarioService usuarios,
                 new SaudeService(saude, plantas));
     }
 
-    /** Carrega, nesta ordem, catálogo, estações e saúde (que depende do catálogo). Não duplica dados. */
     public ResumoCarga carregarDadosIniciais() {
         int plantas = catalogo.carregarCatalogoInicial();
         int estacoes = tempo.carregarTempoInicial();

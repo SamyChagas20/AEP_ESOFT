@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RegistroSaude.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.model</a> &gt; <span class="el_source">RegistroSaude.java</span></div><h1>RegistroSaude.java</h1><pre class="source lang-java linenums">package com.ecohorta.model;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class RegistroSaude {
+
+    private String id;
+    private final String codigo;
+    private final TipoRegistroSaude tipo;
+    private final String nome;
+    private final String descricao;
+    private final String orientacao;
+    private final String aviso;
+<span class="fc" id="L16">    private final List&lt;ItemSaude&gt; evitar = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L17">    private final List&lt;ItemSaude&gt; recomendadas = new ArrayList&lt;&gt;();</span>
+
+    public RegistroSaude(String codigo, TipoRegistroSaude tipo, String nome, String descricao,
+<span class="fc" id="L20">                         String orientacao, String aviso) {</span>
+<span class="pc bpc" id="L21" title="1 of 4 branches missed.">        if (codigo == null || codigo.isBlank()) {</span>
+<span class="fc" id="L22">            throw new IllegalArgumentException(&quot;O código do registro de saúde é obrigatório.&quot;);</span>
+        }
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (tipo == null) {</span>
+<span class="fc" id="L25">            throw new IllegalArgumentException(&quot;O tipo do registro de saúde é obrigatório.&quot;);</span>
+        }
+<span class="pc bpc" id="L27" title="1 of 4 branches missed.">        if (nome == null || nome.isBlank()) {</span>
+<span class="fc" id="L28">            throw new IllegalArgumentException(&quot;O nome do registro de saúde é obrigatório.&quot;);</span>
+        }
+<span class="fc" id="L30">        this.codigo = codigo.trim().toUpperCase();</span>
+<span class="fc" id="L31">        this.tipo = tipo;</span>
+<span class="fc" id="L32">        this.nome = nome.trim();</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        this.descricao = descricao == null ? &quot;&quot; : descricao.trim();</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        this.orientacao = orientacao == null ? &quot;&quot; : orientacao.trim();</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        this.aviso = aviso == null ? &quot;&quot; : aviso.trim();</span>
+<span class="fc" id="L36">    }</span>
+
+    public RegistroSaude adicionarEvitar(ItemSaude item) {
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (item.gravidade() == null) {</span>
+<span class="fc" id="L40">            throw new IllegalArgumentException(&quot;Plantas a evitar precisam de uma gravidade.&quot;);</span>
+        }
+<span class="fc" id="L42">        evitar.add(item);</span>
+<span class="fc" id="L43">        return this;</span>
+    }
+
+    public RegistroSaude adicionarRecomendada(ItemSaude item) {
+<span class="fc" id="L47">        recomendadas.add(item);</span>
+<span class="fc" id="L48">        return this;</span>
+    }
+
+    public String getId() {
+<span class="fc" id="L52">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="fc" id="L56">        this.id = id;</span>
+<span class="fc" id="L57">    }</span>
+
+    public String getCodigo() {
+<span class="fc" id="L60">        return codigo;</span>
+    }
+
+    public TipoRegistroSaude getTipo() {
+<span class="fc" id="L64">        return tipo;</span>
+    }
+
+    public String getNome() {
+<span class="fc" id="L68">        return nome;</span>
+    }
+
+    public String getDescricao() {
+<span class="fc" id="L72">        return descricao;</span>
+    }
+
+    public String getOrientacao() {
+<span class="fc" id="L76">        return orientacao;</span>
+    }
+
+    public String getAviso() {
+<span class="fc" id="L80">        return aviso;</span>
+    }
+
+    public List&lt;ItemSaude&gt; getEvitar() {
+<span class="fc" id="L84">        return Collections.unmodifiableList(evitar);</span>
+    }
+
+    public List&lt;ItemSaude&gt; getRecomendadas() {
+<span class="fc" id="L88">        return Collections.unmodifiableList(recomendadas);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

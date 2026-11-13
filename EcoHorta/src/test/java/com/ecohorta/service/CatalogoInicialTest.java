@@ -44,7 +44,6 @@ class CatalogoInicialTest {
         assertTrue(CatalogoInicial.cebolinha().epocaAdequada(1));
         assertTrue(CatalogoInicial.cebolinha().epocaAdequada(12));
 
-        // janela de salsinha cruza o ano (nov a fev)
         assertTrue(CatalogoInicial.salsinha().epocaAdequada(12));
         assertTrue(CatalogoInicial.salsinha().epocaAdequada(1));
         assertTrue(CatalogoInicial.pimenta().epocaAdequada(10));

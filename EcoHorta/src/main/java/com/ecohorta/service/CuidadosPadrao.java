@@ -6,7 +6,6 @@ import com.ecohorta.model.TipoCuidado;
 
 import java.util.List;
 
-/** Cuidados genéricos por categoria, usados para as plantas carregadas do CSV. */
 public final class CuidadosPadrao {
 
     private CuidadosPadrao() {

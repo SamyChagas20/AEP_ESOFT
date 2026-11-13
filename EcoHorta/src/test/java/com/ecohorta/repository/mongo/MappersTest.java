@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Garante que objetos viram documentos BSON (com aninhados/referências) e voltam idênticos. */
 class MappersTest {
 
     @Test
@@ -89,7 +88,7 @@ class MappersTest {
         assertEquals(alface.getRega(), volta.getRega());
         assertEquals(alface.getJanelasPlantio(), volta.getJanelasPlantio());
         assertEquals(alface.getCuidados(), volta.getCuidados());
-        assertTrue(volta.epocaAdequada(1)); // janela que cruza o ano sobrevive à conversão
+        assertTrue(volta.epocaAdequada(1));
     }
 
     @Test
@@ -160,8 +159,6 @@ class MappersTest {
         assertEquals(plantio.getCuidados(), volta.getCuidados());
     }
 
-    // ---------------- campos novos de "plantas" ----------------
-
     @Test
     void plantaGravaLuzApartamentoEstacoesENomeDeBusca() {
         Planta rucula = com.ecohorta.service.CatalogoCsv.carregar().stream()
@@ -193,7 +190,7 @@ class MappersTest {
         assertFalse(volta.isComestivel());
         assertEquals(jiboia.getApartamento(), volta.getApartamento());
         assertEquals(jiboia.getEstacoes(), volta.getEstacoes());
-        assertTrue(PlantaMapper.paraDocumento(jiboia).get("melhorMesPlantio") == null); // ano todo
+        assertTrue(PlantaMapper.paraDocumento(jiboia).get("melhorMesPlantio") == null);
     }
 
     @Test
@@ -211,8 +208,6 @@ class MappersTest {
         assertTrue(lida.isComestivel());
         assertEquals("alface", lida.getNomeBusca());
     }
-
-    // ---------------- tempo ----------------
 
     @Test
     void tempoFazIdaEVoltaComMesesEmbutidos() {
@@ -232,8 +227,6 @@ class MappersTest {
         assertEquals(outono.getMeses(), volta.getMeses());
         assertTrue(volta.getMeses().get(1).melhor());
     }
-
-    // ---------------- saúde ----------------
 
     @Test
     void saudeGuardaListasComReferenciasParaPlantas() {

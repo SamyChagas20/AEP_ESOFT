@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SaudeMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.repository.mongo</a> &gt; <span class="el_source">SaudeMapper.java</span></div><h1>SaudeMapper.java</h1><pre class="source lang-java linenums">package com.ecohorta.repository.mongo;
+
+import com.ecohorta.model.Gravidade;
+import com.ecohorta.model.ItemSaude;
+import com.ecohorta.model.RegistroSaude;
+import com.ecohorta.model.TipoRegistroSaude;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class SaudeMapper {
+
+    private SaudeMapper() {
+    }
+
+    public static Document paraDocumento(RegistroSaude registro) {
+<span class="fc" id="L19">        Document doc = new Document();</span>
+<span class="pc bpc" id="L20" title="1 of 2 branches missed.">        if (registro.getId() != null) {</span>
+<span class="fc" id="L21">            doc.put(&quot;_id&quot;, new ObjectId(registro.getId()));</span>
+        }
+<span class="fc" id="L23">        doc.append(&quot;codigo&quot;, registro.getCodigo());</span>
+<span class="fc" id="L24">        doc.append(&quot;tipo&quot;, registro.getTipo().name());</span>
+<span class="fc" id="L25">        doc.append(&quot;nome&quot;, registro.getNome());</span>
+<span class="fc" id="L26">        doc.append(&quot;descricao&quot;, registro.getDescricao());</span>
+<span class="fc" id="L27">        doc.append(&quot;orientacao&quot;, registro.getOrientacao());</span>
+<span class="fc" id="L28">        doc.append(&quot;aviso&quot;, registro.getAviso());</span>
+<span class="fc" id="L29">        doc.append(&quot;evitar&quot;, itens(registro.getEvitar()));</span>
+<span class="fc" id="L30">        doc.append(&quot;recomendadas&quot;, itens(registro.getRecomendadas()));</span>
+<span class="fc" id="L31">        return doc;</span>
+    }
+
+    private static List&lt;Document&gt; itens(List&lt;ItemSaude&gt; itens) {
+<span class="fc" id="L35">        List&lt;Document&gt; docs = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        for (ItemSaude i : itens) {</span>
+<span class="fc" id="L37">            docs.add(new Document(&quot;plantaId&quot;, BsonUtil.paraObjectId(i.plantaId()))</span>
+<span class="fc" id="L38">                    .append(&quot;plantaNome&quot;, i.plantaNome())</span>
+<span class="fc" id="L39">                    .append(&quot;motivo&quot;, i.motivo())</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">                    .append(&quot;gravidade&quot;, i.gravidade() == null ? null : i.gravidade().name()));</span>
+<span class="fc" id="L41">        }</span>
+<span class="fc" id="L42">        return docs;</span>
+    }
+
+    public static RegistroSaude deDocumento(Document doc) {
+<span class="fc" id="L46">        RegistroSaude registro = new RegistroSaude(</span>
+<span class="fc" id="L47">                doc.getString(&quot;codigo&quot;),</span>
+<span class="fc" id="L48">                TipoRegistroSaude.valueOf(doc.getString(&quot;tipo&quot;)),</span>
+<span class="fc" id="L49">                doc.getString(&quot;nome&quot;),</span>
+<span class="fc" id="L50">                doc.getString(&quot;descricao&quot;),</span>
+<span class="fc" id="L51">                doc.getString(&quot;orientacao&quot;),</span>
+<span class="fc" id="L52">                doc.getString(&quot;aviso&quot;));</span>
+<span class="fc" id="L53">        registro.setId(BsonUtil.lerId(doc));</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        for (Document d : BsonUtil.lerSubdocumentos(doc, &quot;evitar&quot;)) {</span>
+<span class="fc" id="L55">            registro.adicionarEvitar(item(d));</span>
+<span class="fc" id="L56">        }</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        for (Document d : BsonUtil.lerSubdocumentos(doc, &quot;recomendadas&quot;)) {</span>
+<span class="fc" id="L58">            registro.adicionarRecomendada(item(d));</span>
+<span class="fc" id="L59">        }</span>
+<span class="fc" id="L60">        return registro;</span>
+    }
+
+    private static ItemSaude item(Document d) {
+<span class="fc" id="L64">        return new ItemSaude(</span>
+<span class="fc" id="L65">                BsonUtil.lerReferencia(d, &quot;plantaId&quot;),</span>
+<span class="fc" id="L66">                d.getString(&quot;plantaNome&quot;),</span>
+<span class="fc" id="L67">                d.getString(&quot;motivo&quot;),</span>
+<span class="fc" id="L68">                BsonUtil.lerEnum(d, &quot;gravidade&quot;, Gravidade.class, null));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

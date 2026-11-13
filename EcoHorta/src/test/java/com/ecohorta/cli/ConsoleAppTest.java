@@ -16,10 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Simula uma pessoa usando o terminal: as linhas digitadas são a entrada
- * e a saída impressa é verificada.
- */
 class ConsoleAppTest {
 
     private final Ambiente ambiente = new Ambiente();
@@ -38,12 +34,9 @@ class ConsoleAppTest {
         return executarBruto(String.join("\n", linhas) + "\n");
     }
 
-    /** Catálogo (+ estações e saúde) carregado, como o Main faz ao iniciar. */
     private void carregarDados() {
         ambiente.servicos.carregarDadosIniciais();
     }
-
-    // ---------------- menu inicial ----------------
 
     @Test
     void sairImediatamente() {
@@ -61,8 +54,6 @@ class ConsoleAppTest {
     void fimDaEntradaEncerraSemErro() {
         assertTrue(executarBruto("").contains("Entrada encerrada"));
     }
-
-    // ---------------- catálogo ----------------
 
     @Test
     void buscaPorNomeSemAcentoMostraFichaCompletaDaPlanta() {
@@ -113,7 +104,7 @@ class ConsoleAppTest {
     @Test
     void filtraPorCategoria() {
         carregarDados();
-        String saida = executar("2", "2", "4", "0", "0", "0"); // 4 = Bulbo
+        String saida = executar("2", "2", "4", "0", "0", "0");
         assertTrue(saida.contains("Bulbo — 6 planta(s)"));
         assertTrue(saida.contains("Cebola-roxa"));
     }
@@ -121,7 +112,7 @@ class ConsoleAppTest {
     @Test
     void filtraPorEstacaoComPaginacao() {
         carregarDados();
-        String saida = executar("2", "3", "4", "p", "a", "0", "0", "0"); // 4 = Inverno
+        String saida = executar("2", "3", "4", "p", "a", "0", "0", "0");
         assertTrue(saida.contains("Plantas de Inverno"));
         assertTrue(saida.contains("mostrando 1 a 20"));
         assertTrue(saida.contains("mostrando 21 a 40"));
@@ -131,7 +122,7 @@ class ConsoleAppTest {
     @Test
     void plantasParaApartamentoComPoucaLuz() {
         carregarDados();
-        String saida = executar("2", "4", "1", "1", "0", "0", "0"); // ideal + pouca luz
+        String saida = executar("2", "4", "1", "1", "0", "0", "0");
         assertTrue(saida.contains("Ideal para apartamento — Pouca luz"));
         assertTrue(saida.contains("Jiboia"));
         assertFalse(saida.contains("Tomate"));
@@ -140,7 +131,7 @@ class ConsoleAppTest {
     @Test
     void plantasParaApartamentoSemFiltroDeLuz() {
         carregarDados();
-        String saida = executar("2", "4", "2", "", "0", "0", "0"); // possível, luz qualquer
+        String saida = executar("2", "4", "2", "", "0", "0", "0");
         assertTrue(saida.contains("Possível com cuidados — "));
         assertFalse(saida.contains("Possível com cuidados — Pouca"));
     }
@@ -158,8 +149,6 @@ class ConsoleAppTest {
         carregarDados();
         assertTrue(executar("2", "9", "0", "0").contains("Opção inválida."));
     }
-
-    // ---------------- estações e meses ----------------
 
     @Test
     void estacoesMostramMelhorMesEQuantidadeDePlantasPorMes() {
@@ -207,8 +196,6 @@ class ConsoleAppTest {
         assertTrue(executar("4", "0").contains("Nenhuma planta encontrada."));
     }
 
-    // ---------------- saúde e segurança ----------------
-
     @Test
     void mostraPlantasPerigosasParaGatos() {
         carregarDados();
@@ -233,7 +220,7 @@ class ConsoleAppTest {
     @Test
     void mostraOQueEvitarERecomendarPorCondicaoDeSaude() {
         carregarDados();
-        String saida = executar("5", "4", "10", "0", "0"); // última condição: anticoagulante
+        String saida = executar("5", "4", "10", "0", "0");
         assertTrue(saida.contains("== Uso de anticoagulante (varfarina) =="));
         assertTrue(saida.contains("Plantas a evitar ou com cuidado:"));
         assertTrue(saida.contains("Plantas recomendadas:"));
@@ -284,8 +271,6 @@ class ConsoleAppTest {
         assertTrue(executar("5", "9", "0", "0").contains("Opção inválida."));
     }
 
-    // ---------------- login e cadastro ----------------
-
     @Test
     void novoUsuarioEhCadastradoPeloEmail() {
         String saida = executar("1", "ana@exemplo.com", "Ana", "0", "0");
@@ -314,8 +299,6 @@ class ConsoleAppTest {
         String saida = executar("1", "", "ana@exemplo.com", "Ana", "0", "0");
         assertTrue(saida.contains("Este campo é obrigatório."));
     }
-
-    // ---------------- usuário sem hortas ----------------
 
     @Test
     void semHortasTodasAsAcoesOrientamACriarUma() {
@@ -352,23 +335,21 @@ class ConsoleAppTest {
         assertTrue(saida.contains("Nenhuma tarefa pendente para hoje!"));
     }
 
-    // ---------------- fluxo completo ----------------
-
     @Test
     void fluxoCompletoDoCadastroAteAColheita() {
         carregarDados();
         String saida = executar(
-                "1", "ana@exemplo.com", "Ana",          // cadastro
-                "2", "Quintal", "Maringá",               // criar horta
-                "3", "Canteiro A", "4,5", "Sol pleno",   // canteiro (decimal com vírgula)
-                "4", "tomate", "1", "1", "3", "",        // plantio: busca "tomate", 1º resultado, canteiro 1, 3 mudas, hoje
-                "5",                                     // ver plantios
-                "6", "1", "", "", "",                    // rega com valores padrão
-                "7", "1", "1", "",                       // cuidado: plantio 1, adubação, hoje
-                "8",                                     // tarefas de hoje
-                "9", "1", "1", "",                       // colher
-                "10",                                    // resumo
-                "1",                                     // minhas hortas
+                "1", "ana@exemplo.com", "Ana",
+                "2", "Quintal", "Maringá",
+                "3", "Canteiro A", "4,5", "Sol pleno",
+                "4", "tomate", "1", "1", "3", "",
+                "5",
+                "6", "1", "", "", "",
+                "7", "1", "1", "",
+                "8",
+                "9", "1", "1", "",
+                "10",
+                "1",
                 "0", "0");
 
         assertTrue(saida.contains("Cadastro criado, Ana!"));
@@ -393,7 +374,7 @@ class ConsoleAppTest {
         String saida = executar("1", "ana@exemplo.com", "Ana",
                 "2", "Quintal", "",
                 "3", "A", "2", "",
-                "4", "pimenta", "2", "1", "2", "", // "Pimenta" é o 2º resultado (novembro é época)
+                "4", "pimenta", "2", "1", "2", "",
                 "0", "0");
         assertTrue(saida.contains("Plantio iniciado: 2 Pimenta"));
         assertFalse(saida.contains("não está entre as épocas"));
@@ -434,9 +415,9 @@ class ConsoleAppTest {
         carregarDados();
         String saida = executar("1", "ana@exemplo.com", "Ana",
                 "2", "Quintal", "",
-                "3", "A", "abc", "-2", "2", "",                  // área inválida duas vezes
-                "4", "alface-crespa", "1", "0", "2", "31/02/2026", "10/11/2026", // quantidade 0; data inválida
-                "6", "1", "xyz", "300", "", "",                  // ml inválido, depois 300
+                "3", "A", "abc", "-2", "2", "",
+                "4", "alface-crespa", "1", "0", "2", "31/02/2026", "10/11/2026",
+                "6", "1", "xyz", "300", "", "",
                 "0", "0");
         assertTrue(saida.contains("Digite um número maior que zero."));
         assertTrue(saida.contains("Digite um número entre 1 e 10000."));
@@ -473,15 +454,13 @@ class ConsoleAppTest {
         String saida = executar("1", "ana@exemplo.com",
                 "2", "Horta A", "",
                 "2", "Horta B", "",
-                "3", "2", "Canteiro", "1", "", // escolhe a horta 2
+                "3", "2", "Canteiro", "1", "",
                 "1",
                 "0", "0");
         assertTrue(saida.contains("Suas hortas:"));
         assertTrue(saida.contains("2) Horta B"));
         assertTrue(saida.contains("Canteiro \"Canteiro\" adicionado."));
     }
-
-    // ---------------- demonstração ----------------
 
     @Test
     void demonstracaoCarregaDadosEMostraTarefasAtrasadas() {
@@ -495,11 +474,11 @@ class ConsoleAppTest {
     @Test
     void demonstracaoPermiteAcompanharEEncerrarPlantios() {
         String saida = executar("6",
-                "5",                      // ver plantios
-                "6", "3", "", "", "",     // rega do 3º plantio (Tomate)
-                "7", "3", "1", "",        // cuidado: adubação do Tomate
-                "9", "1", "2", "",        // Cebolinha perdida
-                "9", "1", "0",            // cancelar encerramento
+                "5",
+                "6", "3", "", "", "",
+                "7", "3", "1", "",
+                "9", "1", "2", "",
+                "9", "1", "0",
                 "10", "1",
                 "0", "0");
         assertTrue(saida.contains("Tomate — Canteiro Sol [Ativo]"));

@@ -5,10 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Horta de um usuário. Referencia o usuário por id (relacionamento entre
- * coleções) e embute a lista de canteiros (subdocumentos).
- */
 public class Horta {
 
     private String id;
@@ -29,7 +25,6 @@ public class Horta {
         this.localizacao = (localizacao == null || localizacao.isBlank()) ? "Não informada" : localizacao.trim();
     }
 
-    /** Adiciona um canteiro; não permite dois canteiros com o mesmo nome. */
     public Horta adicionarCanteiro(Canteiro canteiro) {
         if (buscarCanteiro(canteiro.nome()).isPresent()) {
             throw new IllegalArgumentException("Já existe um canteiro chamado \"" + canteiro.nome() + "\" nesta horta.");

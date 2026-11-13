@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Horta.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.model</a> &gt; <span class="el_source">Horta.java</span></div><h1>Horta.java</h1><pre class="source lang-java linenums">package com.ecohorta.model;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+public class Horta {
+
+    private String id;
+    private final String usuarioId;
+    private final String nome;
+    private final String localizacao;
+<span class="fc" id="L14">    private final List&lt;Canteiro&gt; canteiros = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L16">    public Horta(String usuarioId, String nome, String localizacao) {</span>
+<span class="fc bfc" id="L17" title="All 4 branches covered.">        if (usuarioId == null || usuarioId.isBlank()) {</span>
+<span class="fc" id="L18">            throw new IllegalArgumentException(&quot;A horta precisa pertencer a um usuário.&quot;);</span>
+        }
+<span class="pc bpc" id="L20" title="1 of 4 branches missed.">        if (nome == null || nome.isBlank()) {</span>
+<span class="fc" id="L21">            throw new IllegalArgumentException(&quot;O nome da horta é obrigatório.&quot;);</span>
+        }
+<span class="fc" id="L23">        this.usuarioId = usuarioId;</span>
+<span class="fc" id="L24">        this.nome = nome.trim();</span>
+<span class="pc bpc" id="L25" title="1 of 4 branches missed.">        this.localizacao = (localizacao == null || localizacao.isBlank()) ? &quot;Não informada&quot; : localizacao.trim();</span>
+<span class="fc" id="L26">    }</span>
+
+    public Horta adicionarCanteiro(Canteiro canteiro) {
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (buscarCanteiro(canteiro.nome()).isPresent()) {</span>
+<span class="fc" id="L30">            throw new IllegalArgumentException(&quot;Já existe um canteiro chamado \&quot;&quot; + canteiro.nome() + &quot;\&quot; nesta horta.&quot;);</span>
+        }
+<span class="fc" id="L32">        canteiros.add(canteiro);</span>
+<span class="fc" id="L33">        return this;</span>
+    }
+
+    public Optional&lt;Canteiro&gt; buscarCanteiro(String nomeCanteiro) {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (nomeCanteiro == null) {</span>
+<span class="fc" id="L38">            return Optional.empty();</span>
+        }
+<span class="fc" id="L40">        return canteiros.stream()</span>
+<span class="fc" id="L41">                .filter(c -&gt; c.nome().equalsIgnoreCase(nomeCanteiro.trim()))</span>
+<span class="fc" id="L42">                .findFirst();</span>
+    }
+
+    public String getId() {
+<span class="fc" id="L46">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="fc" id="L50">        this.id = id;</span>
+<span class="fc" id="L51">    }</span>
+
+    public String getUsuarioId() {
+<span class="fc" id="L54">        return usuarioId;</span>
+    }
+
+    public String getNome() {
+<span class="fc" id="L58">        return nome;</span>
+    }
+
+    public String getLocalizacao() {
+<span class="fc" id="L62">        return localizacao;</span>
+    }
+
+    public List&lt;Canteiro&gt; getCanteiros() {
+<span class="fc" id="L66">        return Collections.unmodifiableList(canteiros);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

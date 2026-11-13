@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SaudeInicial.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.service</a> &gt; <span class="el_source">SaudeInicial.java</span></div><h1>SaudeInicial.java</h1><pre class="source lang-java linenums">package com.ecohorta.service;
+
+import com.ecohorta.model.Gravidade;
+import com.ecohorta.model.TipoRegistroSaude;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class SaudeInicial {
+
+    static final String AVISO_PADRAO =
+            &quot;Informação educativa. Não substitui a orientação de médico, nutricionista ou veterinário.&quot;;
+
+<span class="fc" id="L14">    public record Entrada(String planta, String motivo, Gravidade gravidade) {</span>
+    }
+
+<span class="fc" id="L17">    public record Definicao(String codigo, TipoRegistroSaude tipo, String nome, String descricao,</span>
+                            String orientacao, String aviso, List&lt;Entrada&gt; evitar, List&lt;Entrada&gt; recomendadas) {
+    }
+
+    private SaudeInicial() {
+    }
+
+    private static List&lt;Entrada&gt; ev(Gravidade gravidade, String motivo, String... plantas) {
+<span class="fc" id="L25">        List&lt;Entrada&gt; lista = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        for (String planta : plantas) {</span>
+<span class="fc" id="L27">            lista.add(new Entrada(planta, motivo, gravidade));</span>
+        }
+<span class="fc" id="L29">        return lista;</span>
+    }
+
+    private static List&lt;Entrada&gt; ok(String motivo, String... plantas) {
+<span class="fc" id="L33">        return ev(null, motivo, plantas);</span>
+    }
+
+    @SafeVarargs
+    private static List&lt;Entrada&gt; juntar(List&lt;Entrada&gt;... listas) {
+<span class="fc" id="L38">        List&lt;Entrada&gt; todas = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        for (List&lt;Entrada&gt; lista : listas) {</span>
+<span class="fc" id="L40">            todas.addAll(lista);</span>
+        }
+<span class="fc" id="L42">        return todas;</span>
+    }
+
+<span class="fc" id="L45">    private static final String[] ALLIUMS = {&quot;Cebola&quot;, &quot;Cebola-roxa&quot;, &quot;Cebola-de-cabeça-pequena&quot;, &quot;Alho&quot;,</span>
+            &quot;Alho-poró&quot;, &quot;Chalota&quot;, &quot;Cebolinha&quot;, &quot;Cebolinha-chinesa&quot;};
+<span class="fc" id="L47">    private static final String[] TOMATES = {&quot;Tomate&quot;, &quot;Tomate-cereja&quot;, &quot;Tomate-italiano&quot;};</span>
+<span class="fc" id="L48">    private static final String[] PIMENTAS = {&quot;Pimenta&quot;, &quot;Pimenta-malagueta&quot;, &quot;Pimenta-dedo-de-moça&quot;,</span>
+            &quot;Pimenta-biquinho&quot;, &quot;Pimenta-jalapeño&quot;, &quot;Pimenta-habanero&quot;, &quot;Pimenta-de-cheiro&quot;, &quot;Pimenta-cumari&quot;};
+<span class="fc" id="L50">    private static final String[] CITRICOS = {&quot;Limão-taiti&quot;, &quot;Limão-siciliano&quot;, &quot;Laranja&quot;, &quot;Tangerina&quot;};</span>
+<span class="fc" id="L51">    private static final String[] AROIDES_PET = {&quot;Jiboia&quot;, &quot;Lírio-da-paz&quot;, &quot;Costela-de-adão&quot;, &quot;Filodendro&quot;,</span>
+            &quot;Antúrio&quot;, &quot;Copo-de-leite&quot;, &quot;Zamioculca&quot;, &quot;Singônio&quot;, &quot;Begônia&quot;, &quot;Taioba&quot;, &quot;Inhame&quot;, &quot;Mangarito&quot;};
+<span class="fc" id="L53">    private static final String[] FEIJOES_CRUS = {&quot;Feijão-carioca&quot;, &quot;Feijão-preto&quot;, &quot;Feijão-de-corda&quot;,</span>
+            &quot;Feijão-guandu&quot;, &quot;Fava&quot;};
+<span class="fc" id="L55">    private static final String[] CRUCIFERAS = {&quot;Couve&quot;, &quot;Repolho&quot;, &quot;Repolho-roxo&quot;, &quot;Brócolis&quot;, &quot;Couve-flor&quot;,</span>
+            &quot;Couve-de-bruxelas&quot;, &quot;Mostarda&quot;, &quot;Rúcula&quot;, &quot;Agrião&quot;, &quot;Nabo&quot;, &quot;Rabanete&quot;, &quot;Couve-chinesa&quot;, &quot;Pak choi&quot;,
+            &quot;Mizuna&quot;, &quot;Tatsoi&quot;, &quot;Couve-rábano&quot;, &quot;Raiz-forte&quot;, &quot;Rutabaga&quot;};
+
+    private static List&lt;Entrada&gt; segurasParaPets() {
+<span class="fc" id="L60">        return ok(&quot;Considerada não tóxica para cães e gatos; ofereça com moderação e supervisão&quot;,</span>
+                &quot;Manjericão&quot;, &quot;Manjericão-roxo&quot;, &quot;Alecrim&quot;, &quot;Tomilho&quot;, &quot;Sálvia&quot;, &quot;Coentro&quot;, &quot;Endro&quot;,
+                &quot;Capuchinha&quot;, &quot;Girassol&quot;, &quot;Rosa&quot;, &quot;Amor-perfeito&quot;, &quot;Alisso&quot;, &quot;Zínia&quot;, &quot;Cosmos&quot;,
+                &quot;Pepino&quot;, &quot;Cenoura&quot;, &quot;Abobrinha&quot;, &quot;Morango&quot;, &quot;Mirtilo&quot;, &quot;Framboesa&quot;, &quot;Amora&quot;, &quot;Banana&quot;,
+                &quot;Samambaia&quot;, &quot;Clorofito&quot;, &quot;Palmeira-areca&quot;, &quot;Calathea&quot;, &quot;Maranta&quot;, &quot;Peperômia&quot;, &quot;Bromélia&quot;,
+                &quot;Orquídea&quot;, &quot;Violeta-africana&quot;, &quot;Echeveria&quot;, &quot;Haworthia&quot;);
+    }
+
+    public static List&lt;Definicao&gt; registros() {
+<span class="fc" id="L69">        return List.of(gatos(), caes(), pessoas(), respiratorio(), alergiaPolen(), hipertensao(), diabetes(),</span>
+<span class="fc" id="L70">                doencaRenal(), anticoagulante(), gravidez(), refluxo(), tireoide(), hepatica());</span>
+    }
+
+    private static List&lt;Entrada&gt; toxicasParaPets(boolean gatos) {
+<span class="fc" id="L74">        return juntar(</span>
+<span class="fc" id="L75">                ev(Gravidade.GRAVE, &quot;Cebola, alho e parentes (Allium) danificam as hemácias e causam anemia&quot;</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">                        + (gatos ? &quot;; gatos são ainda mais sensíveis&quot; : &quot;&quot;) + &quot;, crus, cozidos ou em pó&quot;, ALLIUMS),</span>
+<span class="fc" id="L77">                ev(Gravidade.GRAVE, &quot;Cica: toda a planta, sobretudo as sementes, pode causar falência do fígado&quot;, &quot;Cica&quot;),</span>
+<span class="fc" id="L78">                ev(Gravidade.GRAVE, &quot;Sementes com ricina, toxina potente (mamona)&quot;, &quot;Mamona&quot;),</span>
+<span class="fc" id="L79">                ev(Gravidade.GRAVE, &quot;Todas as partes afetam o coração (espirradeira)&quot;, &quot;Espirradeira&quot;),</span>
+<span class="fc" id="L80">                ev(Gravidade.GRAVE, &quot;Grayanotoxinas causam vômito, fraqueza e problemas no coração&quot;, &quot;Azaleia&quot;),</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">                gatos</span>
+<span class="fc" id="L82">                        ? ev(Gravidade.GRAVE, &quot;Qualquer parte do lírio, até a água do vaso, pode causar insuficiência renal aguda em gatos&quot;, &quot;Lírio&quot;)</span>
+<span class="fc" id="L83">                        : ev(Gravidade.LEVE, &quot;O lírio pode causar vômito e salivação em cães&quot;, &quot;Lírio&quot;),</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">                gatos ? List.&lt;Entrada&gt;of()</span>
+<span class="fc" id="L85">                        : ev(Gravidade.GRAVE, &quot;Uvas causam insuficiência renal aguda em cães&quot;, &quot;Uva&quot;),</span>
+<span class="fc" id="L86">                ev(Gravidade.MODERADA, &quot;Folhas, caules e frutos verdes têm solanina/tomatina: vômito, diarreia e fraqueza&quot;, TOMATES),</span>
+<span class="fc" id="L87">                ev(Gravidade.MODERADA, &quot;Partes verdes e brotos de batata têm solanina&quot;, &quot;Batata&quot;),</span>
+<span class="fc" id="L88">                ev(Gravidade.LEVE, &quot;Folhas e caules da berinjela têm solaninas&quot;, &quot;Berinjela&quot;),</span>
+<span class="fc" id="L89">                ev(Gravidade.MODERADA, &quot;Saponinas e antraquinonas causam vômito, diarreia e letargia&quot;, &quot;Babosa&quot;),</span>
+<span class="fc" id="L90">                ev(Gravidade.MODERADA, &quot;Compostos que afetam o coração (bufadienolídeos)&quot;, &quot;Kalanchoe&quot;),</span>
+<span class="fc" id="L91">                ev(Gravidade.MODERADA, &quot;Oxalato insolúvel irrita a boca e a garganta: baba, vômito, dificuldade para engolir&quot;,</span>
+                        &quot;Comigo-ninguém-pode&quot;),
+<span class="fc" id="L93">                ev(Gravidade.MODERADA, &quot;Saponinas causam vômito, salivação e diarreia&quot;, &quot;Hera&quot;),</span>
+<span class="fc" id="L94">                ev(Gravidade.MODERADA, &quot;Partes verdes e frutos crus contêm glicosídeos cianogênicos&quot;, &quot;Sabugueiro&quot;),</span>
+<span class="fc" id="L95">                ev(Gravidade.LEVE, &quot;Oxalato insolúvel irrita a boca e o estômago&quot;, AROIDES_PET),</span>
+<span class="fc" id="L96">                ev(Gravidade.LEVE, &quot;Óleos essenciais causam vômito, diarreia e baba&quot;,</span>
+                        &quot;Hortelã&quot;, &quot;Hortelã-pimenta&quot;, &quot;Orégano&quot;, &quot;Manjerona&quot;, &quot;Estragão&quot;, &quot;Lavanda&quot;, &quot;Camomila&quot;,
+                        &quot;Capim-limão&quot;, &quot;Louro&quot;, &quot;Poejo&quot;, &quot;Citronela&quot;, &quot;Gerânio-perfumado&quot;, &quot;Salsinha&quot;, &quot;Arruda&quot;,
+                        &quot;Erva-de-santa-maria&quot;, &quot;Confrei&quot;),
+<span class="fc" id="L100">                ev(Gravidade.LEVE, &quot;Óleos e psoralenos da casca, folhas e sementes irritam o estômago&quot;, CITRICOS),</span>
+<span class="fc" id="L101">                ev(Gravidade.LEVE, &quot;O látex irrita a pele e o estômago&quot;, &quot;Figo&quot;, &quot;Fícus-benjamim&quot;, &quot;Fícus-lira&quot;, &quot;Seringueira&quot;),</span>
+<span class="fc" id="L102">                ev(Gravidade.LEVE, &quot;A persina e a gordura podem causar vômito e diarreia; o caroço pode obstruir&quot;, &quot;Abacate&quot;),</span>
+<span class="fc" id="L103">                ev(Gravidade.LEVE, &quot;A capsaicina irrita a boca e o estômago (não é veneno, mas dói)&quot;, PIMENTAS),</span>
+<span class="fc" id="L104">                ev(Gravidade.LEVE, &quot;Saponinas e outros compostos causam vômito e diarreia&quot;,</span>
+                        &quot;Dracena&quot;, &quot;Bambu-da-sorte&quot;, &quot;Espada-de-são-jorge&quot;, &quot;Planta-jade&quot;, &quot;Crisântemo&quot;, &quot;Margarida&quot;,
+                        &quot;Dália&quot;, &quot;Cravo-de-defunto&quot;, &quot;Trapoeraba&quot;, &quot;Hortênsia&quot;));
+    }
+
+    private static Definicao gatos() {
+<span class="fc" id="L110">        return new Definicao(&quot;GATOS&quot;, TipoRegistroSaude.ANIMAL, &quot;Gatos&quot;,</span>
+                &quot;Gatos mordiscam folhas e têm dificuldade para eliminar certas toxinas. Os pontos mais perigosos &quot;
+                        + &quot;são lírios, cebola/alho e plantas ornamentais comuns em apartamentos.&quot;,
+                &quot;Mantenha as plantas perigosas fora do alcance, prefira as seguras e, se o gato comer alguma, &quot;
+                        + &quot;ligue para o veterinário imediatamente, levando o nome da planta.&quot;,
+<span class="fc" id="L115">                AVISO_PADRAO, toxicasParaPets(true), segurasParaPets());</span>
+    }
+
+    private static Definicao caes() {
+<span class="fc" id="L119">        List&lt;Entrada&gt; evitar = juntar(toxicasParaPets(false),</span>
+<span class="fc" id="L120">                ev(Gravidade.MODERADA, &quot;Crus contêm lectinas que causam vômito e diarreia intensos&quot;, FEIJOES_CRUS),</span>
+<span class="fc" id="L121">                ev(Gravidade.MODERADA, &quot;Caroço e folhas têm amigdalina (libera cianeto) e o caroço obstrui&quot;, &quot;Pêssego&quot;),</span>
+<span class="fc" id="L122">                ev(Gravidade.LEVE, &quot;A espiga (sabugo) pode obstruir o intestino&quot;, &quot;Milho-verde&quot;, &quot;Milho-pipoca&quot;),</span>
+<span class="fc" id="L123">                ev(Gravidade.LEVE, &quot;Caroço ou sementes podem obstruir o intestino&quot;, &quot;Manga&quot;, &quot;Caqui&quot;));</span>
+<span class="fc" id="L124">        return new Definicao(&quot;CAES&quot;, TipoRegistroSaude.ANIMAL, &quot;Cães&quot;,</span>
+                &quot;Cães comem quase tudo no quintal. Uvas, cebola/alho, partes verdes do tomate e ornamentais &quot;
+                        + &quot;como azaleia e cica estão entre as principais causas de intoxicação.&quot;,
+                &quot;Proteja a horta com cerca baixa ou canteiro suspenso, evite adubos que atraem o cão (farinha de &quot;
+                        + &quot;osso, esterco fresco) e procure o veterinário ao menor sinal de ingestão.&quot;,
+<span class="fc" id="L129">                AVISO_PADRAO, evitar, segurasParaPets());</span>
+    }
+
+    private static Definicao pessoas() {
+<span class="fc" id="L133">        return new Definicao(&quot;PESSOAS&quot;, TipoRegistroSaude.PESSOA, &quot;Pessoas (consumo)&quot;,</span>
+                &quot;Algumas plantas fazem mal quando comidas cruas, mal preparadas, em partes erradas ou em excesso.&quot;,
+                &quot;Cozinhe sempre mandioca, feijão, taioba, inhame e chaya; não coma folhas e frutos verdes de tomate e &quot;
+                        + &quot;batata; nunca consuma plantas ornamentais; em dúvida, não coma.&quot;,
+                AVISO_PADRAO,
+<span class="fc" id="L138">                juntar(</span>
+<span class="fc" id="L139">                        ev(Gravidade.GRAVE, &quot;Todas as partes (sementes especialmente) são muito tóxicas&quot;, &quot;Mamona&quot;, &quot;Espirradeira&quot;, &quot;Azaleia&quot;, &quot;Cica&quot;),</span>
+<span class="fc" id="L140">                        ev(Gravidade.GRAVE, &quot;Crua ou mal processada libera cianeto (variedades bravas); só consumir cozida e bem preparada&quot;, &quot;Mandioca&quot;),</span>
+<span class="fc" id="L141">                        ev(Gravidade.GRAVE, &quot;Uso interno associado a lesão do fígado (alcaloides pirrolizidínicos)&quot;, &quot;Confrei&quot;),</span>
+<span class="fc" id="L142">                        ev(Gravidade.MODERADA, &quot;Alcaloides pirrolizidínicos podem lesar o fígado em uso frequente&quot;, &quot;Borragem&quot;),</span>
+<span class="fc" id="L143">                        ev(Gravidade.MODERADA, &quot;Crus ou mal cozidos contêm lectinas: vômito e diarreia intensos&quot;, FEIJOES_CRUS),</span>
+<span class="fc" id="L144">                        ev(Gravidade.MODERADA, &quot;Cristais de oxalato irritam boca e garganta; cozinhar sempre&quot;, &quot;Taioba&quot;, &quot;Inhame&quot;, &quot;Mangarito&quot;, &quot;Cará&quot;),</span>
+<span class="fc" id="L145">                        ev(Gravidade.MODERADA, &quot;Crua tem glicosídeos cianogênicos; ferver bem antes de comer&quot;, &quot;Chaya&quot;),</span>
+<span class="fc" id="L146">                        ev(Gravidade.MODERADA, &quot;Partes verdes e brotos têm solanina (náusea, dor de cabeça)&quot;, &quot;Batata&quot;),</span>
+<span class="fc" id="L147">                        ev(Gravidade.MODERADA, &quot;Pode ser tóxica ao fígado e causar queimadura na pele com sol&quot;, &quot;Arruda&quot;),</span>
+<span class="fc" id="L148">                        ev(Gravidade.MODERADA, &quot;Contém pulegona, tóxica ao fígado em doses altas&quot;, &quot;Poejo&quot;),</span>
+<span class="fc" id="L149">                        ev(Gravidade.MODERADA, &quot;Contém ascaridol, tóxico em doses altas&quot;, &quot;Erva-de-santa-maria&quot;),</span>
+<span class="fc" id="L150">                        ev(Gravidade.MODERADA, &quot;Contém tujona, que pode ser neurotóxica&quot;, &quot;Losna&quot;),</span>
+<span class="fc" id="L151">                        ev(Gravidade.MODERADA, &quot;Partes verdes e frutos crus causam náusea e vômito&quot;, &quot;Sabugueiro&quot;),</span>
+<span class="fc" id="L152">                        ev(Gravidade.MODERADA, &quot;Ornamental não comestível: oxalato e outros compostos tóxicos&quot;, &quot;Comigo-ninguém-pode&quot;, &quot;Hortênsia&quot;, &quot;Copo-de-leite&quot;),</span>
+<span class="fc" id="L153">                        ev(Gravidade.LEVE, &quot;Folhas e frutos verdes têm solanina; coma apenas o fruto maduro&quot;, TOMATES),</span>
+<span class="fc" id="L154">                        ev(Gravidade.LEVE, &quot;O látex (casca) é laxante forte; só o gel interno é usado&quot;, &quot;Babosa&quot;),</span>
+<span class="fc" id="L155">                        ev(Gravidade.LEVE, &quot;Queimação intensa na boca e na pele; use luvas&quot;, &quot;Pimenta-habanero&quot;),</span>
+<span class="fc" id="L156">                        ev(Gravidade.LEVE, &quot;Casca e fruto verdes podem conter compostos cianogênicos; consuma maduro&quot;, &quot;Maracujá&quot;),</span>
+<span class="fc" id="L157">                        ev(Gravidade.LEVE, &quot;Coma cozida: crua causa desconforto&quot;, &quot;Vagem&quot;, &quot;Soja-edamame&quot;),</span>
+<span class="fc" id="L158">                        ev(Gravidade.LEVE, &quot;O látex irrita a pele e a boca&quot;, &quot;Figo&quot;),</span>
+<span class="fc" id="L159">                        ev(Gravidade.LEVE, &quot;Ornamental não comestível; pode irritar a boca&quot;, &quot;Lírio-da-paz&quot;, &quot;Antúrio&quot;, &quot;Hera&quot;)),</span>
+<span class="fc" id="L160">                List.of());</span>
+    }
+
+    private static Definicao respiratorio() {
+<span class="fc" id="L164">        return new Definicao(&quot;RESPIRATORIO&quot;, TipoRegistroSaude.COMORBIDADE,</span>
+                &quot;Problemas respiratórios (asma, bronquite, DPOC)&quot;,
+                &quot;Vias aéreas sensíveis reagem a pólen, perfumes fortes, mofo e poeira. Escolha plantas de baixo &quot;
+                        + &quot;pólen e fáceis de limpar, e evite substrato encharcado.&quot;,
+                &quot;Retire flores secas, limpe as folhas com pano úmido, não deixe água parada no prato (mofo), lave &quot;
+                        + &quot;as mãos depois de mexer na terra e evite perfumes fortes em ambientes fechados.&quot;,
+                &quot;Informação educativa. Em crise de asma ou falta de ar, procure atendimento médico.&quot;,
+<span class="fc" id="L171">                juntar(</span>
+<span class="fc" id="L172">                        ev(Gravidade.MODERADA, &quot;Muito pólen (família das margaridas), que pode desencadear sintomas&quot;,</span>
+                                &quot;Girassol&quot;, &quot;Crisântemo&quot;, &quot;Margarida&quot;, &quot;Cravo-de-defunto&quot;, &quot;Calêndula&quot;, &quot;Camomila&quot;),
+<span class="fc" id="L174">                        ev(Gravidade.MODERADA, &quot;Perfume intenso, que pode irritar as vias aéreas em ambientes fechados&quot;,</span>
+                                &quot;Lírio&quot;, &quot;Lavanda&quot;, &quot;Gerânio-perfumado&quot;),
+<span class="fc" id="L176">                        ev(Gravidade.LEVE, &quot;O látex e a poeira acumulada podem causar reação&quot;, &quot;Fícus-benjamim&quot;),</span>
+<span class="fc" id="L177">                        ev(Gravidade.LEVE, &quot;O vapor da pimenta ao manusear ou cozinhar irrita as vias aéreas&quot;, PIMENTAS),</span>
+<span class="fc" id="L178">                        ev(Gravidade.LEVE, &quot;O mentol concentrado pode irritar vias aéreas sensíveis&quot;, &quot;Hortelã-pimenta&quot;)),</span>
+<span class="fc" id="L179">                juntar(</span>
+<span class="fc" id="L180">                        ok(&quot;Folhagem de pouco pólen e fácil de limpar&quot;,</span>
+                                &quot;Jiboia&quot;, &quot;Dracena&quot;, &quot;Palmeira-areca&quot;, &quot;Filodendro&quot;, &quot;Espada-de-são-jorge&quot;, &quot;Clorofito&quot;),
+<span class="fc" id="L182">                        ok(&quot;Flor de baixo pólen em comparação às margaridas&quot;, &quot;Amor-perfeito&quot;, &quot;Zínia&quot;),</span>
+<span class="fc" id="L183">                        ok(&quot;Erva de aroma suave&quot;, &quot;Salsinha&quot;, &quot;Tomilho&quot;),</span>
+<span class="fc" id="L184">                        ok(&quot;Folhosa colhida antes de florir quase não libera pólen&quot;, &quot;Alface&quot;, &quot;Rúcula&quot;, &quot;Couve&quot;, &quot;Espinafre&quot;)));</span>
+    }
+
+    private static Definicao alergiaPolen() {
+<span class="fc" id="L188">        return new Definicao(&quot;ALERGIA_POLEN&quot;, TipoRegistroSaude.COMORBIDADE,</span>
+                &quot;Alergia a pólen (rinite alérgica e síndrome pólen-alimento)&quot;,
+                &quot;Quem é alérgico a pólens de ambrosia, artemísia ou bétula pode reagir a plantas aparentadas, &quot;
+                        + &quot;inclusive comestíveis (formigamento na boca ao comer).&quot;,
+                &quot;Se notar coceira na boca ou garganta ao comer crus, prefira cozidos e converse com um alergista.&quot;,
+                AVISO_PADRAO,
+<span class="fc" id="L194">                juntar(</span>
+<span class="fc" id="L195">                        ev(Gravidade.MODERADA, &quot;Mesma família da ambrosia e da artemísia (Asteraceae): pólen e reação cruzada&quot;,</span>
+                                &quot;Camomila&quot;, &quot;Girassol&quot;, &quot;Crisântemo&quot;, &quot;Calêndula&quot;, &quot;Margarida&quot;),
+<span class="fc" id="L197">                        ev(Gravidade.LEVE, &quot;Parente das asteráceas: possível reação oral cruzada quando crua&quot;,</span>
+                                &quot;Chicória&quot;, &quot;Endívia&quot;, &quot;Escarola&quot;, &quot;Radicchio&quot;, &quot;Alcachofra&quot;, &quot;Almeirão&quot;),
+<span class="fc" id="L199">                        ev(Gravidade.LEVE, &quot;Síndrome aipo-artemísia-especiarias: possível reação oral cruzada&quot;,</span>
+                                &quot;Salsão&quot;, &quot;Cenoura&quot;, &quot;Salsinha&quot;, &quot;Funcho&quot;),
+<span class="fc" id="L201">                        ev(Gravidade.LEVE, &quot;Possível reação oral cruzada em alérgicos a ambrosia&quot;,</span>
+                                &quot;Melão&quot;, &quot;Melancia&quot;, &quot;Banana&quot;)),
+<span class="fc" id="L203">                ok(&quot;Flor ou folhagem de baixo pólen&quot;,</span>
+                        &quot;Amor-perfeito&quot;, &quot;Zínia&quot;, &quot;Jiboia&quot;, &quot;Dracena&quot;, &quot;Palmeira-areca&quot;, &quot;Filodendro&quot;));
+    }
+
+    private static Definicao hipertensao() {
+<span class="fc" id="L208">        return new Definicao(&quot;HIPERTENSAO&quot;, TipoRegistroSaude.COMORBIDADE, &quot;Pressão alta (hipertensão)&quot;,</span>
+                &quot;O controle da pressão se apoia em menos sal, mais potássio e fibras. Ervas frescas ajudam a &quot;
+                        + &quot;temperar sem sal.&quot;,
+                &quot;Troque parte do sal por ervas e temperos, aumente hortaliças e frutas e converse com o médico &quot;
+                        + &quot;antes de usar chás medicinais regularmente.&quot;,
+                AVISO_PADRAO,
+<span class="fc" id="L214">                ev(Gravidade.MODERADA, &quot;Interage com vários medicamentos e pode reduzir o efeito de alguns remédios do coração e da pressão&quot;,</span>
+                        &quot;Erva-de-são-joão&quot;),
+<span class="fc" id="L216">                juntar(</span>
+<span class="fc" id="L217">                        ok(&quot;Ervas e temperos substituem parte do sal&quot;,</span>
+                                &quot;Manjericão&quot;, &quot;Orégano&quot;, &quot;Alecrim&quot;, &quot;Coentro&quot;, &quot;Salsinha&quot;, &quot;Cebolinha&quot;, &quot;Tomilho&quot;),
+<span class="fc" id="L219">                        ok(&quot;Uso tradicional; evidência modesta de redução leve da pressão&quot;, &quot;Alho&quot;),</span>
+<span class="fc" id="L220">                        ok(&quot;Rica em nitratos, que ajudam o relaxamento dos vasos&quot;, &quot;Beterraba&quot;),</span>
+<span class="fc" id="L221">                        ok(&quot;O chá do cálice reduziu levemente a pressão em estudos; cuidado se já usa anti-hipertensivo&quot;, &quot;Vinagreira&quot;),</span>
+<span class="fc" id="L222">                        ok(&quot;Fonte de potássio, que ajuda a equilibrar o sódio&quot;, &quot;Couve&quot;, &quot;Banana&quot;, &quot;Tomate&quot;, &quot;Abóbora-cabotiá&quot;),</span>
+<span class="fc" id="L223">                        ok(&quot;Uso tradicional; evidência limitada&quot;, &quot;Salsão&quot;)));</span>
+    }
+
+    private static Definicao diabetes() {
+<span class="fc" id="L227">        return new Definicao(&quot;DIABETES&quot;, TipoRegistroSaude.COMORBIDADE, &quot;Diabetes&quot;,</span>
+                &quot;Priorize hortaliças de baixo índice glicêmico e ricas em fibras; modere amidos e frutas muito doces.&quot;,
+                &quot;Combine as porções com o plano alimentar do nutricionista e observe a glicemia após novos alimentos.&quot;,
+                AVISO_PADRAO,
+<span class="fc" id="L231">                ev(Gravidade.LEVE, &quot;Amido ou açúcar elevam a glicemia rapidamente: moderar a porção&quot;,</span>
+                        &quot;Batata&quot;, &quot;Mandioca&quot;, &quot;Batata-doce&quot;, &quot;Milho-verde&quot;, &quot;Banana&quot;, &quot;Uva&quot;, &quot;Manga&quot;, &quot;Melancia&quot;,
+                        &quot;Abacaxi&quot;, &quot;Figo&quot;, &quot;Caqui&quot;),
+<span class="fc" id="L234">                juntar(</span>
+<span class="fc" id="L235">                        ok(&quot;Pouco amido e muita fibra: baixo impacto na glicemia&quot;,</span>
+                                &quot;Couve&quot;, &quot;Brócolis&quot;, &quot;Couve-flor&quot;, &quot;Rúcula&quot;, &quot;Alface&quot;, &quot;Espinafre&quot;, &quot;Pepino&quot;, &quot;Abobrinha&quot;,
+                                &quot;Berinjela&quot;, &quot;Jiló&quot;, &quot;Quiabo&quot;, &quot;Chuchu&quot;, &quot;Vagem&quot;),
+<span class="fc" id="L238">                        ok(&quot;Fibras e proteínas ajudam o controle da glicemia (porção moderada)&quot;,</span>
+                                &quot;Feijão-carioca&quot;, &quot;Feijão-preto&quot;, &quot;Grão-de-bico&quot;, &quot;Lentilha&quot;),
+<span class="fc" id="L240">                        ok(&quot;Frutas vermelhas têm menor impacto glicêmico&quot;, &quot;Morango&quot;, &quot;Framboesa&quot;, &quot;Mirtilo&quot;, &quot;Amora&quot;),</span>
+<span class="fc" id="L241">                        ok(&quot;Folha adoçante sem calorias&quot;, &quot;Stevia&quot;)));</span>
+    }
+
+    private static Definicao doencaRenal() {
+<span class="fc" id="L245">        return new Definicao(&quot;DOENCA_RENAL&quot;, TipoRegistroSaude.COMORBIDADE, &quot;Doença renal e pedras nos rins&quot;,</span>
+                &quot;Quem tem pedras de oxalato deve limitar alimentos ricos em oxalato; na doença renal crônica, &quot;
+                        + &quot;também importam o potássio e o fósforo.&quot;,
+                &quot;Beba bastante água, siga a dieta do nutricionista e prefira hortaliças de baixo oxalato.&quot;,
+                AVISO_PADRAO,
+<span class="fc" id="L250">                juntar(</span>
+<span class="fc" id="L251">                        ev(Gravidade.GRAVE, &quot;Contém uma neurotoxina que se acumula quando os rins não funcionam bem&quot;, &quot;Carambola&quot;),</span>
+<span class="fc" id="L252">                        ev(Gravidade.GRAVE, &quot;Muito rico em oxalato&quot;, &quot;Espinafre&quot;, &quot;Acelga&quot;, &quot;Azedinha&quot;, &quot;Beldroega&quot;),</span>
+<span class="fc" id="L253">                        ev(Gravidade.MODERADA, &quot;Rico em oxalato&quot;, &quot;Beterraba&quot;, &quot;Quiabo&quot;, &quot;Batata-doce&quot;, &quot;Taioba&quot;, &quot;Amendoim&quot;),</span>
+<span class="fc" id="L254">                        ev(Gravidade.LEVE, &quot;Oxalato moderado; moderar a porção&quot;, &quot;Salsinha&quot;, &quot;Figo&quot;),</span>
+<span class="fc" id="L255">                        ev(Gravidade.LEVE, &quot;Rico em potássio; limitar na doença renal crônica avançada&quot;, &quot;Tomate&quot;, &quot;Banana&quot;, &quot;Batata&quot;)),</span>
+<span class="fc" id="L256">                juntar(</span>
+<span class="fc" id="L257">                        ok(&quot;Baixo oxalato e pouco potássio&quot;,</span>
+                                &quot;Couve-flor&quot;, &quot;Repolho&quot;, &quot;Pepino&quot;, &quot;Alface-americana&quot;, &quot;Cebola&quot;, &quot;Alho&quot;, &quot;Rabanete&quot;),
+<span class="fc" id="L259">                        ok(&quot;Fruta de baixo oxalato&quot;, &quot;Mamão&quot;, &quot;Abacaxi&quot;, &quot;Morango&quot;),</span>
+<span class="fc" id="L260">                        ok(&quot;Erva de baixíssimo oxalato&quot;, &quot;Tomilho&quot;)));</span>
+    }
+
+    private static Definicao anticoagulante() {
+<span class="fc" id="L264">        return new Definicao(&quot;ANTICOAGULANTE&quot;, TipoRegistroSaude.COMORBIDADE, &quot;Uso de anticoagulante (varfarina)&quot;,</span>
+                &quot;A vitamina K compete com a varfarina. O segredo não é cortar as verduras, e sim manter uma &quot;
+                        + &quot;quantidade parecida todos os dias.&quot;,
+                &quot;Não mude de repente a quantidade de folhas verdes escuras e avise o médico antes de começar &quot;
+                        + &quot;chás, suplementos ou ervas medicinais.&quot;,
+                AVISO_PADRAO,
+<span class="fc" id="L270">                juntar(</span>
+<span class="fc" id="L271">                        ev(Gravidade.MODERADA, &quot;Muito rica em vitamina K: manter porções constantes&quot;,</span>
+                                &quot;Couve&quot;, &quot;Espinafre&quot;, &quot;Brócolis&quot;, &quot;Couve-de-bruxelas&quot;, &quot;Acelga&quot;, &quot;Mostarda&quot;, &quot;Agrião&quot;,
+                                &quot;Salsinha&quot;, &quot;Chicória&quot;, &quot;Endívia&quot;),
+<span class="fc" id="L274">                        ev(Gravidade.LEVE, &quot;Boa quantidade de vitamina K: manter regularidade&quot;,</span>
+                                &quot;Cebolinha&quot;, &quot;Rúcula&quot;, &quot;Repolho&quot;, &quot;Coentro&quot;, &quot;Alface-crespa&quot;, &quot;Alface-romana&quot;),
+<span class="fc" id="L276">                        ev(Gravidade.MODERADA, &quot;Interage com anticoagulantes e outros remédios&quot;, &quot;Erva-de-são-joão&quot;),</span>
+<span class="fc" id="L277">                        ev(Gravidade.MODERADA, &quot;Contém cumarina, que pode somar efeito ao anticoagulante&quot;, &quot;Guaco&quot;),</span>
+<span class="fc" id="L278">                        ev(Gravidade.LEVE, &quot;Em doses altas (chás, suplementos) pode aumentar o risco de sangramento&quot;,</span>
+                                &quot;Gengibre&quot;, &quot;Alho&quot;, &quot;Cúrcuma&quot;, &quot;Camomila&quot;)),
+<span class="fc" id="L280">                ok(&quot;Pouca vitamina K, de menor interferência&quot;,</span>
+                        &quot;Cenoura&quot;, &quot;Tomate&quot;, &quot;Batata&quot;, &quot;Pepino&quot;, &quot;Abobrinha&quot;, &quot;Cebola&quot;, &quot;Milho-verde&quot;, &quot;Banana&quot;,
+                        &quot;Batata-doce&quot;, &quot;Berinjela&quot;));
+    }
+
+    private static Definicao gravidez() {
+<span class="fc" id="L286">        return new Definicao(&quot;GRAVIDEZ_LACTACAO&quot;, TipoRegistroSaude.COMORBIDADE, &quot;Gravidez e amamentação&quot;,</span>
+                &quot;Muitas ervas medicinais não têm segurança comprovada na gravidez; algumas podem estimular o útero &quot;
+                        + &quot;ou afetar o bebê e o leite.&quot;,
+                &quot;Use ervas só como tempero, evite chás medicinais sem orientação e lave muito bem folhas e frutas &quot;
+                        + &quot;consumidas cruas.&quot;,
+                AVISO_PADRAO,
+<span class="fc" id="L292">                juntar(</span>
+<span class="fc" id="L293">                        ev(Gravidade.GRAVE, &quot;Pode estimular contrações e causar aborto&quot;, &quot;Arruda&quot;, &quot;Poejo&quot;, &quot;Losna&quot;,</span>
+                                &quot;Erva-de-santa-maria&quot;),
+<span class="fc" id="L295">                        ev(Gravidade.GRAVE, &quot;Uso interno associado a lesão do fígado&quot;, &quot;Confrei&quot;),</span>
+<span class="fc" id="L296">                        ev(Gravidade.MODERADA, &quot;Mamão verde ou o látex pode estimular contrações&quot;, &quot;Mamão&quot;),</span>
+<span class="fc" id="L297">                        ev(Gravidade.MODERADA, &quot;Segurança não comprovada; evitar uso interno&quot;,</span>
+                                &quot;Mil-folhas&quot;, &quot;Babosa&quot;, &quot;Borragem&quot;, &quot;Hissopo&quot;, &quot;Erva-de-são-joão&quot;),
+<span class="fc" id="L299">                        ev(Gravidade.MODERADA, &quot;Chá ou doses medicinais podem estimular o útero ou reduzir o leite&quot;, &quot;Sálvia&quot;),</span>
+<span class="fc" id="L300">                        ev(Gravidade.LEVE, &quot;Como tempero é ok; evitar chás concentrados e óleos&quot;,</span>
+                                &quot;Orégano&quot;, &quot;Hortelã-pimenta&quot;, &quot;Salsinha&quot;, &quot;Manjerona&quot;, &quot;Alecrim&quot;),
+<span class="fc" id="L302">                        ev(Gravidade.LEVE, &quot;Evitar chás em grande quantidade&quot;,</span>
+                                &quot;Camomila&quot;, &quot;Erva-cidreira&quot;, &quot;Guaco&quot;, &quot;Valeriana&quot;)),
+<span class="fc" id="L304">                juntar(</span>
+<span class="fc" id="L305">                        ok(&quot;Fonte de folato e ferro&quot;, &quot;Couve&quot;, &quot;Brócolis&quot;, &quot;Feijão-preto&quot;, &quot;Feijão-carioca&quot;,</span>
+                                &quot;Lentilha&quot;, &quot;Grão-de-bico&quot;, &quot;Laranja&quot;, &quot;Cenoura&quot;),
+<span class="fc" id="L307">                        ok(&quot;O gengibre em quantidade culinária pode aliviar náuseas&quot;, &quot;Gengibre&quot;)));</span>
+    }
+
+    private static Definicao refluxo() {
+<span class="fc" id="L311">        return new Definicao(&quot;GASTRITE_REFLUXO&quot;, TipoRegistroSaude.COMORBIDADE, &quot;Gastrite e refluxo&quot;,</span>
+                &quot;Alimentos ácidos, picantes ou muito aromáticos costumam piorar os sintomas, mas os gatilhos &quot;
+                        + &quot;variam de pessoa para pessoa.&quot;,
+                &quot;Observe quais alimentos pioram os seus sintomas, faça refeições menores e prefira preparos cozidos.&quot;,
+                AVISO_PADRAO,
+<span class="fc" id="L316">                juntar(</span>
+<span class="fc" id="L317">                        ev(Gravidade.MODERADA, &quot;A capsaicina irrita o estômago e o esôfago&quot;, PIMENTAS),</span>
+<span class="fc" id="L318">                        ev(Gravidade.MODERADA, &quot;Ácido; piora o refluxo em muitas pessoas&quot;, TOMATES),</span>
+<span class="fc" id="L319">                        ev(Gravidade.MODERADA, &quot;A menta relaxa o esfíncter do esôfago e favorece o refluxo&quot;, &quot;Hortelã-pimenta&quot;),</span>
+<span class="fc" id="L320">                        ev(Gravidade.LEVE, &quot;A hortelã pode piorar o refluxo em quem é sensível&quot;, &quot;Hortelã&quot;),</span>
+<span class="fc" id="L321">                        ev(Gravidade.LEVE, &quot;Crus costumam ser gatilho de azia&quot;, &quot;Cebola&quot;, &quot;Cebola-roxa&quot;, &quot;Alho&quot;),</span>
+<span class="fc" id="L322">                        ev(Gravidade.LEVE, &quot;Frutas cítricas e ácidas podem irritar&quot;, &quot;Limão-taiti&quot;, &quot;Limão-siciliano&quot;,</span>
+                                &quot;Laranja&quot;, &quot;Tangerina&quot;, &quot;Abacaxi&quot;)),
+<span class="fc" id="L324">                juntar(</span>
+<span class="fc" id="L325">                        ok(&quot;Tradicional para náuseas e digestão, em pouca quantidade&quot;, &quot;Gengibre&quot;),</span>
+<span class="fc" id="L326">                        ok(&quot;Chás suaves de uso tradicional para o estômago&quot;, &quot;Camomila&quot;, &quot;Funcho&quot;, &quot;Erva-doce&quot;, &quot;Erva-cidreira&quot;),</span>
+<span class="fc" id="L327">                        ok(&quot;Frutas pouco ácidas&quot;, &quot;Banana&quot;, &quot;Mamão&quot;, &quot;Melão&quot;, &quot;Melancia&quot;),</span>
+<span class="fc" id="L328">                        ok(&quot;Hortaliças suaves, de preferência cozidas&quot;, &quot;Couve-flor&quot;, &quot;Pepino&quot;, &quot;Alface&quot;, &quot;Salsão&quot;,</span>
+                                &quot;Abobrinha&quot;, &quot;Abóbora-cabotiá&quot;, &quot;Cenoura&quot;, &quot;Batata&quot;, &quot;Chuchu&quot;)));
+    }
+
+    private static Definicao tireoide() {
+<span class="fc" id="L333">        return new Definicao(&quot;TIREOIDE&quot;, TipoRegistroSaude.COMORBIDADE, &quot;Problemas de tireoide (hipotireoidismo)&quot;,</span>
+                &quot;Crucíferas cruas e em grande quantidade contêm goitrógenos que podem atrapalhar a tireoide, &quot;
+                        + &quot;principalmente quando falta iodo. Cozinhar reduz bastante o efeito.&quot;,
+                &quot;Prefira as crucíferas cozidas, varie a alimentação e tome o remédio da tireoide longe de alimentos &quot;
+                        + &quot;(e de soja), como o médico orientar.&quot;,
+                &quot;Informação educativa. O efeito é relevante só em consumo cru e em grandes quantidades; siga o seu endocrinologista.&quot;,
+<span class="fc" id="L339">                juntar(</span>
+<span class="fc" id="L340">                        ev(Gravidade.LEVE, &quot;Crucífera crua em grande quantidade pode interferir na tireoide; cozinhar reduz o efeito&quot;, CRUCIFERAS),</span>
+<span class="fc" id="L341">                        ev(Gravidade.LEVE, &quot;Contém compostos que liberam tiocianato; consumir cozida e variada&quot;, &quot;Mandioca&quot;),</span>
+<span class="fc" id="L342">                        ev(Gravidade.LEVE, &quot;As isoflavonas podem reduzir a absorção do remédio; separar os horários&quot;, &quot;Soja-edamame&quot;)),</span>
+<span class="fc" id="L343">                ok(&quot;Sem goitrógenos relevantes&quot;, &quot;Alface&quot;, &quot;Cenoura&quot;, &quot;Tomate&quot;, &quot;Pepino&quot;, &quot;Abobrinha&quot;, &quot;Pimentão&quot;));</span>
+    }
+
+    private static Definicao hepatica() {
+<span class="fc" id="L347">        return new Definicao(&quot;HEPATICA&quot;, TipoRegistroSaude.COMORBIDADE, &quot;Doenças do fígado&quot;,</span>
+                &quot;O fígado processa as substâncias das plantas: ervas medicinais e chás concentrados podem sobrecarregá-lo.&quot;,
+                &quot;Evite chás medicinais e suplementos de ervas sem orientação médica.&quot;,
+                AVISO_PADRAO,
+<span class="fc" id="L351">                juntar(</span>
+<span class="fc" id="L352">                        ev(Gravidade.GRAVE, &quot;Alcaloides pirrolizidínicos causam lesão no fígado&quot;, &quot;Confrei&quot;),</span>
+<span class="fc" id="L353">                        ev(Gravidade.GRAVE, &quot;A pulegona é tóxica ao fígado&quot;, &quot;Poejo&quot;),</span>
+<span class="fc" id="L354">                        ev(Gravidade.MODERADA, &quot;Alcaloides pirrolizidínicos em uso frequente&quot;, &quot;Borragem&quot;),</span>
+<span class="fc" id="L355">                        ev(Gravidade.MODERADA, &quot;Pode ser tóxica ao fígado&quot;, &quot;Arruda&quot;, &quot;Erva-de-santa-maria&quot;, &quot;Losna&quot;),</span>
+<span class="fc" id="L356">                        ev(Gravidade.LEVE, &quot;Como tempero é seguro, mas suplementos concentrados já foram ligados a lesão hepática&quot;, &quot;Cúrcuma&quot;)),</span>
+<span class="fc" id="L357">                ok(&quot;Uso tradicional para a digestão; evidência limitada, converse com o médico&quot;,</span>
+                        &quot;Alcachofra&quot;, &quot;Dente-de-leão&quot;));
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -12,17 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Saúde e segurança: toxicidade para gatos, cães e pessoas e orientações por condição de saúde.
- * Informação educativa, que não substitui médico, nutricionista ou veterinário.
- */
 public class SaudeService {
 
-    /** Uma citação da planta em um registro de saúde. */
     public record Alerta(String codigo, String nome, TipoRegistroSaude tipo, ItemSaude item) {
     }
 
-    /** Tudo o que o banco sabe sobre a planta em termos de saúde. */
     public record PerfilSaude(List<Alerta> toxicidade, List<Alerta> evitarEm,
                               List<Alerta> indicadaPara, List<Alerta> seguraParaPets) {
 
@@ -39,12 +33,6 @@ public class SaudeService {
         this.plantas = plantas;
     }
 
-    /**
-     * Insere os registros de saúde que ainda não existem, ligando cada nome de planta ao seu id.
-     * O catálogo precisa estar carregado antes.
-     *
-     * @return quantos registros foram inseridos
-     */
     public int carregarSaudeInicial() {
         Map<String, Planta> cache = new HashMap<>();
         int inseridos = 0;
@@ -86,7 +74,6 @@ public class SaudeService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Registro de saúde não encontrado: " + codigo));
     }
 
-    /** Monta a ficha de saúde da planta consultando as listas embutidas da coleção "saude". */
     public PerfilSaude perfil(Planta planta) {
         List<Alerta> toxicidade = new ArrayList<>();
         List<Alerta> evitarEm = new ArrayList<>();

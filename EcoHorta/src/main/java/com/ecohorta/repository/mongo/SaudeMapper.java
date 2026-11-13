@@ -10,10 +10,6 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Converte RegistroSaude <-> Document (coleção "saude").
- * As listas "evitar" e "recomendadas" têm subdocumentos com "plantaId" (referência a "plantas").
- */
 public final class SaudeMapper {
 
     private SaudeMapper() {

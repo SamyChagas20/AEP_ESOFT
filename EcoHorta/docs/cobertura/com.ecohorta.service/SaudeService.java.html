@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SaudeService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.service</a> &gt; <span class="el_source">SaudeService.java</span></div><h1>SaudeService.java</h1><pre class="source lang-java linenums">package com.ecohorta.service;
+
+import com.ecohorta.model.ItemSaude;
+import com.ecohorta.model.Planta;
+import com.ecohorta.model.RegistroSaude;
+import com.ecohorta.model.TipoRegistroSaude;
+import com.ecohorta.repository.PlantaRepository;
+import com.ecohorta.repository.SaudeRepository;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class SaudeService {
+
+<span class="fc" id="L17">    public record Alerta(String codigo, String nome, TipoRegistroSaude tipo, ItemSaude item) {</span>
+    }
+
+<span class="fc" id="L20">    public record PerfilSaude(List&lt;Alerta&gt; toxicidade, List&lt;Alerta&gt; evitarEm,</span>
+                              List&lt;Alerta&gt; indicadaPara, List&lt;Alerta&gt; seguraParaPets) {
+
+        public boolean semRegistros() {
+<span class="pc bpc" id="L24" title="2 of 8 branches missed.">            return toxicidade.isEmpty() &amp;&amp; evitarEm.isEmpty() &amp;&amp; indicadaPara.isEmpty() &amp;&amp; seguraParaPets.isEmpty();</span>
+        }
+    }
+
+    private final SaudeRepository saude;
+    private final PlantaRepository plantas;
+
+<span class="fc" id="L31">    public SaudeService(SaudeRepository saude, PlantaRepository plantas) {</span>
+<span class="fc" id="L32">        this.saude = saude;</span>
+<span class="fc" id="L33">        this.plantas = plantas;</span>
+<span class="fc" id="L34">    }</span>
+
+    public int carregarSaudeInicial() {
+<span class="fc" id="L37">        Map&lt;String, Planta&gt; cache = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L38">        int inseridos = 0;</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        for (SaudeInicial.Definicao d : SaudeInicial.registros()) {</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">            if (saude.buscarPorCodigo(d.codigo()).isPresent()) {</span>
+<span class="fc" id="L41">                continue;</span>
+            }
+<span class="fc" id="L43">            RegistroSaude registro = new RegistroSaude(d.codigo(), d.tipo(), d.nome(), d.descricao(),</span>
+<span class="fc" id="L44">                    d.orientacao(), d.aviso());</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">            for (SaudeInicial.Entrada e : d.evitar()) {</span>
+<span class="fc" id="L46">                registro.adicionarEvitar(item(e, cache));</span>
+<span class="fc" id="L47">            }</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">            for (SaudeInicial.Entrada e : d.recomendadas()) {</span>
+<span class="fc" id="L49">                registro.adicionarRecomendada(item(e, cache));</span>
+<span class="fc" id="L50">            }</span>
+<span class="fc" id="L51">            saude.salvar(registro);</span>
+<span class="fc" id="L52">            inseridos++;</span>
+<span class="fc" id="L53">        }</span>
+<span class="fc" id="L54">        return inseridos;</span>
+    }
+
+    private ItemSaude item(SaudeInicial.Entrada entrada, Map&lt;String, Planta&gt; cache) {
+<span class="fc" id="L58">        Planta planta = cache.computeIfAbsent(entrada.planta(), nome -&gt; plantas.buscarPorNome(nome)</span>
+<span class="fc" id="L59">                .orElseThrow(() -&gt; new RegraDeNegocioException(</span>
+                        &quot;Planta \&quot;&quot; + nome + &quot;\&quot; não encontrada no catálogo. Carregue o catálogo antes da saúde.&quot;)));
+<span class="fc" id="L61">        return new ItemSaude(planta.getId(), planta.getNome(), entrada.motivo(), entrada.gravidade());</span>
+    }
+
+    public List&lt;RegistroSaude&gt; listar() {
+<span class="fc" id="L65">        return saude.listar();</span>
+    }
+
+    public List&lt;RegistroSaude&gt; listarPorTipo(TipoRegistroSaude tipo) {
+<span class="fc" id="L69">        return saude.listarPorTipo(tipo);</span>
+    }
+
+    public RegistroSaude buscarPorCodigo(String codigo) {
+<span class="fc" id="L73">        return saude.buscarPorCodigo(codigo)</span>
+<span class="fc" id="L74">                .orElseThrow(() -&gt; new RecursoNaoEncontradoException(&quot;Registro de saúde não encontrado: &quot; + codigo));</span>
+    }
+
+    public PerfilSaude perfil(Planta planta) {
+<span class="fc" id="L78">        List&lt;Alerta&gt; toxicidade = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L79">        List&lt;Alerta&gt; evitarEm = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L80">        List&lt;Alerta&gt; indicadaPara = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L81">        List&lt;Alerta&gt; seguraParaPets = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for (RegistroSaude r : saude.listarPorPlanta(planta.getId())) {</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            boolean condicao = r.getTipo() == TipoRegistroSaude.COMORBIDADE;</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            for (ItemSaude i : r.getEvitar()) {</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">                if (i.plantaId().equals(planta.getId())) {</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">                    (condicao ? evitarEm : toxicidade).add(new Alerta(r.getCodigo(), r.getNome(), r.getTipo(), i));</span>
+                }
+<span class="fc" id="L89">            }</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">            for (ItemSaude i : r.getRecomendadas()) {</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">                if (i.plantaId().equals(planta.getId())) {</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">                    (condicao ? indicadaPara : seguraParaPets).add(new Alerta(r.getCodigo(), r.getNome(), r.getTipo(), i));</span>
+                }
+<span class="fc" id="L94">            }</span>
+<span class="fc" id="L95">        }</span>
+<span class="fc" id="L96">        return new PerfilSaude(toxicidade, evitarEm, indicadaPara, seguraParaPets);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

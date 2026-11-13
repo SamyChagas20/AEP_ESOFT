@@ -1,6 +1,5 @@
 package com.ecohorta.model;
 
-/** Categorias de cuidado que uma planta pode exigir. */
 public enum TipoCuidado {
     ADUBACAO("Adubação"),
     PODA("Poda"),

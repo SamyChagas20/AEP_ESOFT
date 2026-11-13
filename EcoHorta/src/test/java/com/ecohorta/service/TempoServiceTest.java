@@ -68,7 +68,7 @@ class TempoServiceTest {
         List<String> primavera = service.plantasDaEstacao(Estacao.PRIMAVERA).stream().map(Planta::getNome).toList();
         assertTrue(primavera.contains("Tomate"));
         assertTrue(primavera.contains("Pimenta"));
-        assertFalse(primavera.contains("Alho")); // alho: abril a junho
+        assertFalse(primavera.contains("Alho"));
 
         List<Planta> outubro = service.plantasDoMelhorMes(Estacao.PRIMAVERA);
         assertFalse(outubro.isEmpty());

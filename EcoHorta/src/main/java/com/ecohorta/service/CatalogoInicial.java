@@ -11,25 +11,17 @@ import com.ecohorta.model.TipoCuidado;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Dados iniciais do catálogo: as 5 plantas do protótipo (com cuidados detalhados)
- * mais as plantas do arquivo CSV ({@link CatalogoCsv}).
- * Valores indicativos para o Centro-Sul do Brasil (hemisfério sul);
- * devem ser confirmados conforme o clima e a variedade cultivada.
- */
 public final class CatalogoInicial {
 
     private CatalogoInicial() {
     }
 
-    /** Todas as plantas iniciais: as 5 detalhadas primeiro, depois as do CSV. */
     public static List<Planta> plantas() {
         List<Planta> todas = new ArrayList<>(detalhadas());
         todas.addAll(CatalogoCsv.carregar());
         return todas;
     }
 
-    /** As 5 plantas originais do protótipo, com cuidados específicos. */
     public static List<Planta> detalhadas() {
         return List.of(tomate(), cebolinha(), pimenta(), alface(), salsinha());
     }

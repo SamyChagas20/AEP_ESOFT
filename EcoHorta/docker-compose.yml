@@ -1,4 +1,3 @@
-# Sobe um MongoDB local para desenvolvimento/testes:  docker compose up -d
 services:
   mongo:
     image: mongo:7

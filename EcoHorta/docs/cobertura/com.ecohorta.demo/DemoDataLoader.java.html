@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DemoDataLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.demo</a> &gt; <span class="el_source">DemoDataLoader.java</span></div><h1>DemoDataLoader.java</h1><pre class="source lang-java linenums">package com.ecohorta.demo;
+
+import com.ecohorta.model.Horta;
+import com.ecohorta.model.Usuario;
+import com.ecohorta.service.Servicos;
+
+import java.time.Clock;
+import java.time.LocalDate;
+import java.util.Optional;
+
+public class DemoDataLoader {
+
+    public static final String EMAIL_DEMO = &quot;demo@ecohorta.com&quot;;
+
+    private final Servicos servicos;
+    private final Clock relogio;
+
+<span class="fc" id="L18">    public DemoDataLoader(Servicos servicos, Clock relogio) {</span>
+<span class="fc" id="L19">        this.servicos = servicos;</span>
+<span class="fc" id="L20">        this.relogio = relogio;</span>
+<span class="fc" id="L21">    }</span>
+
+    public Usuario carregar() {
+<span class="fc" id="L24">        servicos.catalogo().carregarCatalogoInicial();</span>
+
+<span class="fc" id="L26">        Optional&lt;Usuario&gt; existente = servicos.usuarios().buscarPorEmail(EMAIL_DEMO);</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if (existente.isPresent()) {</span>
+<span class="fc" id="L28">            return existente.get();</span>
+        }
+
+<span class="fc" id="L31">        LocalDate hoje = LocalDate.now(relogio);</span>
+<span class="fc" id="L32">        Usuario usuario = servicos.usuarios().cadastrar(&quot;Maria Hortelã&quot;, EMAIL_DEMO);</span>
+
+<span class="fc" id="L34">        Horta horta = servicos.hortas().criarHorta(usuario.getId(), &quot;Horta do Quintal&quot;, &quot;Maringá - PR&quot;);</span>
+<span class="fc" id="L35">        horta = servicos.hortas().adicionarCanteiro(horta.getId(), &quot;Canteiro Sol&quot;, 4.0, &quot;Sol pleno&quot;);</span>
+<span class="fc" id="L36">        horta = servicos.hortas().adicionarCanteiro(horta.getId(), &quot;Canteiro Sombra&quot;, 2.5, &quot;Meia sombra&quot;);</span>
+<span class="fc" id="L37">        String hortaId = horta.getId();</span>
+
+<span class="fc" id="L39">        var plantios = servicos.plantios();</span>
+
+<span class="fc" id="L41">        var tomate = plantios.iniciarPlantio(hortaId, &quot;Tomate&quot;, &quot;Canteiro Sol&quot;, 4, hoje.minusDays(20));</span>
+<span class="fc" id="L42">        plantios.registrarRega(tomate.getId(), 1000, &quot;Rega da manhã&quot;, hoje.minusDays(3));</span>
+
+<span class="fc" id="L44">        var pimenta = plantios.iniciarPlantio(hortaId, &quot;Pimenta&quot;, &quot;Canteiro Sol&quot;, 2, hoje.minusDays(5));</span>
+<span class="fc" id="L45">        plantios.registrarRega(pimenta.getId(), null, &quot;&quot;, hoje.minusDays(1));</span>
+
+<span class="fc" id="L47">        var cebolinha = plantios.iniciarPlantio(hortaId, &quot;Cebolinha&quot;, &quot;Canteiro Sombra&quot;, 10, hoje.minusDays(65));</span>
+<span class="fc" id="L48">        plantios.registrarRega(cebolinha.getId(), null, &quot;&quot;, hoje.minusDays(1));</span>
+
+<span class="fc" id="L50">        var alface = plantios.iniciarPlantio(hortaId, &quot;Alface&quot;, &quot;Canteiro Sombra&quot;, 12, hoje.minusDays(10));</span>
+<span class="fc" id="L51">        plantios.registrarRega(alface.getId(), 250, &quot;&quot;, hoje);</span>
+
+<span class="fc" id="L53">        var salsinha = plantios.iniciarPlantio(hortaId, &quot;Salsinha&quot;, &quot;Canteiro Sombra&quot;, 6, hoje.minusDays(30));</span>
+<span class="fc" id="L54">        plantios.registrarRega(salsinha.getId(), null, &quot;&quot;, hoje.minusDays(2));</span>
+
+<span class="fc" id="L56">        return usuario;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

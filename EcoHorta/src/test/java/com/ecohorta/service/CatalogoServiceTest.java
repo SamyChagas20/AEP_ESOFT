@@ -79,8 +79,6 @@ class CatalogoServiceTest {
         assertTrue(setembro.contains("Tomate"));
     }
 
-    // ---------------- filtros ----------------
-
     @Test
     void pesquisaPorParteDoNomeSemAcentos() {
         service.carregarCatalogoInicial();

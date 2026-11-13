@@ -19,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.Scanner;
 
-/** Ponto de entrada: monta as dependências (MongoDB + serviços) e abre o menu no terminal. */
 public class Main {
 
     public static void main(String[] args) {

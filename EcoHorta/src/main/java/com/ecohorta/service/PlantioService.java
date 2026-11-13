@@ -21,11 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Fluxo principal do sistema: iniciar plantios, registrar regas e cuidados,
- * encerrar o ciclo (colheita/perda) e calcular as tarefas do dia.
- * Relaciona as coleções "hortas", "plantas" e "plantios".
- */
 public class PlantioService {
 
     private final PlantioRepository plantios;
@@ -55,12 +50,6 @@ public class PlantioService {
         return plantios.salvar(new Plantio(horta.getId(), planta.getId(), canteiro.nome(), quantidade, dataPlantio));
     }
 
-    /**
-     * Registra uma rega.
-     *
-     * @param quantidadeMl quantidade usada; se nulo, usa a recomendada para a planta
-     * @param data         data da rega; se nula, usa hoje
-     */
     public Plantio registrarRega(String plantioId, Integer quantidadeMl, String observacao, LocalDate data) {
         Plantio plantio = buscarPlantio(plantioId);
         LocalDate dia = data == null ? hoje() : data;
@@ -103,10 +92,6 @@ public class PlantioService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Planta não encontrada."));
     }
 
-    /**
-     * Calcula as tarefas pendentes (rega, cuidados periódicos e colheita) dos plantios
-     * ativos da horta, até a data informada. Tarefas com data anterior vêm marcadas como atrasadas.
-     */
     public List<Tarefa> tarefasDoDia(String hortaId, LocalDate hoje) {
         hortas.buscarPorId(hortaId)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Horta não encontrada."));

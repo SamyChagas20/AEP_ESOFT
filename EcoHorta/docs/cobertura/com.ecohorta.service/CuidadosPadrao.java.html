@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CuidadosPadrao.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.service</a> &gt; <span class="el_source">CuidadosPadrao.java</span></div><h1>CuidadosPadrao.java</h1><pre class="source lang-java linenums">package com.ecohorta.service;
+
+import com.ecohorta.model.CategoriaPlanta;
+import com.ecohorta.model.Cuidado;
+import com.ecohorta.model.TipoCuidado;
+
+import java.util.List;
+
+public final class CuidadosPadrao {
+
+    private CuidadosPadrao() {
+    }
+
+    public static List&lt;Cuidado&gt; para(CategoriaPlanta categoria) {
+<span class="fc bfc" id="L15" title="All 12 branches covered.">        return switch (categoria) {</span>
+<span class="fc" id="L16">            case FOLHOSA -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubação orgânica rica em nitrogênio (húmus ou composto)&quot;, 15),
+                    new Cuidado(TipoCuidado.PRAGAS, &quot;Verificar lesmas, pulgões e lagartas nas folhas&quot;, 7),
+                    new Cuidado(TipoCuidado.SOLO, &quot;Solo rico em matéria orgânica, bem drenado e úmido&quot;, 0));
+<span class="fc" id="L20">            case HORTALICA_FRUTO -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubar com composto ou NPK, reforçando o potássio na frutificação&quot;, 15),
+                    new Cuidado(TipoCuidado.PRAGAS, &quot;Inspecionar folhas e frutos (mosca-branca, ácaros, lagartas)&quot;, 7),
+                    new Cuidado(TipoCuidado.SUSTENTACAO, &quot;Usar tutor ou gaiola em variedades altas ou trepadeiras&quot;, 0));
+<span class="fc" id="L24">            case RAIZ_TUBERCULO -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubo rico em potássio e pobre em nitrogênio&quot;, 20),
+                    new Cuidado(TipoCuidado.PRAGAS, &quot;Observar folhas e raízes quanto a pragas e podridões&quot;, 10),
+                    new Cuidado(TipoCuidado.SOLO, &quot;Solo fofo e profundo, sem pedras&quot;, 0));
+<span class="fc" id="L28">            case BULBO -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubo orgânico e potássio a cada 20 dias&quot;, 20),
+                    new Cuidado(TipoCuidado.SOLO, &quot;Solo leve e bem drenado&quot;, 0),
+                    new Cuidado(TipoCuidado.MANEJO, &quot;Colher quando as folhas começarem a secar&quot;, 0));
+<span class="fc" id="L32">            case ERVA_TEMPERO -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubo orgânico leve a cada 30 dias&quot;, 30),
+                    new Cuidado(TipoCuidado.PODA, &quot;Podar as pontas para estimular a brotação e adiar a floração&quot;, 14),
+                    new Cuidado(TipoCuidado.SOLO, &quot;Solo leve e bem drenado; evitar encharcar&quot;, 0));
+<span class="fc" id="L36">            case LEGUMINOSA -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubo com fósforo e potássio; evitar excesso de nitrogênio&quot;, 20),
+                    new Cuidado(TipoCuidado.PRAGAS, &quot;Verificar vaquinhas, pulgões e fungos nas folhas&quot;, 10),
+                    new Cuidado(TipoCuidado.SUSTENTACAO, &quot;Usar tutor nas variedades trepadoras&quot;, 0));
+<span class="fc" id="L40">            case FRUTIFERA -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubar com composto e potássio&quot;, 30),
+                    new Cuidado(TipoCuidado.PRAGAS, &quot;Verificar cochonilhas, moscas-das-frutas e fungos&quot;, 14),
+                    new Cuidado(TipoCuidado.PODA, &quot;Podar para formação e após a colheita&quot;, 0));
+<span class="fc" id="L44">            case MEDICINAL -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubo orgânico leve&quot;, 45),
+                    new Cuidado(TipoCuidado.PODA, &quot;Colher ou podar regularmente para estimular a rebrota&quot;, 21),
+                    new Cuidado(TipoCuidado.SOLO, &quot;Solo bem drenado&quot;, 0));
+<span class="fc" id="L48">            case PANC -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubo orgânico&quot;, 30),
+                    new Cuidado(TipoCuidado.PODA, &quot;Colher folhas e brotos com frequência para estimular a rebrota&quot;, 14),
+                    new Cuidado(TipoCuidado.SOLO, &quot;Solo rico em matéria orgânica&quot;, 0));
+<span class="fc" id="L52">            case FLOR -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubo orgânico para floração&quot;, 30),
+                    new Cuidado(TipoCuidado.PODA, &quot;Retirar as flores secas para estimular nova floração&quot;, 14),
+                    new Cuidado(TipoCuidado.PRAGAS, &quot;Verificar pulgões nos botões&quot;, 10));
+<span class="fc" id="L56">            case ORNAMENTAL -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubo líquido diluído para plantas de folhagem&quot;, 45),
+                    new Cuidado(TipoCuidado.PODA, &quot;Retirar folhas secas e limpar o pó das folhas&quot;, 30),
+                    new Cuidado(TipoCuidado.LUMINOSIDADE, &quot;Girar o vaso de vez em quando para crescer por igual&quot;, 0));
+<span class="fc" id="L60">            case OUTRA -&gt; List.of(</span>
+                    new Cuidado(TipoCuidado.ADUBACAO, &quot;Adubo orgânico&quot;, 30));
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

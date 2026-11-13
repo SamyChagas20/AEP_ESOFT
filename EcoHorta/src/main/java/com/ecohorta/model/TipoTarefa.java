@@ -1,6 +1,5 @@
 package com.ecohorta.model;
 
-/** Tipos de tarefa que o sistema pode sugerir para o dia. */
 public enum TipoTarefa {
     REGA("Rega"),
     CUIDADO("Cuidado"),

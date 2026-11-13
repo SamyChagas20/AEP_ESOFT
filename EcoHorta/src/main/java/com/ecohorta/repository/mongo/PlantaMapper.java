@@ -16,13 +16,6 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Converte Planta <-> Document (coleção "plantas").
- * Estrutura complexa: "rega" e "apartamento" são documentos aninhados; "janelasPlantio" e
- * "cuidados" são listas de subdocumentos; "estacoes" é a lista de códigos que referenciam
- * a coleção "tempo" (campo "codigo"). Campos derivados (nomeBusca, estacoes,
- * melhorMesPlantio, horasSolMinimas) são gravados para permitir consultas e índices.
- */
 public final class PlantaMapper {
 
     private PlantaMapper() {
@@ -93,7 +86,6 @@ public final class PlantaMapper {
                 rega);
         planta.setId(BsonUtil.lerId(doc));
 
-        // Documentos antigos (sem os campos novos) recebem valores padrão.
         planta.categoria(BsonUtil.lerEnum(doc, "categoria", CategoriaPlanta.class, CategoriaPlanta.OUTRA));
         planta.nivelLuz(BsonUtil.lerEnum(doc, "nivelLuz", NivelLuz.class, NivelLuz.PLENA));
         Object comestivel = doc.get("comestivel");

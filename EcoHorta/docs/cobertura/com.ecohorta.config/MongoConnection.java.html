@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MongoConnection.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.config</a> &gt; <span class="el_source">MongoConnection.java</span></div><h1>MongoConnection.java</h1><pre class="source lang-java linenums">package com.ecohorta.config;
+
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
+import java.util.concurrent.TimeUnit;
+
+public class MongoConnection implements AutoCloseable {
+
+    public static final String URI_PADRAO = &quot;mongodb://localhost:27017&quot;;
+    public static final String BANCO_PADRAO = &quot;ecohorta&quot;;
+    private static final int TEMPO_LIMITE_SEGUNDOS = 3;
+
+    private final MongoClient cliente;
+    private final MongoDatabase banco;
+
+<span class="fc" id="L21">    public MongoConnection(String uri, String nomeBanco) {</span>
+<span class="fc" id="L22">        MongoClientSettings configuracao = MongoClientSettings.builder()</span>
+<span class="fc" id="L23">                .applyConnectionString(new ConnectionString(uri))</span>
+<span class="fc" id="L24">                .applyToClusterSettings(c -&gt; c.serverSelectionTimeout(TEMPO_LIMITE_SEGUNDOS, TimeUnit.SECONDS))</span>
+<span class="fc" id="L25">                .build();</span>
+<span class="fc" id="L26">        this.cliente = MongoClients.create(configuracao);</span>
+<span class="fc" id="L27">        this.banco = cliente.getDatabase(nomeBanco);</span>
+<span class="fc" id="L28">    }</span>
+
+    public static MongoConnection deAmbiente() {
+<span class="nc" id="L31">        return new MongoConnection(</span>
+<span class="nc" id="L32">                valorOuPadrao(System.getenv(&quot;MONGODB_URI&quot;), URI_PADRAO),</span>
+<span class="nc" id="L33">                valorOuPadrao(System.getenv(&quot;MONGODB_DB&quot;), BANCO_PADRAO));</span>
+    }
+
+    static String valorOuPadrao(String valor, String padrao) {
+<span class="fc bfc" id="L37" title="All 4 branches covered.">        return (valor == null || valor.isBlank()) ? padrao : valor.trim();</span>
+    }
+
+    public MongoDatabase getBanco() {
+<span class="fc" id="L41">        return banco;</span>
+    }
+
+    public void verificarConexao() {
+<span class="fc" id="L45">        banco.runCommand(new Document(&quot;ping&quot;, 1));</span>
+<span class="fc" id="L46">    }</span>
+
+    @Override
+    public void close() {
+<span class="fc" id="L50">        cliente.close();</span>
+<span class="fc" id="L51">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

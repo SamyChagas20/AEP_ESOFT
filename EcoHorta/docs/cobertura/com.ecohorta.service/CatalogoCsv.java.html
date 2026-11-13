@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CatalogoCsv.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.service</a> &gt; <span class="el_source">CatalogoCsv.java</span></div><h1>CatalogoCsv.java</h1><pre class="source lang-java linenums">package com.ecohorta.service;
+
+import com.ecohorta.model.AdaptacaoApartamento;
+import com.ecohorta.model.CategoriaPlanta;
+import com.ecohorta.model.NivelApartamento;
+import com.ecohorta.model.NivelLuz;
+import com.ecohorta.model.Planta;
+import com.ecohorta.model.RegaRecomendada;
+import com.ecohorta.model.TipoCuidado;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public final class CatalogoCsv {
+
+    public static final String RECURSO = &quot;/catalogo/plantas.csv&quot;;
+
+<span class="fc" id="L24">    private static final Map&lt;String, CategoriaPlanta&gt; CATEGORIAS = Map.ofEntries(</span>
+<span class="fc" id="L25">            Map.entry(&quot;FOL&quot;, CategoriaPlanta.FOLHOSA),</span>
+<span class="fc" id="L26">            Map.entry(&quot;FRU&quot;, CategoriaPlanta.HORTALICA_FRUTO),</span>
+<span class="fc" id="L27">            Map.entry(&quot;RAI&quot;, CategoriaPlanta.RAIZ_TUBERCULO),</span>
+<span class="fc" id="L28">            Map.entry(&quot;BUL&quot;, CategoriaPlanta.BULBO),</span>
+<span class="fc" id="L29">            Map.entry(&quot;ERV&quot;, CategoriaPlanta.ERVA_TEMPERO),</span>
+<span class="fc" id="L30">            Map.entry(&quot;LEG&quot;, CategoriaPlanta.LEGUMINOSA),</span>
+<span class="fc" id="L31">            Map.entry(&quot;FRT&quot;, CategoriaPlanta.FRUTIFERA),</span>
+<span class="fc" id="L32">            Map.entry(&quot;MED&quot;, CategoriaPlanta.MEDICINAL),</span>
+<span class="fc" id="L33">            Map.entry(&quot;PNC&quot;, CategoriaPlanta.PANC),</span>
+<span class="fc" id="L34">            Map.entry(&quot;FLO&quot;, CategoriaPlanta.FLOR),</span>
+<span class="fc" id="L35">            Map.entry(&quot;ORN&quot;, CategoriaPlanta.ORNAMENTAL));</span>
+
+    private CatalogoCsv() {
+    }
+
+    public static List&lt;Planta&gt; carregar() {
+<span class="fc" id="L41">        try (InputStream in = CatalogoCsv.class.getResourceAsStream(RECURSO)) {</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">            if (in == null) {</span>
+<span class="nc" id="L43">                throw new IllegalStateException(&quot;Arquivo do catálogo não encontrado: &quot; + RECURSO);</span>
+            }
+<span class="fc" id="L45">            return ler(new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)));</span>
+<span class="nc" id="L46">        } catch (IOException e) {</span>
+<span class="nc" id="L47">            throw new IllegalStateException(&quot;Não foi possível ler o catálogo: &quot; + e.getMessage(), e);</span>
+        }
+    }
+
+    public static List&lt;Planta&gt; ler(BufferedReader leitor) throws IOException {
+<span class="fc" id="L52">        List&lt;Planta&gt; plantas = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L53">        int numero = 0;</span>
+        String linha;
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        while ((linha = leitor.readLine()) != null) {</span>
+<span class="fc" id="L56">            numero++;</span>
+<span class="fc bfc" id="L57" title="All 4 branches covered.">            if (linha.isBlank() || linha.startsWith(&quot;#&quot;)) {</span>
+<span class="fc" id="L58">                continue;</span>
+            }
+            try {
+<span class="fc" id="L61">                plantas.add(converter(linha));</span>
+<span class="fc" id="L62">            } catch (RuntimeException e) {</span>
+<span class="fc" id="L63">                throw new IllegalStateException(&quot;Linha &quot; + numero + &quot; do catálogo é inválida (&quot; + e.getMessage()</span>
+                        + &quot;): &quot; + linha, e);
+<span class="fc" id="L65">            }</span>
+        }
+<span class="fc" id="L67">        return plantas;</span>
+    }
+
+    static Planta converter(String linha) {
+<span class="fc" id="L71">        String[] c = linha.split(&quot;;&quot;, 10);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (c.length &lt; 9) {</span>
+<span class="fc" id="L73">            throw new IllegalArgumentException(&quot;esperadas 10 colunas&quot;);</span>
+        }
+<span class="fc" id="L75">        CategoriaPlanta categoria = CATEGORIAS.get(c[2].trim());</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (categoria == null) {</span>
+<span class="fc" id="L77">            throw new IllegalArgumentException(&quot;categoria desconhecida: &quot; + c[2]);</span>
+        }
+<span class="fc bfc" id="L79" title="All 4 branches covered.">        NivelLuz luz = switch (c[4].trim()) {</span>
+<span class="fc" id="L80">            case &quot;B&quot; -&gt; NivelLuz.MINIMA;</span>
+<span class="fc" id="L81">            case &quot;M&quot; -&gt; NivelLuz.MEDIA;</span>
+<span class="fc" id="L82">            case &quot;P&quot; -&gt; NivelLuz.PLENA;</span>
+<span class="fc" id="L83">            default -&gt; throw new IllegalArgumentException(&quot;luz desconhecida: &quot; + c[4]);</span>
+        };
+<span class="fc bfc" id="L85" title="All 4 branches covered.">        NivelApartamento nivelApt = switch (c[5].trim()) {</span>
+<span class="fc" id="L86">            case &quot;I&quot; -&gt; NivelApartamento.IDEAL;</span>
+<span class="fc" id="L87">            case &quot;P&quot; -&gt; NivelApartamento.POSSIVEL;</span>
+<span class="fc" id="L88">            case &quot;N&quot; -&gt; NivelApartamento.NAO_RECOMENDADO;</span>
+<span class="fc" id="L89">            default -&gt; throw new IllegalArgumentException(&quot;apartamento desconhecido: &quot; + c[5]);</span>
+        };
+<span class="fc" id="L91">        int regaDias = Integer.parseInt(c[6].trim());</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        String observacaoRega = regaDias &gt;= 10</span>
+<span class="fc" id="L93">                ? &quot;Deixar o substrato secar bem entre as regas&quot;</span>
+<span class="fc" id="L94">                : &quot;Regar quando a camada superficial do solo estiver seca&quot;;</span>
+
+<span class="fc" id="L96">        Planta planta = new Planta(c[0], c[1], Integer.parseInt(c[3].trim()),</span>
+<span class="fc" id="L97">                luz.getRotulo() + &quot; — &quot; + luz.getDescricao(),</span>
+<span class="fc" id="L98">                new RegaRecomendada(regaDias, Integer.parseInt(c[7].trim()), observacaoRega))</span>
+<span class="fc" id="L99">                .categoria(categoria)</span>
+<span class="fc" id="L100">                .nivelLuz(luz)</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">                .apartamento(new AdaptacaoApartamento(nivelApt, notaApartamento(nivelApt)))</span>
+<span class="fc" id="L102">                .comestivel(categoria != CategoriaPlanta.ORNAMENTAL);</span>
+
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        for (String janela : c[8].trim().split(&quot;\\|&quot;)) {</span>
+<span class="fc" id="L105">            String[] meses = janela.split(&quot;-&quot;);</span>
+<span class="fc" id="L106">            planta.adicionarJanela(Integer.parseInt(meses[0].trim()), Integer.parseInt(meses[1].trim()), &quot;&quot;);</span>
+        }
+<span class="fc" id="L108">        CuidadosPadrao.para(categoria).forEach(planta::adicionarCuidado);</span>
+<span class="pc bpc" id="L109" title="1 of 4 branches missed.">        if (c.length == 10 &amp;&amp; !c[9].isBlank()) {</span>
+<span class="fc" id="L110">            planta.adicionarCuidado(TipoCuidado.MANEJO, c[9].trim(), 0);</span>
+        }
+<span class="fc" id="L112">        return planta;</span>
+    }
+
+    private static String notaApartamento(NivelApartamento nivel) {
+<span class="fc bfc" id="L116" title="All 3 branches covered.">        return switch (nivel) {</span>
+<span class="fc" id="L117">            case IDEAL -&gt; &quot;Cresce bem em vasos dentro de casa, em janela ou bancada com a luz indicada&quot;;</span>
+<span class="fc" id="L118">            case POSSIVEL -&gt; &quot;Possível em vaso grande na varanda ou em janela bem iluminada&quot;;</span>
+<span class="fc" id="L119">            case NAO_RECOMENDADO -&gt; &quot;Exige muito espaço ou sol direto o dia todo; prefira quintal ou terreno&quot;;</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

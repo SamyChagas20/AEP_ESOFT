@@ -2,7 +2,6 @@ package com.ecohorta.model;
 
 import java.time.LocalDate;
 
-/** Histórico de uma rega realizada (subdocumento em "plantios"). */
 public record RegistroRega(LocalDate data, int quantidadeMl, String observacao) {
 
     public RegistroRega {

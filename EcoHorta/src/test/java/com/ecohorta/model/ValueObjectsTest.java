@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Valida as regras dos objetos de valor (records) usados como subdocumentos. */
 class ValueObjectsTest {
 
     @Test

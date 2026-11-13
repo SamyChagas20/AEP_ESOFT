@@ -11,11 +11,6 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Converte Plantio <-> Document (coleção "plantios").
- * "hortaId" e "plantaId" são referências (ObjectId) para "hortas" e "plantas";
- * "regas" e "cuidados" são listas de subdocumentos com o histórico.
- */
 public final class PlantioMapper {
 
     private PlantioMapper() {

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MongoPlantaRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.repository.mongo</a> &gt; <span class="el_source">MongoPlantaRepository.java</span></div><h1>MongoPlantaRepository.java</h1><pre class="source lang-java linenums">package com.ecohorta.repository.mongo;
+
+import com.ecohorta.model.Planta;
+import com.ecohorta.model.Textos;
+import com.ecohorta.repository.FiltroPlantas;
+import com.ecohorta.repository.PlantaRepository;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.Sorts;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
+
+public class MongoPlantaRepository implements PlantaRepository {
+
+    public static final String COLECAO = &quot;plantas&quot;;
+
+    private final MongoCollection&lt;Document&gt; colecao;
+
+<span class="fc" id="L27">    public MongoPlantaRepository(MongoDatabase banco) {</span>
+<span class="fc" id="L28">        this.colecao = banco.getCollection(COLECAO);</span>
+<span class="fc" id="L29">    }</span>
+
+    @Override
+    public Planta salvar(Planta planta) {
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (planta.getId() == null) {</span>
+<span class="fc" id="L34">            planta.setId(new ObjectId().toHexString());</span>
+        }
+<span class="fc" id="L36">        colecao.replaceOne(Filters.eq(&quot;_id&quot;, new ObjectId(planta.getId())),</span>
+<span class="fc" id="L37">                PlantaMapper.paraDocumento(planta), new ReplaceOptions().upsert(true));</span>
+<span class="fc" id="L38">        return planta;</span>
+    }
+
+    @Override
+    public Optional&lt;Planta&gt; buscarPorId(String id) {
+<span class="fc bfc" id="L43" title="All 4 branches covered.">        if (id == null || !ObjectId.isValid(id)) {</span>
+<span class="fc" id="L44">            return Optional.empty();</span>
+        }
+<span class="fc" id="L46">        Document doc = colecao.find(Filters.eq(&quot;_id&quot;, new ObjectId(id))).first();</span>
+<span class="fc" id="L47">        return Optional.ofNullable(doc).map(PlantaMapper::deDocumento);</span>
+    }
+
+    @Override
+    public Optional&lt;Planta&gt; buscarPorNome(String nome) {
+<span class="fc" id="L52">        String procurado = Textos.normalizar(nome);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (procurado.isEmpty()) {</span>
+<span class="fc" id="L54">            return Optional.empty();</span>
+        }
+<span class="fc" id="L56">        Document doc = colecao.find(Filters.eq(&quot;nomeBusca&quot;, procurado)).first();</span>
+<span class="fc" id="L57">        return Optional.ofNullable(doc).map(PlantaMapper::deDocumento);</span>
+    }
+
+    @Override
+    public List&lt;Planta&gt; listarTodas() {
+<span class="fc" id="L62">        return filtrar(FiltroPlantas.todas());</span>
+    }
+
+    @Override
+    public List&lt;Planta&gt; filtrar(FiltroPlantas filtro) {
+<span class="fc" id="L67">        List&lt;Bson&gt; condicoes = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L68">        String termo = Textos.normalizar(filtro.termo());</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (!termo.isEmpty()) {</span>
+<span class="fc" id="L70">            condicoes.add(Filters.regex(&quot;nomeBusca&quot;, Pattern.compile(Pattern.quote(termo))));</span>
+        }
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (filtro.estacao() != null) {</span>
+<span class="fc" id="L73">            condicoes.add(Filters.eq(&quot;estacoes&quot;, filtro.estacao().name()));</span>
+        }
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (filtro.nivelLuz() != null) {</span>
+<span class="fc" id="L76">            condicoes.add(Filters.eq(&quot;nivelLuz&quot;, filtro.nivelLuz().name()));</span>
+        }
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (filtro.apartamento() != null) {</span>
+<span class="fc" id="L79">            condicoes.add(Filters.eq(&quot;apartamento.nivel&quot;, filtro.apartamento().name()));</span>
+        }
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (filtro.categoria() != null) {</span>
+<span class="fc" id="L82">            condicoes.add(Filters.eq(&quot;categoria&quot;, filtro.categoria().name()));</span>
+        }
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (filtro.comestivel() != null) {</span>
+<span class="fc" id="L85">            condicoes.add(Filters.eq(&quot;comestivel&quot;, filtro.comestivel()));</span>
+        }
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        Bson consulta = condicoes.isEmpty() ? new Document() : Filters.and(condicoes);</span>
+<span class="fc" id="L88">        return colecao.find(consulta).sort(Sorts.ascending(&quot;nomeBusca&quot;))</span>
+<span class="fc" id="L89">                .map(PlantaMapper::deDocumento)</span>
+<span class="fc" id="L90">                .into(new ArrayList&lt;&gt;());</span>
+    }
+
+    @Override
+    public long contar() {
+<span class="fc" id="L95">        return colecao.countDocuments();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

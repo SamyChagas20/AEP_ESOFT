@@ -4,7 +4,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 
-/** Cria os índices usados pelas consultas e garante unicidade das chaves naturais. */
 public final class MongoIndices {
 
     private MongoIndices() {

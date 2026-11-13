@@ -9,10 +9,6 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Converte Tempo <-> Document (coleção "tempo").
- * "codigo" (PRIMAVERA, VERAO, OUTONO, INVERNO) é a chave natural usada por "plantas.estacoes".
- */
 public final class TempoMapper {
 
     private TempoMapper() {

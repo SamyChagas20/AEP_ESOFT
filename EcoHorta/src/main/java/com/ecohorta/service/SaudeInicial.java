@@ -6,32 +6,20 @@ import com.ecohorta.model.TipoRegistroSaude;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Dados iniciais da coleção "saude": toxicidade para gatos, cães e pessoas, e orientações para
- * condições de saúde (comorbidades). As plantas são citadas pelo NOME do catálogo e convertidas
- * em referências pelo {@link SaudeService}.
- *
- * Material educativo, compilado de fontes públicas (ASPCA, sociedades de asma e alergia, nutrição
- * clínica para dieta renal, varfarina e refluxo). Não substitui médico, nutricionista ou veterinário.
- */
 public final class SaudeInicial {
 
     static final String AVISO_PADRAO =
             "Informação educativa. Não substitui a orientação de médico, nutricionista ou veterinário.";
 
-    /** Planta citada em uma lista, com o motivo e (para "evitar") a gravidade. */
     public record Entrada(String planta, String motivo, Gravidade gravidade) {
     }
 
-    /** Definição completa de um documento da coleção "saude". */
     public record Definicao(String codigo, TipoRegistroSaude tipo, String nome, String descricao,
                             String orientacao, String aviso, List<Entrada> evitar, List<Entrada> recomendadas) {
     }
 
     private SaudeInicial() {
     }
-
-    // ---------- ajudantes para montar as listas ----------
 
     private static List<Entrada> ev(Gravidade gravidade, String motivo, String... plantas) {
         List<Entrada> lista = new ArrayList<>();
@@ -68,7 +56,6 @@ public final class SaudeInicial {
             "Couve-de-bruxelas", "Mostarda", "Rúcula", "Agrião", "Nabo", "Rabanete", "Couve-chinesa", "Pak choi",
             "Mizuna", "Tatsoi", "Couve-rábano", "Raiz-forte", "Rutabaga"};
 
-    /** Plantas consideradas seguras para gatos e cães (listas de plantas não tóxicas da ASPCA). */
     private static List<Entrada> segurasParaPets() {
         return ok("Considerada não tóxica para cães e gatos; ofereça com moderação e supervisão",
                 "Manjericão", "Manjericão-roxo", "Alecrim", "Tomilho", "Sálvia", "Coentro", "Endro",
@@ -82,8 +69,6 @@ public final class SaudeInicial {
         return List.of(gatos(), caes(), pessoas(), respiratorio(), alergiaPolen(), hipertensao(), diabetes(),
                 doencaRenal(), anticoagulante(), gravidez(), refluxo(), tireoide(), hepatica());
     }
-
-    // ---------- animais ----------
 
     private static List<Entrada> toxicasParaPets(boolean gatos) {
         return juntar(
@@ -174,8 +159,6 @@ public final class SaudeInicial {
                         ev(Gravidade.LEVE, "Ornamental não comestível; pode irritar a boca", "Lírio-da-paz", "Antúrio", "Hera")),
                 List.of());
     }
-
-    // ---------- condições de saúde ----------
 
     private static Definicao respiratorio() {
         return new Definicao("RESPIRATORIO", TipoRegistroSaude.COMORBIDADE,

@@ -2,6 +2,8 @@ package com.ecohorta.repository.mongo;
 
 import com.ecohorta.config.MongoConnection;
 import com.ecohorta.model.Estacao;
+import com.ecohorta.model.CategoriaPlanta;
+import com.ecohorta.model.ItemSaude;
 import com.ecohorta.model.Gravidade;
 import com.ecohorta.model.Horta;
 import com.ecohorta.model.NivelApartamento;
@@ -36,10 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-/**
- * Testes de integração com um MongoDB real (localhost:27017 ou a variável MONGODB_URI).
- * Usam um banco temporário próprio e são IGNORADOS automaticamente se o MongoDB não estiver acessível.
- */
 class MongoRepositoriosIntegracaoTest {
 
     private static MongoConnection conexao;
@@ -65,6 +63,9 @@ class MongoRepositoriosIntegracaoTest {
         } catch (RuntimeException e) {
             if (candidata != null) {
                 candidata.close();
+            }
+            if (Boolean.getBoolean("mongo.obrigatorio")) {
+                throw new IllegalStateException("MongoDB obrigatório para validar a entrega: conexão indisponível.", e);
             }
         }
         assumeTrue(conexao != null, "MongoDB indisponível: testes de integração ignorados.");
@@ -167,7 +168,6 @@ class MongoRepositoriosIntegracaoTest {
         p2.colher(LocalDate.of(2026, 10, 20));
         plantios.salvar(p2);
 
-        // histórico embutido sobrevive ao ciclo gravar/ler; ordenação por data de plantio
         List<Plantio> lista = plantios.listarPorHorta(horta.getId());
         assertEquals(2, lista.size());
         assertEquals(p2.getId(), lista.get(0).getId());
@@ -175,13 +175,11 @@ class MongoRepositoriosIntegracaoTest {
         assertEquals(1, lido.getRegas().size());
         assertEquals(1, lido.getCuidados().size());
 
-        // agregação ($match + $group)
         Map<StatusPlantio, Long> resumo = plantios.contarPorStatus(horta.getId());
         assertEquals(1L, resumo.get(StatusPlantio.ATIVO));
         assertEquals(1L, resumo.get(StatusPlantio.COLHIDO));
         assertEquals(0L, resumo.get(StatusPlantio.PERDIDO));
 
-        // junção entre coleções com $lookup: plantios -> plantas
         Document comPlanta = conexao.getBanco().getCollection(MongoPlantioRepository.COLECAO)
                 .aggregate(List.of(
                         Aggregates.match(Filters.eq("_id", new ObjectId(p1.getId()))),
@@ -193,8 +191,6 @@ class MongoRepositoriosIntegracaoTest {
         assertEquals(0L, plantios.contarPorStatus("invalido").get(StatusPlantio.ATIVO));
         assertTrue(plantios.buscarPorId("invalido").isEmpty());
     }
-
-    // ---------------- catálogo ampliado, estações e saúde ----------------
 
     @Test
     void cargaInicialCompletaEIdempotenteNoMongo() {
@@ -242,7 +238,6 @@ class MongoRepositoriosIntegracaoTest {
     void saudeEncontraRegistrosPelasListasEmbutidasEEstacoesLigamComPlantas() {
         servicos().carregarDadosIniciais();
 
-        // consulta nas listas de subdocumentos: quais registros citam a cebola?
         String idCebola = plantas.buscarPorNome("Cebola").orElseThrow().getId();
         List<RegistroSaude> citam = saude.listarPorPlanta(idCebola);
         assertTrue(citam.stream().anyMatch(r -> r.getCodigo().equals("GATOS")
@@ -255,7 +250,6 @@ class MongoRepositoriosIntegracaoTest {
         assertEquals(13, saude.listar().size());
         assertTrue(saude.buscarPorCodigo(null).isEmpty());
 
-        // estações em ordem e relação tempo -> plantas pelo código da estação ($lookup com array)
         assertEquals(Estacao.PRIMAVERA, tempos.listar().get(0).getEstacao());
         assertEquals(10, tempos.buscarPorEstacao(Estacao.PRIMAVERA).orElseThrow().getMelhorMes());
         Document primaveraComPlantas = conexao.getBanco().getCollection(MongoTempoRepository.COLECAO)
@@ -264,5 +258,89 @@ class MongoRepositoriosIntegracaoTest {
                         Aggregates.lookup(MongoPlantaRepository.COLECAO, "codigo", "estacoes", "plantas")))
                 .first();
         assertTrue(primaveraComPlantas.getList("plantas", Document.class).size() > 50);
+    }
+
+    @Test
+    void filtrosCombinadosExigemTodosOsCriterios() {
+        servicos().catalogo().carregarCatalogoInicial();
+        FiltroPlantas filtro = FiltroPlantas.todas().comTermo("RUCULA")
+                .comCategoria(CategoriaPlanta.FOLHOSA).comEstacao(Estacao.INVERNO)
+                .comNivelLuz(NivelLuz.MEDIA).comApartamento(NivelApartamento.IDEAL)
+                .comComestivel(true);
+
+        assertEquals(List.of("Rúcula", "Rúcula-selvagem"),
+                plantas.filtrar(filtro).stream().map(Planta::getNome).toList());
+        assertTrue(plantas.filtrar(filtro.comComestivel(false)).isEmpty());
+        assertTrue(plantas.filtrar(filtro.comCategoria(CategoriaPlanta.ORNAMENTAL)).isEmpty());
+    }
+
+    @Test
+    void buscaTrataMetacaracteresComoTextoLiteral() {
+        servicos().catalogo().carregarCatalogoInicial();
+        assertTrue(plantas.filtrar(FiltroPlantas.todas().comTermo(".*")).isEmpty());
+        assertTrue(plantas.filtrar(FiltroPlantas.todas().comTermo("[")).isEmpty());
+    }
+
+    @Test
+    void idsNulosInvalidosEValidosSemRegistroNaoEncontramDocumentos() {
+        for (String id : java.util.Arrays.asList(null, "invalido", new ObjectId().toHexString())) {
+            assertTrue(plantas.buscarPorId(id).isEmpty());
+            assertTrue(usuarios.buscarPorId(id).isEmpty());
+            assertTrue(hortas.buscarPorId(id).isEmpty());
+            assertTrue(hortas.listarPorUsuario(id).isEmpty());
+            assertTrue(plantios.buscarPorId(id).isEmpty());
+            assertTrue(plantios.listarPorHorta(id).isEmpty());
+            assertTrue(plantios.contarPorStatus(id).values().stream().allMatch(total -> total == 0));
+            assertTrue(saude.listarPorPlanta(id).isEmpty());
+        }
+        assertTrue(tempos.buscarPorEstacao(Estacao.INVERNO).isEmpty());
+        assertTrue(saude.buscarPorCodigo("INEXISTENTE").isEmpty());
+    }
+
+    @Test
+    void salvarEstacaoExistenteAtualizaMesesSemDuplicar() {
+        Tempo original = tempos.salvar(new Tempo(Estacao.VERAO, "Inicial", 12, "Justificativa"));
+        Tempo revisado = new Tempo(Estacao.VERAO, "Revisado", 1, "Nova justificativa")
+                .adicionarMes(1, "Observação revisada");
+        revisado.setId(original.getId());
+        tempos.salvar(revisado);
+
+        Tempo lido = tempos.buscarPorEstacao(Estacao.VERAO).orElseThrow();
+        assertEquals(1, tempos.listar().size());
+        assertEquals(original.getId(), lido.getId());
+        assertEquals("Revisado", lido.getDescricao());
+        assertEquals(1, lido.getMelhorMes());
+        assertEquals(revisado.getMeses(), lido.getMeses());
+    }
+
+    @Test
+    void saudeConsultaRecomendadasEAtualizaListasSemDuplicar() {
+        Planta alface = plantas.salvar(CatalogoInicial.alface());
+        Planta tomate = plantas.salvar(CatalogoInicial.tomate());
+        RegistroSaude registro = new RegistroSaude("TESTE", TipoRegistroSaude.COMORBIDADE,
+                "Condição de teste", "", "", "");
+        registro.adicionarRecomendada(new ItemSaude(alface.getId(), alface.getNome(), "Motivo de teste", null));
+        saude.salvar(registro);
+
+        assertEquals(List.of(registro.getId()), saude.listarPorPlanta(alface.getId())
+                .stream().map(RegistroSaude::getId).toList());
+        assertTrue(saude.listarPorPlanta(tomate.getId()).isEmpty());
+
+        registro.adicionarEvitar(new ItemSaude(tomate.getId(), tomate.getNome(), "Outro motivo", Gravidade.LEVE));
+        saude.salvar(registro);
+        RegistroSaude lido = saude.buscarPorCodigo(" teste ").orElseThrow();
+        assertEquals(1, saude.listar().size());
+        assertEquals(registro.getRecomendadas(), lido.getRecomendadas());
+        assertEquals(registro.getEvitar(), lido.getEvitar());
+        assertEquals(registro.getId(), saude.listarPorPlanta(tomate.getId()).get(0).getId());
+    }
+
+    @Test
+    void indiceDeNomeImpedeDuplicataMesmoSemAcento() {
+        Planta original = CatalogoInicial.alface();
+        plantas.salvar(new Planta("Rúcula", "", 30, "", original.getRega()));
+        assertThrows(MongoException.class,
+                () -> plantas.salvar(new Planta("RUCULA", "", 30, "", original.getRega())));
+        assertEquals(1L, plantas.contar());
     }
 }

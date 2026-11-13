@@ -5,11 +5,6 @@ import com.ecohorta.model.Tempo;
 
 import java.util.List;
 
-/**
- * Dados iniciais da coleção "tempo": as 4 estações com o melhor mês para plantar em cada uma.
- * Valores indicativos para o Centro-Sul do Brasil (ex.: Paraná, São Paulo, Minas); no Norte e
- * Nordeste o calendário é outro (chuvoso x seco).
- */
 public final class TempoInicial {
 
     private TempoInicial() {

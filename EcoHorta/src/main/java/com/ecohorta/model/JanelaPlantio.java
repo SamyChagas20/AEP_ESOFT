@@ -2,11 +2,6 @@ package com.ecohorta.model;
 
 import java.time.LocalDate;
 
-/**
- * Período do ano (em meses) em que uma planta pode ser plantada.
- * Suporta janelas que cruzam a virada do ano (ex.: novembro a fevereiro).
- * É um subdocumento da coleção "plantas".
- */
 public record JanelaPlantio(int mesInicio, int mesFim, String observacao) {
 
     private static final String[] MESES =
@@ -19,7 +14,6 @@ public record JanelaPlantio(int mesInicio, int mesFim, String observacao) {
         observacao = observacao == null ? "" : observacao.trim();
     }
 
-    /** Indica se o mês (1-12) está dentro da janela. */
     public boolean contem(int mes) {
         if (mes < 1 || mes > 12) {
             return false;
@@ -27,7 +21,7 @@ public record JanelaPlantio(int mesInicio, int mesFim, String observacao) {
         if (mesInicio <= mesFim) {
             return mes >= mesInicio && mes <= mesFim;
         }
-        // janela que cruza o ano, ex.: 11 -> 2
+
         return mes >= mesInicio || mes <= mesFim;
     }
 
@@ -35,7 +29,6 @@ public record JanelaPlantio(int mesInicio, int mesFim, String observacao) {
         return contem(data.getMonthValue());
     }
 
-    /** Texto amigável, ex.: "Set a Nov (Primavera)". */
     public String descricao() {
         String periodo;
         if (mesInicio == 1 && mesFim == 12) {
@@ -48,7 +41,6 @@ public record JanelaPlantio(int mesInicio, int mesFim, String observacao) {
         return observacao.isEmpty() ? periodo : periodo + " (" + observacao + ")";
     }
 
-    /** Abreviação do mês em português (1 = Jan). */
     public static String nomeDoMes(int mes) {
         if (mes < 1 || mes > 12) {
             throw new IllegalArgumentException("Mês inválido: " + mes);

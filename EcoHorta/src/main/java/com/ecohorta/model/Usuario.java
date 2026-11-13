@@ -3,7 +3,6 @@ package com.ecohorta.model;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-/** Pessoa que cuida de uma ou mais hortas. */
 public class Usuario {
 
     private static final Pattern EMAIL = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
@@ -23,7 +22,6 @@ public class Usuario {
         this.nome = nome.trim();
     }
 
-    /** Padroniza o e-mail (minúsculas, sem espaços) para busca e unicidade. */
     public static String normalizarEmail(String email) {
         return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
     }

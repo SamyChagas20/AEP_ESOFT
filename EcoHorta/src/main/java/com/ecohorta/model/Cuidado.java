@@ -1,10 +1,5 @@
 package com.ecohorta.model;
 
-/**
- * Cuidado recomendado para uma planta (adubação, poda, pragas...).
- * Se frequenciaDias for 0, é apenas uma orientação (não gera tarefas periódicas).
- * É um item da lista de subdocumentos "cuidados" em "plantas".
- */
 public record Cuidado(TipoCuidado tipo, String descricao, int frequenciaDias) {
 
     public Cuidado {
@@ -20,7 +15,6 @@ public record Cuidado(TipoCuidado tipo, String descricao, int frequenciaDias) {
         descricao = descricao.trim();
     }
 
-    /** Verdadeiro se o cuidado se repete periodicamente. */
     public boolean periodico() {
         return frequenciaDias > 0;
     }

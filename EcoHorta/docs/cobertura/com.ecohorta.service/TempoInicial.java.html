@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TempoInicial.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.service</a> &gt; <span class="el_source">TempoInicial.java</span></div><h1>TempoInicial.java</h1><pre class="source lang-java linenums">package com.ecohorta.service;
+
+import com.ecohorta.model.Estacao;
+import com.ecohorta.model.Tempo;
+
+import java.util.List;
+
+public final class TempoInicial {
+
+    private TempoInicial() {
+    }
+
+    public static List&lt;Tempo&gt; estacoes() {
+<span class="fc" id="L14">        return List.of(primavera(), verao(), outono(), inverno());</span>
+    }
+
+    static Tempo primavera() {
+<span class="fc" id="L18">        return new Tempo(Estacao.PRIMAVERA,</span>
+                &quot;Temperaturas subindo e chuvas voltando. Fim do risco de geada na maior parte do Centro-Sul: &quot;
+                        + &quot;estação principal para frutos, ervas de calor e leguminosas.&quot;,
+                10,
+                &quot;Outubro reúne solo já aquecido, temperaturas amenas e chuvas regulares, sem o calor extremo do verão.&quot;)
+<span class="fc" id="L23">                .adicionarMes(9, &quot;Ainda pode haver frio e geada tardia; bom para sementeiras protegidas&quot;)</span>
+<span class="fc" id="L24">                .adicionarMes(10, &quot;Clima ideal: temperatura amena, solo aquecido e chuva regular&quot;)</span>
+<span class="fc" id="L25">                .adicionarMes(11, &quot;Calor crescente; reforçar a rega e cobrir o solo com palha&quot;);</span>
+    }
+
+    static Tempo verao() {
+<span class="fc" id="L29">        return new Tempo(Estacao.VERAO,</span>
+                &quot;Calor e chuvas fortes. Favorece culturas de calor (quiabo, abóbora, manjericão), &quot;
+                        + &quot;mas exige atenção a fungos, pragas e rega.&quot;,
+                12,
+                &quot;Dezembro é o começo do verão: calor e chuva ajudam o desenvolvimento e dão tempo para o ciclo &quot;
+                        + &quot;terminar antes do outono.&quot;)
+<span class="fc" id="L35">                .adicionarMes(12, &quot;Início do verão: melhor momento para culturas de calor&quot;)</span>
+<span class="fc" id="L36">                .adicionarMes(1, &quot;Calor intenso e chuvas fortes; atenção a fungos e a pragas&quot;)</span>
+<span class="fc" id="L37">                .adicionarMes(2, &quot;Fim do verão: bom para a segunda safra (feijão, tomate) e para preparar o outono&quot;);</span>
+    }
+
+    static Tempo outono() {
+<span class="fc" id="L41">        return new Tempo(Estacao.OUTONO,</span>
+                &quot;Temperaturas amenas e menos pragas. Ótima época para folhosas, brássicas, raízes, alho e cebola.&quot;,
+                4,
+                &quot;Abril tem temperaturas amenas, menos pragas e solo ainda morno: ideal para a maioria das hortaliças.&quot;)
+<span class="fc" id="L45">                .adicionarMes(3, &quot;Calor diminuindo; bom para começar couves, brócolis e folhosas&quot;)</span>
+<span class="fc" id="L46">                .adicionarMes(4, &quot;Clima ideal para folhosas, raízes e ervas&quot;)</span>
+<span class="fc" id="L47">                .adicionarMes(5, &quot;Primeiras friagens; época de alho, cebola, ervilha e fava&quot;);</span>
+    }
+
+    static Tempo inverno() {
+<span class="fc" id="L51">        return new Tempo(Estacao.INVERNO,</span>
+                &quot;Dias curtos e frio, com risco de geada em regiões mais frias. Prefira culturas de clima fresco &quot;
+                        + &quot;e proteja as sensíveis.&quot;,
+                8,
+                &quot;Agosto marca o fim do inverno: o risco de geada cai, e já dá para preparar sementeiras da primavera.&quot;)
+<span class="fc" id="L56">                .adicionarMes(6, &quot;Geadas possíveis: cobrir as plantas sensíveis&quot;)</span>
+<span class="fc" id="L57">                .adicionarMes(7, &quot;Mês mais frio: priorizar folhosas e brássicas resistentes&quot;)</span>
+<span class="fc" id="L58">                .adicionarMes(8, &quot;Fim do inverno: preparar sementeiras de tomate, pimenta e berinjela&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

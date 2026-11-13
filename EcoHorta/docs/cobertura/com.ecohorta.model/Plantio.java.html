@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Plantio.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.model</a> &gt; <span class="el_source">Plantio.java</span></div><h1>Plantio.java</h1><pre class="source lang-java linenums">package com.ecohorta.model;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+public class Plantio {
+
+    private String id;
+    private final String hortaId;
+    private final String plantaId;
+    private final String canteiro;
+    private final int quantidade;
+    private final LocalDate dataPlantio;
+<span class="fc" id="L20">    private StatusPlantio status = StatusPlantio.ATIVO;</span>
+    private LocalDate dataEncerramento;
+<span class="fc" id="L22">    private final List&lt;RegistroRega&gt; regas = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L23">    private final List&lt;RegistroCuidado&gt; cuidados = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L25">    public Plantio(String hortaId, String plantaId, String canteiro, int quantidade, LocalDate dataPlantio) {</span>
+<span class="pc bpc" id="L26" title="2 of 8 branches missed.">        if (hortaId == null || hortaId.isBlank() || plantaId == null || plantaId.isBlank()) {</span>
+<span class="fc" id="L27">            throw new IllegalArgumentException(&quot;O plantio precisa estar ligado a uma horta e a uma planta.&quot;);</span>
+        }
+<span class="pc bpc" id="L29" title="1 of 4 branches missed.">        if (canteiro == null || canteiro.isBlank()) {</span>
+<span class="fc" id="L30">            throw new IllegalArgumentException(&quot;O canteiro é obrigatório.&quot;);</span>
+        }
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if (quantidade &lt; 1) {</span>
+<span class="fc" id="L33">            throw new IllegalArgumentException(&quot;A quantidade deve ser de pelo menos 1.&quot;);</span>
+        }
+<span class="fc" id="L35">        this.hortaId = hortaId;</span>
+<span class="fc" id="L36">        this.plantaId = plantaId;</span>
+<span class="fc" id="L37">        this.canteiro = canteiro.trim();</span>
+<span class="fc" id="L38">        this.quantidade = quantidade;</span>
+<span class="fc" id="L39">        this.dataPlantio = Objects.requireNonNull(dataPlantio, &quot;A data do plantio é obrigatória.&quot;);</span>
+<span class="fc" id="L40">    }</span>
+
+    public static Plantio restaurar(String id, String hortaId, String plantaId, String canteiro,
+                                    int quantidade, LocalDate dataPlantio, StatusPlantio status,
+                                    LocalDate dataEncerramento, List&lt;RegistroRega&gt; regas,
+                                    List&lt;RegistroCuidado&gt; cuidados) {
+<span class="fc" id="L46">        Plantio p = new Plantio(hortaId, plantaId, canteiro, quantidade, dataPlantio);</span>
+<span class="fc" id="L47">        p.id = id;</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        p.status = status == null ? StatusPlantio.ATIVO : status;</span>
+<span class="fc" id="L49">        p.dataEncerramento = dataEncerramento;</span>
+<span class="fc" id="L50">        p.regas.addAll(regas);</span>
+<span class="fc" id="L51">        p.cuidados.addAll(cuidados);</span>
+<span class="fc" id="L52">        return p;</span>
+    }
+
+    public RegistroRega registrarRega(LocalDate data, int quantidadeMl, String observacao) {
+<span class="fc" id="L56">        exigirAtivo();</span>
+<span class="fc" id="L57">        validarData(data, &quot;A rega&quot;);</span>
+<span class="fc" id="L58">        RegistroRega registro = new RegistroRega(data, quantidadeMl, observacao);</span>
+<span class="fc" id="L59">        regas.add(registro);</span>
+<span class="fc" id="L60">        return registro;</span>
+    }
+
+    public RegistroCuidado registrarCuidado(LocalDate data, TipoCuidado tipo, String descricao) {
+<span class="fc" id="L64">        exigirAtivo();</span>
+<span class="fc" id="L65">        validarData(data, &quot;O cuidado&quot;);</span>
+<span class="fc" id="L66">        RegistroCuidado registro = new RegistroCuidado(data, tipo, descricao);</span>
+<span class="fc" id="L67">        cuidados.add(registro);</span>
+<span class="fc" id="L68">        return registro;</span>
+    }
+
+    public void colher(LocalDate data) {
+<span class="fc" id="L72">        encerrar(StatusPlantio.COLHIDO, data);</span>
+<span class="fc" id="L73">    }</span>
+
+    public void marcarComoPerdido(LocalDate data) {
+<span class="fc" id="L76">        encerrar(StatusPlantio.PERDIDO, data);</span>
+<span class="fc" id="L77">    }</span>
+
+    private void encerrar(StatusPlantio novoStatus, LocalDate data) {
+<span class="fc" id="L80">        exigirAtivo();</span>
+<span class="fc" id="L81">        validarData(data, &quot;O encerramento&quot;);</span>
+<span class="fc" id="L82">        this.status = novoStatus;</span>
+<span class="fc" id="L83">        this.dataEncerramento = data;</span>
+<span class="fc" id="L84">    }</span>
+
+    private void exigirAtivo() {
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (status != StatusPlantio.ATIVO) {</span>
+<span class="fc" id="L88">            throw new IllegalStateException(&quot;Este plantio já foi encerrado (&quot; + status.getRotulo() + &quot;).&quot;);</span>
+        }
+<span class="fc" id="L90">    }</span>
+
+    private void validarData(LocalDate data, String sujeito) {
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (data == null) {</span>
+<span class="fc" id="L94">            throw new IllegalArgumentException(&quot;A data é obrigatória.&quot;);</span>
+        }
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (data.isBefore(dataPlantio)) {</span>
+<span class="fc" id="L97">            throw new IllegalArgumentException(sujeito + &quot; não pode ser anterior à data do plantio.&quot;);</span>
+        }
+<span class="fc" id="L99">    }</span>
+
+    public boolean isAtivo() {
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        return status == StatusPlantio.ATIVO;</span>
+    }
+
+    public Optional&lt;LocalDate&gt; ultimaRega() {
+<span class="fc" id="L106">        return regas.stream().map(RegistroRega::data).max(Comparator.naturalOrder());</span>
+    }
+
+    public LocalDate proximaRega(Planta planta) {
+<span class="fc" id="L110">        return ultimaRega()</span>
+<span class="fc" id="L111">                .map(ultima -&gt; ultima.plusDays(planta.getRega().frequenciaDias()))</span>
+<span class="fc" id="L112">                .orElse(dataPlantio);</span>
+    }
+
+    public Optional&lt;LocalDate&gt; ultimoCuidado(TipoCuidado tipo) {
+<span class="fc" id="L116">        return cuidados.stream()</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">                .filter(c -&gt; c.tipo() == tipo)</span>
+<span class="fc" id="L118">                .map(RegistroCuidado::data)</span>
+<span class="fc" id="L119">                .max(Comparator.naturalOrder());</span>
+    }
+
+    public LocalDate proximoCuidado(Cuidado cuidado) {
+<span class="fc" id="L123">        LocalDate base = ultimoCuidado(cuidado.tipo()).orElse(dataPlantio);</span>
+<span class="fc" id="L124">        return base.plusDays(cuidado.frequenciaDias());</span>
+    }
+
+    public LocalDate dataPrevistaColheita(Planta planta) {
+<span class="fc" id="L128">        return dataPlantio.plusDays(planta.getDiasParaColheita());</span>
+    }
+
+    public long diasDesdePlantio(LocalDate hoje) {
+<span class="fc" id="L132">        return ChronoUnit.DAYS.between(dataPlantio, hoje);</span>
+    }
+
+    public String getId() {
+<span class="fc" id="L136">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="fc" id="L140">        this.id = id;</span>
+<span class="fc" id="L141">    }</span>
+
+    public String getHortaId() {
+<span class="fc" id="L144">        return hortaId;</span>
+    }
+
+    public String getPlantaId() {
+<span class="fc" id="L148">        return plantaId;</span>
+    }
+
+    public String getCanteiro() {
+<span class="fc" id="L152">        return canteiro;</span>
+    }
+
+    public int getQuantidade() {
+<span class="fc" id="L156">        return quantidade;</span>
+    }
+
+    public LocalDate getDataPlantio() {
+<span class="fc" id="L160">        return dataPlantio;</span>
+    }
+
+    public StatusPlantio getStatus() {
+<span class="fc" id="L164">        return status;</span>
+    }
+
+    public LocalDate getDataEncerramento() {
+<span class="fc" id="L168">        return dataEncerramento;</span>
+    }
+
+    public List&lt;RegistroRega&gt; getRegas() {
+<span class="fc" id="L172">        return Collections.unmodifiableList(regas);</span>
+    }
+
+    public List&lt;RegistroCuidado&gt; getCuidados() {
+<span class="fc" id="L176">        return Collections.unmodifiableList(cuidados);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

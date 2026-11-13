@@ -5,7 +5,6 @@ import com.ecohorta.repository.UsuarioRepository;
 
 import java.util.Optional;
 
-/** Cadastro e consulta de usuários. */
 public class UsuarioService {
 
     private final UsuarioRepository usuarios;
@@ -15,7 +14,7 @@ public class UsuarioService {
     }
 
     public Usuario cadastrar(String nome, String email) {
-        Usuario novo = new Usuario(nome, email); // valida os dados
+        Usuario novo = new Usuario(nome, email);
         if (usuarios.buscarPorEmail(novo.getEmail()).isPresent()) {
             throw new RegraDeNegocioException("Já existe um usuário com o e-mail " + novo.getEmail() + ".");
         }

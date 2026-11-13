@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Garante a qualidade do arquivo de dados do catálogo. */
 class CatalogoCsvTest {
 
     private final List<Planta> csv = CatalogoCsv.carregar();
@@ -89,7 +88,7 @@ class CatalogoCsvTest {
         assertEquals(NivelApartamento.IDEAL, rucula.getApartamento().nivel());
         assertTrue(rucula.getCuidados().stream().anyMatch(c -> c.tipo() == TipoCuidado.ADUBACAO && c.periodico()));
         assertTrue(rucula.getCuidados().stream().anyMatch(c -> c.tipo() == TipoCuidado.MANEJO
-                && c.descricao().contains("no calor sobe para flor"))); // dica com ponto e vírgula preservada
+                && c.descricao().contains("no calor sobe para flor")));
         assertEquals(Textos.normalizar("Rúcula"), rucula.getNomeBusca());
     }
 

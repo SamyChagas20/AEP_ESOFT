@@ -7,10 +7,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
-/** Monta um ambiente completo em memória, com relógio fixo, para os testes. */
 public class Ambiente {
 
-    /** "Hoje" dos testes: 10/11/2026. */
     public static final LocalDate HOJE = LocalDate.of(2026, 11, 10);
     public static final Clock RELOGIO = Clock.fixed(Instant.parse("2026-11-10T12:00:00Z"), ZoneOffset.UTC);
 

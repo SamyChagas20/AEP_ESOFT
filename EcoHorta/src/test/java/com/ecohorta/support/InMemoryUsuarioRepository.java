@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-/** Repositório em memória que guarda documentos BSON (mesmo formato do MongoDB). */
 public class InMemoryUsuarioRepository implements UsuarioRepository {
 
     private final Map<String, Document> dados = new LinkedHashMap<>();

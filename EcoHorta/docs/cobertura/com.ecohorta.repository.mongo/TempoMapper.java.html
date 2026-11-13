@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TempoMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">EcoHorta</a> &gt; <a href="index.source.html" class="el_package">com.ecohorta.repository.mongo</a> &gt; <span class="el_source">TempoMapper.java</span></div><h1>TempoMapper.java</h1><pre class="source lang-java linenums">package com.ecohorta.repository.mongo;
+
+import com.ecohorta.model.Estacao;
+import com.ecohorta.model.MesDaEstacao;
+import com.ecohorta.model.Tempo;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class TempoMapper {
+
+    private TempoMapper() {
+    }
+
+    public static Document paraDocumento(Tempo tempo) {
+<span class="fc" id="L18">        Document doc = new Document();</span>
+<span class="pc bpc" id="L19" title="1 of 2 branches missed.">        if (tempo.getId() != null) {</span>
+<span class="fc" id="L20">            doc.put(&quot;_id&quot;, new ObjectId(tempo.getId()));</span>
+        }
+<span class="fc" id="L22">        doc.append(&quot;codigo&quot;, tempo.getEstacao().name());</span>
+<span class="fc" id="L23">        doc.append(&quot;nome&quot;, tempo.getEstacao().getNome());</span>
+<span class="fc" id="L24">        doc.append(&quot;ordem&quot;, tempo.getEstacao().getOrdem());</span>
+<span class="fc" id="L25">        doc.append(&quot;descricao&quot;, tempo.getDescricao());</span>
+<span class="fc" id="L26">        doc.append(&quot;melhorMes&quot;, tempo.getMelhorMes());</span>
+<span class="fc" id="L27">        doc.append(&quot;justificativaMelhorMes&quot;, tempo.getJustificativaMelhorMes());</span>
+
+<span class="fc" id="L29">        List&lt;Document&gt; meses = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        for (MesDaEstacao m : tempo.getMeses()) {</span>
+<span class="fc" id="L31">            meses.add(new Document(&quot;numero&quot;, m.numero())</span>
+<span class="fc" id="L32">                    .append(&quot;nome&quot;, m.nome())</span>
+<span class="fc" id="L33">                    .append(&quot;melhor&quot;, m.melhor())</span>
+<span class="fc" id="L34">                    .append(&quot;observacao&quot;, m.observacao()));</span>
+<span class="fc" id="L35">        }</span>
+<span class="fc" id="L36">        doc.append(&quot;meses&quot;, meses);</span>
+<span class="fc" id="L37">        return doc;</span>
+    }
+
+    public static Tempo deDocumento(Document doc) {
+<span class="fc" id="L41">        Tempo tempo = new Tempo(</span>
+<span class="fc" id="L42">                Estacao.valueOf(doc.getString(&quot;codigo&quot;)),</span>
+<span class="fc" id="L43">                doc.getString(&quot;descricao&quot;),</span>
+<span class="fc" id="L44">                BsonUtil.lerInt(doc, &quot;melhorMes&quot;),</span>
+<span class="fc" id="L45">                doc.getString(&quot;justificativaMelhorMes&quot;));</span>
+<span class="fc" id="L46">        tempo.setId(BsonUtil.lerId(doc));</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        for (Document m : BsonUtil.lerSubdocumentos(doc, &quot;meses&quot;)) {</span>
+<span class="fc" id="L48">            tempo.adicionarMes(BsonUtil.lerInt(m, &quot;numero&quot;), m.getString(&quot;observacao&quot;));</span>
+<span class="fc" id="L49">        }</span>
+<span class="fc" id="L50">        return tempo;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

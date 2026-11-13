@@ -1,6 +1,5 @@
 package com.ecohorta.model;
 
-/** Nomes dos meses em português. */
 public final class Meses {
 
     private static final String[] NOMES = {"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",

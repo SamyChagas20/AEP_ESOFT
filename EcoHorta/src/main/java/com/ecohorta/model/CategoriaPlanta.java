@@ -1,6 +1,5 @@
 package com.ecohorta.model;
 
-/** Grandes grupos do catálogo. */
 public enum CategoriaPlanta {
     FOLHOSA("Folhosa"),
     HORTALICA_FRUTO("Hortaliça de fruto"),
